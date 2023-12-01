@@ -1,0 +1,100 @@
+/**:
+  ros__parameters:
+
+    publish_debug: true
+    kf_types: [3]
+
+    kf_lin:
+      v_noise:
+        linear:
+          vel:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+          acc:
+            x: 100.0
+            y: 100.0
+            z: 100.0
+        angular:
+          vel:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+          acc:
+            x: 100.0
+            y: 100.0
+            z: 100.0
+      w_noise:
+        linear:
+          vel:
+            x: 1.0
+            y: 1.0
+            z: 1.0
+        angular:
+          vel:
+            x: 4.0
+            y: 4.0
+            z: 4.0
+    ekf:
+      v_noise:
+        linear:
+          vel:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+          acc:
+            x: 100.0
+            y: 100.0
+            z: 100.0
+        angular:
+          vel:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+          acc:
+            x: 100.0
+            y: 100.0
+            z: 100.0
+      w_noise:
+        linear:
+          vel:
+            x: 1.0
+            y: 1.0
+            z: 1.0
+        angular:
+          vel:
+            x: 1.0
+            y: 1.0
+            z: 1.0
+    kf_ff:
+      moving_average: 0.3
+      v_noise:
+        linear:
+          vel:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+          acc:
+            x: 100.0
+            y: 100.0
+            z: 100.0
+        angular:
+          vel:
+            x: 0.1
+            y: 0.1
+            z: 0.1
+          acc:
+            x: 100.0
+            y: 100.0
+            z: 100.0
+      w_noise:
+        linear:
+          vel:
+            x: 1.0
+            y: 1.0
+            z: 1.0
+        angular:
+          vel:
+            x: 4.0
+            y: 4.0
+            z: 4.0

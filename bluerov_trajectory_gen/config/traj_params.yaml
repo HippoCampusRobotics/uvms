@@ -1,0 +1,98 @@
+/**:
+  ros__parameters:
+    v_max_init: 0.1 # [m / s] initial velocity for initial positioning
+    w_max_init: 0.1 # [rad / s] initial velocity for initial positioning
+    start_accuracy: 0.01 # accuracy to reach position, velocity and orientation
+
+    eight:
+      a: 0.4  # [m], width of the eight
+      f: 0.03 # [s], frequency for once completing the eight
+      x_width: 2.0 # [m] tank width in x-direction
+      y_width: 4.0 # [m] tank width in y-direction
+      height: -0.6 # [m] desired z-height
+      max_roll: 0.2 # [rad] maximum roll angle
+
+    single_dof:
+      idx: 5
+      pos_x:
+        start_pos: [ 1.0, 1.5, -0.7]
+        start_att: [0.0, 0.0, 0.5]  # attitude rpy, afterwards multiplied by pi in [rad]
+        limits: [1.4, 2.5] # limits in y-direction of tank
+        vel: 0.1  # [m/s]
+      pos_y:
+        start_pos: [ 1.0, 1.5, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        limits: [ 1.4, 2.5 ] # limits in y-direction of tank
+        vel: 0.2  # [m/s]
+      pos_z:
+        start_pos: [ 1.0, 1.5, -1.0 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        limits: [ -1.05, -0.65 ] # limits in z-direction of tank
+        vel: 0.2  # [m/s]
+      att_x:
+        start_pos: [ 1.0, 1.5, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        limits: [ -0.25, 0.25 ] # limits in [rad], afterwards multiplied by pi
+        vel: 0.35  # [rad/s]
+      att_y:
+        start_pos: [ 1.0, 1.5, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        limits: [ -0.25, 0.25 ] # limits in [rad], afterwards multiplied by pi
+        vel: 0.3  # [rad/s]
+      att_z:
+        start_pos: [ 1.0, 1.5, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        limits: [ -0.5, 0.5 ] # limits in [rad], afterwards multiplied by pi
+        vel: 0.2  # [rad/s]
+
+    single_dof_setpoints:  # only roll and pitch
+      idx: 1
+      n_setpoints: 11
+      t_setpoint: 12.0 # time how long a setpoint is kept static in [s]
+      accuracy: 0.01  # accuracy on angle error until a setpoint is interpreted as reached
+      att_x:
+        start_pos: [ 0.9, 1.5, -0.7 ]
+        limits: [ -0.3, 0.3 ] # limits in [rad], afterwards multiplied by pi
+
+      att_y:
+        start_pos: [ 0.9, 1.5, -0.7 ]
+        limits: [ -0.3, 0.3 ] # limits in [rad], afterwards multiplied by pi
+
+
+    single_dof_sinusoidal:
+      idx: 1
+      pos_x:
+        start_pos: [1.0, 1.5, -0.7]
+        start_att: [0.0, 0.0, 0.5]  # attitude rpy, afterwards multiplied by pi in [rad]
+        amplitude: 0.1 # amplitude in y-direction of tank
+        omega: 3.0  # [rad/s]
+      pos_y:
+        start_pos: [ 1.0, 1.5, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        amplitude: 0.1 # amplitude in y-direction of tank
+        omega: 3.0  # [rad/s]
+      pos_z:
+        start_pos: [ 1.0, 2.0, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        amplitude: 0.1 # amplitude in z-direction of tank
+        omega: 3.0  # [rad/s]
+      att_x:
+        start_pos: [ 1.0, 2.0, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        amplitude: 0.1 # amplitude in roll-direction, afterwards multiplied by pi in [rad]
+        omega: 3.0  # [rad/s]
+      att_y:
+        start_pos: [ 1.0, 2.0, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        amplitude: 0.1 # amplitude in roll-direction, afterwards multiplied by pi in [rad]
+        omega: 3.0  # [rad/s]
+      att_z:
+        start_pos: [ 1.0, 2.0, -0.7 ]
+        start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+        amplitude: 0.1 # amplitude in roll-direction, afterwards multiplied by pi in [rad]
+        omega: 3.0  # [rad/s]
+
+
+    station_keeping:
+      start_pos: [ 1.0, 2.0, -0.7 ]
+      start_att: [ 0.0, 0.0, 0.5 ]  # post-multiplied with Pi

@@ -1,0 +1,138 @@
+/**:
+  ros__parameters:
+
+    v_max_init_eef: 0.15 # maximum initial velocity for reaching start point for end effector
+    w_max_init_eef: 0.2
+    start_accuracy: 0.02  # accuracy for position and orientation error norm to reach before actual motion starts
+
+    att_dofs_tracked: 2
+    n_runs: 6
+
+    startup:
+      v_max_init: 0.15
+      w_max_init: 0.2
+      dq_max_init: 0.3
+      start_accuracy: 0.025
+      start_pos: [ 1.0, 2.0, -0.7 ]
+      start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
+      start_joints: [1.0, 0.5, 0.75, 0.5] # states are post-multiplied by PI => in rad / pi
+
+    straight_line:
+      unidirectional: true  # must be true
+      startpoint:
+        x: 1.2
+        y: 1.0
+        z: -1.0
+      rotation: # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rot_tangential: 0.5  # afterwards multiplied by pi
+      distance: 2.0 # distance in y-direction
+      forward_velocity: 0.1
+      startup_duration: 2.5  # s
+
+    sinusoidal2D:
+      unidirectional: true
+      startpoint:
+        x: 1.25
+        y: 1.0
+        z: -1.05
+      rotation: # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rot_tangential: 0.5  # afterwards multiplied by pi
+      distance: 1.5 # distance in y-direction
+      period: 100.0
+      n_oscillations: 6 #
+      amp_oscillations: 0.1 #
+
+    sinc:
+      unidirectional: true
+      startpoint:
+        x: 1.2
+        y: 1.5
+        z: -0.9
+      rotation: # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rot_tangential: 0.5  # afterwards multiplied by pi
+      distance: 1.0 # distance in y-direction
+      period: 100.0
+      startup_duration: 1.0  # s
+      n_oscillations: 10 # needs to be even!
+      amp_oscillations: 0.3 #
+
+
+    flower:
+      startpoint:
+        x: 1.0
+        y: 2.0
+        z: -0.9
+      rotation:  # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rot_tangential: 0.25  # afterwards multiplied by pi
+      oscillations_radial: false
+      radius: 0.5 # radius of the flower
+      period: 60.0 # in s
+      startup_duration: 1.0  # s
+      unidirectional: false
+      n_turns: 5
+
+      n_oscillations: 4 #
+      amp_oscillations: 0.15 #
+
+
+    sinus:
+      unidirectional: true  # must be true
+      startpoint:
+        x: 1.2
+        y: 1.3
+        z: -0.9
+      rotation: # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rot_tangential: 0.5  # afterwards multiplied by pi
+      distance: 1.5 # distance in y-direction
+      forward_velocity: 0.06
+      startup_duration: 2.5  # s
+      n_oscillations: 2 #
+      amp_oscillations: 0.15 #
+
+    spiral:
+      unidirectional: true  # must be true
+      startpoint:
+        x: 1.0
+        y: 1.0
+        z: -0.9
+      rotation: # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.0
+        z: 0.0
+      rot_tangential: 0.75  # afterwards multiplied by pi
+      distance: 2.0 # distance in y-direction
+      forward_velocity: 0.05
+      startup_duration: 1.0  # s
+      n_oscillations: 4 #
+      amp_oscillations: 0.1 #
+
+    eight:
+      unidirectional: false
+      startpoint:
+        x: 1.2
+        y: 2.0
+        z: -0.9
+      rotation: # afterwards multiplied by pi, rpy convention
+        x: 0.0
+        y: 0.5
+        z: 0.0
+      rot_tangential: 0.0  # afterwards multiplied by pi
+      amp: 0.4 # distance in y-direction
+      period: 30.0
+      startup_duration: 1.0  # s
+      t_offset_rel: 0.25

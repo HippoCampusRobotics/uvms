@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="uvms">
+    <xacro:arg name="vehicle_name" default="uvms"/>
+    <xacro:property name="base_link_name" value="base_link"/>
+    <xacro:include filename="$(find hippo_sim)/models/bluerov/urdf/bluerov_macro.xacro"/>
+    <xacro:include filename="$(find alpha_sim)/models/alpha/urdf/alpha_5_base_macro.urdf.xacro" />
+
+
+    <xacro:bluerov base_link_name="${base_link_name}" link_ns="$(arg vehicle_name)" rviz_model="True" use_uvms_param="True"/>  <!-- passed boolean must be python expression -->
+    <xacro:alpha_5_base robot_name="$(arg vehicle_name)" link_ns="$(arg vehicle_name)/" ref_link="$(arg vehicle_name)/${base_link_name}"
+                        base_tf_yaml_file="$(find uvms_sim)/config/alpha_base_tf_params_bluerov.yaml">
+    </xacro:alpha_5_base>
+
+</robot>

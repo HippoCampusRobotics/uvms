@@ -1,0 +1,4 @@
+/**: # wildcard for the node name
+  ros__parameters:
+    max_position_error: 0.4
+    max_attitude_error: 0.4

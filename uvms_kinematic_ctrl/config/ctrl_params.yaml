@@ -1,0 +1,218 @@
+/**:
+  ros__parameters:
+
+    #task_keys: [1, 8, 9, 2, 12, 7, 11, 10]
+    #task_types: [1, 1, 1, 2, 3, 3, 3, 4]
+
+    task_keys: [1, 8, 9, 2, 12, 14, 11, 10]
+    task_types: [1, 1, 1, 2, 3, 3, 3, 4]
+    algorithm_type: 4
+    publish_task_velocities: true
+    alpha_dyn: 0.01  # increment in which in each iteration the bound will be pushed to alpha_max after reactivation
+    alpha_max: 2.0  # relative bound up to which the gain will be pushed
+    sigma_min: 0.005
+    svd_damping: 0.005
+
+    accel_smooth_fac_min: 0.5
+    accel_smooth_fac_max: 0.99
+    delta_accel_min: 0.0
+    delta_accel_max: 0.2
+
+    eta: 1.0 # factor shifting the goal towards minimizing the use of control directions in transition
+    nullspace_weighting: false
+
+    weighting_matrix:
+      pos:
+        x: 1.0 # auv x-velocity
+        y: 1.0 # auv y-velocity
+        z: 1.0 # auv z-velocity
+      att:
+        x: 1.0 # auv x-angular rates
+        y: 1.0 # auv y-angular rates
+        z: 1.0 # auv z-angular rates
+      joint: # manipulator joints
+        q0: 0.1
+        q1: 0.1
+        q2: 0.1
+        q3: 0.1
+
+    velocity_limits:
+      linear:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      angular:
+        x: 1.0
+        y: 1.0
+        z: 1.0
+      joints:
+        q0: 0.65
+        q1: 0.65
+        q2: 0.65
+        q3: 0.95
+
+
+    #task:
+    eef_tracking:
+      task_error_gain:
+        pos:
+          x: 4.0
+          y: 4.0
+          z: 4.0
+        att:
+          x: 4.0
+          y: 4.0
+          z: 4.0
+
+    joint_limits:
+      q_min:
+        q0: 0.032
+        q1: 0.0174533
+        q2: 0.0174533
+        q3: -1000000.0
+      q_max:
+        q0: 6.02
+        q1: 3.40339
+        q2: 3.2  # lowered to avoid local minimum between joint limit and manipulability
+        q3: 10000000.0
+      gain:
+        q0: 1.0
+        q1: 1.0
+        q2: 1.0
+        q3: 1.0
+      safety: 0.2  # relative limit which should not be exceeded!
+      delta: 0.2  # offset from which on the controller will actively push the joint position away from the limits
+      alpha: 0.1 # offset added to delta that must be passed to deactivate the task once it is activated
+
+    joint_limits_desired:
+      q_min:
+        q0: 1.370796327  # pi /2 - 0.2
+        q1: -1000000.0
+        q2: -1000000.0
+        q3: -1000000.0
+      q_max:
+        q0: 4.91238898 # 3 pi / 2 + 0.2
+        q1: 2.55619449 # 3 pi / 4 + 0.2
+        q2: 10000000.0
+        q3: 10000000.0
+      gain:
+        q0: 1.0
+        q1: 1.0
+        q2: 1.0
+        q3: 1.0
+      safety: 0.0  # relative limit which should not be exceeded!
+      delta: 0.2  # offset from which on the controller will actively push the joint position away from the limits
+      alpha: 0.1 # offset added to delta that must be passed to deactivate the task once it is activated
+
+    joint_centering:
+      q_min:
+        q0: 0.032
+        q1: 0.0174533
+        q2: 0.0174533
+        q3: -1000000.0  # values with absolut value greater than 2 * PI will be neglected => limits not relevant
+      q_max:
+        q0: 6.02
+        q1: 3.40339
+        q2: 3.40339
+        q3: 10000000.0
+      gain:
+        q0: 0.5
+        q1: 0.5
+        q2: 0.5
+        q3: 0.0
+
+    restricting_plane:
+      idxs: [1, 4]  # indexes are DH-link index - 1 (as they index the transformations i from i -> i+1)
+      planes:
+        p:
+          x: 0.03
+          y: 0.0
+          z: 0.0
+        n:
+          x: 1.0
+          y: 0.0
+          z: 0.0
+      gain: 1.0
+      safety: 0.0
+      delta: 0.03
+      alpha: 0.02 # offset added to delta that must be passed to deactivate the task once it is activated
+
+    ellipse_collision:
+      idxs: [1, 4]  # indexes are DH-link index - 1 (as they index the transformations i from i -> i+1)
+      a:
+        x: 0.26
+        z: 0.2
+      c:
+        x: -0.203
+        z: -0.131675
+      gain: 1.0
+      safety: 0.02
+      delta: 0.03
+      alpha: 0.03 # offset added to delta that must be passed to deactivate the task once it is activated
+
+    auv_confined_space:
+      points:
+        #x: [0.2, 0.2, 0.2, 1.8, 1.8, 1.8]
+        #y: [1.2, 1.2, 1.2, 2.8, 2.8, 2.8]
+        #z: [-1.3, -1.3, -1.3, -0.2, -0.2, -0.2]
+        x: [0.0, 0.0, 0.0, 2.0, 2.0, 2.0]
+        y: [0.5, 0.5, 0.5, 3.5, 3.5, 3.5]
+        z: [-1.3, -1.3, -1.3, 0.0, 0.0, 0.0]
+      normals:
+        x: [1.0, 0.0, 0.0, -1.0, 0.0, 0.0]
+        y: [0.0, 1.0, 0.0, 0.0, -1.0, 0.0]
+        z: [0.0, 0.0, 1.0, 0.0, 0.0, -1.0]
+      gain: 0.5
+      safety: 0.05
+      delta: 0.05
+      alpha: 0.05 # offset added to delta that must be passed to deactivate the task once it is activated
+      auv_radius: 0.3 # [m]
+
+    attitude_limits:
+      idxs: [2]
+      min:  # values in rad / pi, post-multiplied by pi in initialization
+        roll: -0.25
+        pitch: -0.25
+        yaw: -0.25
+      max:
+        roll: 0.25
+        pitch: 0.25
+        yaw: 0.25
+      gain:
+        roll: 1.0
+        pitch: 1.0
+        yaw: 1.0
+      delta: 0.1
+      alpha: 0.05
+
+    attitude_inclination_limits:
+      max: 0.3
+      gain: 1.0
+      delta: 0.1
+      alpha: 0.05
+
+    manipulability:
+      gain: 1.0
+
+    manipulability_limit:
+      delta: 0.001
+      alpha: 0.001
+      min: 0.0035
+      gain: 1.0
+
+    #velocity:
+      #task_weighting_matrix:
+      #  pos:
+      #    x: 1.0 # auv x-velocity
+      #    y: 1.0 # auv y-velocity
+      #    z: 1.0 # auv z-velocity
+      #  att:
+      #    x: 1.0 # auv x-angular rates
+      #    y: 1.0 # auv y-angular rates
+      #    z: 1.0 # auv z-angular rates
+      #  joint: # manipulator joints
+      #    q0: 0.02
+      #    q1: 0.02
+      #    q2: 0.02
+      #    q3: 0.02
+

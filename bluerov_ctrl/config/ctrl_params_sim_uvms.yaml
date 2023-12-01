@@ -1,0 +1,73 @@
+/**: # wildcard for the node name
+  ros__parameters:
+    compensate_manipulator: true
+    pos_p_module:
+      gain:
+        p:
+          x: 5.0
+          y: 5.0
+          z: 5.0
+    att_p_module:
+      gain:
+        roll:
+          p: 5.0
+        pitch:
+          p: 5.0
+        yaw:
+          p: 5.0
+
+    model_based:
+      body_fixed: true
+      d_use_accel_feedforward: false
+      d_use_accel_estimation: false
+      use_accel_feedforward: true
+
+      gain:
+        p:
+          pos_x: 10.0
+          pos_y: 10.0
+          pos_z: 10.0
+          att_x: 10.0
+          att_y: 10.0
+          att_z: 10.0
+        i:
+          pos_x: 25.0
+          pos_y: 25.0
+          pos_z: 25.0
+          att_x: 25.0
+          att_y: 25.0
+          att_z: 25.0
+        d:
+          pos_x: 0.1
+          pos_y: 0.1
+          pos_z: 0.1
+          att_x: 0.1
+          att_y: 0.1
+          att_z: 0.1
+
+    twist_pid:
+      body_fixed: true
+      d_use_accel_feedforward: true
+      d_use_accel_estimation: true
+      gain:
+        p:
+          pos_x: 120.0
+          pos_y: 120.0
+          pos_z: 150.0
+          att_x: 6.0
+          att_y: 7.0
+          att_z: 5.0
+        i:
+          pos_x: 150.0
+          pos_y: 150.0
+          pos_z: 150.0
+          att_x: 20.0
+          att_y: 20.0
+          att_z: 15.0
+        d:
+          pos_x: 10.0
+          pos_y: 10.0
+          pos_z: 11.0
+          att_x: 0.5
+          att_y: 0.5
+          att_z: 0.5
