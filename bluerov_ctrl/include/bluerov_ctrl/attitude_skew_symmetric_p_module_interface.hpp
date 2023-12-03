@@ -16,37 +16,42 @@
 #ifndef BLUEROV_CTRL_ATTITUDE_SKEW_SYMMETRIC_P_MODULE_INTERFACE_HPP
 #define BLUEROV_CTRL_ATTITUDE_SKEW_SYMMETRIC_P_MODULE_INTERFACE_HPP
 
-#include "attitude_skew_symmetric_p_module.hpp"
-#include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include <rclcpp/rclcpp.hpp>
+
+#include "attitude_skew_symmetric_p_module.hpp"
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
+#include "hippo_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_msgs/msg/control_target.hpp"
 
-namespace bluerov_ctrl{
+namespace bluerov_ctrl {
 
-    class AttSkewSymmetricPModuleInterface {
-    public:
-        AttSkewSymmetricPModuleInterface() = default;
-        void initialize(rclcpp::Node* node_ptr);
-        void update(const geometry_msgs::msg::Quaternion &att, geometry_msgs::msg::Vector3 &out_rates);
+class AttSkewSymmetricPModuleInterface {
+ public:
+  AttSkewSymmetricPModuleInterface() = default;
+  void initialize(rclcpp::Node* node_ptr);
+  void update(const geometry_msgs::msg::Quaternion& att,
+              geometry_msgs::msg::Vector3& out_rates);
 
-        void setControlTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
+  void setControlTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
 
-        rcl_interfaces::msg::SetParametersResult onSetPgains(const std::vector<rclcpp::Parameter> &parameters);
-        void declareParams();
-        void initializeParamCallbacks();
-    private:
-        rclcpp::Node* node_ptr_;
-        double gain_roll_p_;
-        double gain_pitch_p_;
-        double gain_yaw_p_;
-        rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr p_gains_cb_handle_;
-        AttSkewSymmetricPControlModule* controller_;
-        std::mutex mutex_;
-    };
-}
+  rcl_interfaces::msg::SetParametersResult onSetPgains(
+      const std::vector<rclcpp::Parameter>& parameters);
+  void declareParams();
+  void initializeParamCallbacks();
 
-#endif //BLUEROV_CTRL_ATTITUDE_SKEW_SYMMETRIC_P_MODULE_INTERFACE_HPP
+ private:
+  rclcpp::Node* node_ptr_;
+  double gain_roll_p_;
+  double gain_pitch_p_;
+  double gain_yaw_p_;
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
+      p_gains_cb_handle_;
+  AttSkewSymmetricPControlModule* controller_;
+  std::mutex mutex_;
+};
+}  // namespace bluerov_ctrl
+
+#endif  // BLUEROV_CTRL_ATTITUDE_SKEW_SYMMETRIC_P_MODULE_INTERFACE_HPP

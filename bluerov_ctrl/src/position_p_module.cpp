@@ -16,6 +16,10 @@
 #include "bluerov_ctrl/position_p_module.hpp"
 
 void bluerov_ctrl::PosPControlModule::update(const Eigen::Vector3d &pos,
-                                             const Eigen::Quaterniond &att, Eigen::Vector3d &out_vel) {
-    out_vel = att.toRotationMatrix().inverse() * (pos_mask_ * (p_gains_* (pos_target.array() - pos.array())).matrix() + vel_target);
+                                             const Eigen::Quaterniond &att,
+                                             Eigen::Vector3d &out_vel) {
+  out_vel =
+      att.toRotationMatrix().inverse() *
+      (pos_mask_ * (p_gains_ * (pos_target.array() - pos.array())).matrix() +
+       vel_target);
 }

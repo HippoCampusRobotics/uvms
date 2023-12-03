@@ -2,6 +2,7 @@ from ament_index_python.packages import get_package_share_path
 import launch
 import launch_ros
 
+
 def generate_launch_description():
     use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
     vehicle_name = launch.substitutions.LaunchConfiguration('vehicle_name')
@@ -29,9 +30,9 @@ def generate_launch_description():
 
     motion_planning_node = launch_ros.actions.Node(package='bluerov_trajectory_gen',
                                                    executable='trajectory_gen_node',
-                                                    namespace=vehicle_name,
+                                                   namespace=vehicle_name,
                                                    parameters=[{'trajectory_type': trajectory_type,
-                                                       'use_sim_time' : use_sim_time},
+                                                                'use_sim_time': use_sim_time},
                                                                config_file_path],
                                                    output='screen'
                                                    )
@@ -41,4 +42,3 @@ def generate_launch_description():
         trajectory_type_launch_arg,
         motion_planning_node
     ])
-

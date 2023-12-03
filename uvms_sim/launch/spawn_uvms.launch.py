@@ -32,10 +32,12 @@ def generate_launch_description():
                                               executable='robot_state_publisher',
                                               name='robot_state_publisher',
                                               output='screen',
-                                              parameters=[{'use_sim_time' : use_sim_time,
+                                              parameters=[{'use_sim_time': use_sim_time,
                                                            'robot_description': launch_ros.descriptions.ParameterValue(
-                                                               launch.substitutions.Command(['xacro ', tf_tree_model_path,
-                                                                 ' ', 'vehicle_name:=', vehicle_name]), value_type=str)}]) # pi: 3.14159265359
+                                                               launch.substitutions.Command(
+                                                                   ['xacro ', tf_tree_model_path,
+                                                                    ' ', 'vehicle_name:=', vehicle_name]),
+                                                               value_type=str)}])  # pi: 3.14159265359
     robot_description = launch.substitutions.LaunchConfiguration(
         'robot_description',
         default=launch.substitutions.Command([
@@ -49,27 +51,27 @@ def generate_launch_description():
     description = {'robot_description': robot_description}
 
     spawner = launch_ros.actions.Node(package='hippo_sim',
-                            executable='spawn',
-                            parameters=[description],
-                            arguments=[
-                                '--param',
-                                'robot_description',
-                                '--remove_on_exit',
-                                'true',
-                                '--x',
-                                '1.0',
-                                '--y',
-                                '2.5',
-                                '--z',
-                                '-0.5',
-                            ])
+                                      executable='spawn',
+                                      parameters=[description],
+                                      arguments=[
+                                          '--param',
+                                          'robot_description',
+                                          '--remove_on_exit',
+                                          'true',
+                                          '--x',
+                                          '1.0',
+                                          '--y',
+                                          '2.5',
+                                          '--z',
+                                          '-0.5',
+                                      ])
 
     bridge = launch_ros.actions.Node(package='uvms_sim',
-                                           executable='bridge',
-                                           parameters=[{'use_sim_time': use_sim_time,
-                                                        'update_frequency': 50.0,
-                                                        'simulate_kinematics': simulate_kinematics}],
-                                           output='screen')
+                                     executable='bridge',
+                                     parameters=[{'use_sim_time': use_sim_time,
+                                                  'update_frequency': 50.0,
+                                                  'simulate_kinematics': simulate_kinematics}],
+                                     output='screen')
 
     spawn_group = launch.actions.GroupAction([
         launch_ros.actions.PushRosNamespace(
@@ -89,7 +91,6 @@ def generate_launch_description():
             'use_sim_time': use_sim_time,
         }.items(),
     )
-
 
     return launch.LaunchDescription([
         use_sim_time_launch_arg,

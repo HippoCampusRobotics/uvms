@@ -16,43 +16,48 @@
 #ifndef BLUEROV_CTRL_POSITION_P_MODULE_INTERFACE_HPP
 #define BLUEROV_CTRL_POSITION_P_MODULE_INTERFACE_HPP
 
-#include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/point.hpp>
 #include <geometry_msgs/msg/quaternion.hpp>
 #include <geometry_msgs/msg/vector3.hpp>
+#include <rclcpp/rclcpp.hpp>
+
+#include "hippo_common/convert.hpp"
+#include "hippo_common/param_utils.hpp"
 #include "hippo_msgs/msg/actuator_setpoint.hpp"
 #include "hippo_msgs/msg/control_target.hpp"
-#include "hippo_common/param_utils.hpp"
-#include "hippo_common/convert.hpp"
 #include "position_p_module.hpp"
 
-namespace bluerov_ctrl{
+namespace bluerov_ctrl {
 
-    class PosPModuleInterface{
-    public:
-        PosPModuleInterface() = default;
-        void initialize(rclcpp::Node* node_ptr);
-        //! returns desired velocities in body-COS
-        //! \param pos
-        //! \param vel
-        //! \param att
-        //! \param out_thrust
-        void update(const geometry_msgs::msg::Point &pos,
-                    const geometry_msgs::msg::Quaternion &att, geometry_msgs::msg::Vector3 &out_vel);
+class PosPModuleInterface {
+ public:
+  PosPModuleInterface() = default;
+  void initialize(rclcpp::Node *node_ptr);
+  //! returns desired velocities in body-COS
+  //! \param pos
+  //! \param vel
+  //! \param att
+  //! \param out_thrust
+  void update(const geometry_msgs::msg::Point &pos,
+              const geometry_msgs::msg::Quaternion &att,
+              geometry_msgs::msg::Vector3 &out_vel);
 
-        void setControlTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
-        rcl_interfaces::msg::SetParametersResult onSetPgains(const std::vector<rclcpp::Parameter> &parameters);
-        void declareParams();
-        void initializeParamCallbacks();
-    private:
-        rclcpp::Node* node_ptr_;
-        std::mutex mutex_;
-        PosPControlModule* controller_;
+  void setControlTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
+  rcl_interfaces::msg::SetParametersResult onSetPgains(
+      const std::vector<rclcpp::Parameter> &parameters);
+  void declareParams();
+  void initializeParamCallbacks();
 
-        rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr p_gains_cb_handle_;
-        double gain_p_x_;
-        double gain_p_y_;
-        double gain_p_z_;
-    };
-}
-#endif //BLUEROV_CTRL_POSITION_P_MODULE_INTERFACE_HPP
+ private:
+  rclcpp::Node *node_ptr_;
+  std::mutex mutex_;
+  PosPControlModule *controller_;
+
+  rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
+      p_gains_cb_handle_;
+  double gain_p_x_;
+  double gain_p_y_;
+  double gain_p_z_;
+};
+}  // namespace bluerov_ctrl
+#endif  // BLUEROV_CTRL_POSITION_P_MODULE_INTERFACE_HPP

@@ -10,7 +10,7 @@ The control framework can then be started using:
 ros2 launch uvms_kinematic_ctrl top_uvms_sim_complete.launch.py vehicle_name:=klopsi00
 ```
 
-## BlueROV
+### BlueROV
 To only start a simulation with the AUV, run:
 ```
 ros2 launch hippo_sim top_bluerov_complete.launch.py vehicle_name:=klopsi00

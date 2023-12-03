@@ -3,8 +3,8 @@ from ament_index_python.packages import get_package_share_directory
 import launch
 from launch_ros.actions import Node
 
-def generate_launch_description():
 
+def generate_launch_description():
     pkg_share = get_package_share_directory('uvms_visualization')
     rviz_config_file = os.path.join(pkg_share, 'rviz/rviz_bag_config.rviz')
 

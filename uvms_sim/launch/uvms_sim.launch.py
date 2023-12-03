@@ -34,12 +34,12 @@ def generate_launch_description():
             'base_tf_file': str(alpha_model_path / 'config/alpha_base_tf_params_bluerov.yaml'),
             'use_hydro': str(use_hydro),
             'update_base_ref': str(True),
-            'is_sim' : str(use_sim_time)}.items())
+            'is_sim': str(use_sim_time)}.items())
 
     bluerov_estimation = launch_ros.actions.Node(package='hippo_sim',
                                                  executable='fake_state_estimator',
                                                  namespace=vehicle_name,
-                                                 parameters=[{'use_sim_time' : use_sim_time}],
+                                                 parameters=[{'use_sim_time': use_sim_time}],
                                                  name='bluerov_state_estimator',
                                                  output='screen')
 

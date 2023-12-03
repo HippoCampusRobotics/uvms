@@ -13,10 +13,9 @@ def generate_launch_description():
     bluerov_low_level_ctrl_path = get_package_share_path('hippo_control')
     bluerov_acceleration_estimation_path = get_package_share_path('bluerov_estimation')
     mixer_path = str(bluerov_low_level_ctrl_path / "launch/node_actuator_mixer_bluerov.launch.py")
-    mixer_config_file_path = str(bluerov_low_level_ctrl_path /('config/actuator_mixer_bluerov_advanced.yaml'))
+    mixer_config_file_path = str(bluerov_low_level_ctrl_path / ('config/actuator_mixer_bluerov_advanced.yaml'))
     uvms_kin_ctrl_path = get_package_share_path('uvms_kinematic_ctrl')
     estimation_watchdog_path = str(uvms_kin_ctrl_path / "launch/node_estimation_drift_watchdog.launch.py")
-
 
     vehicle_name = 'klopsi00'
     use_sim_time = False
@@ -28,17 +27,17 @@ def generate_launch_description():
         launch_arguments={
             'vehicle_name': vehicle_name,
             'use_hydro': str(use_hydro),
-            'use_sim_time' : str(use_sim_time)}.items())
+            'use_sim_time': str(use_sim_time)}.items())
 
     alpha_force_torque_calc = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
             str(alpha_model_path / 'launch/dyn_calc.launch.py')),
-        launch_arguments = {
+        launch_arguments={
             'vehicle_name': vehicle_name,
             'use_hydrodynamics': str(use_hydro),
-            'base_tf_file' : str(alpha_model_path / 'config/alpha_base_tf_params_bluerov.yaml'),
+            'base_tf_file': str(alpha_model_path / 'config/alpha_base_tf_params_bluerov.yaml'),
             'moving_base': str(True),
-            'use_sim_time' : str(use_sim_time)}.items())
+            'use_sim_time': str(use_sim_time)}.items())
 
     bluerov_acceleration_estimation = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
@@ -57,7 +56,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': str(use_sim_time),
             'vehicle_name': vehicle_name,
-            'controller_type' : str(1),
+            'controller_type': str(1),
             'config_file': str(bluerov_ctrl_path / 'config/ctrl_params_real_uvms.yaml'),
         }.items()
     )
@@ -85,20 +84,20 @@ def generate_launch_description():
             str(uvms_kin_ctrl_path / 'launch/uvms_kin_ctrl.launch.py')),
         launch_arguments={
             'vehicle_name': vehicle_name,
-            'use_sim_time' : str(use_sim_time)}.items()
+            'use_sim_time': str(use_sim_time)}.items()
     )
-
 
     state_publisher = launch_ros.actions.Node(package='robot_state_publisher',
                                               executable='robot_state_publisher',
                                               name='robot_state_publisher',
                                               namespace=vehicle_name,
                                               output='screen',
-                                              parameters=[{'use_sim_time' : use_sim_time,
+                                              parameters=[{'use_sim_time': use_sim_time,
                                                            'robot_description': launch_ros.descriptions.ParameterValue(
-                                                               launch.substitutions.Command(['xacro ', tf_tree_model_path,
-                                                                                             ' ', 'vehicle_name:=', vehicle_name]), value_type=str)}]) # pi: 3.14159265359
-
+                                                               launch.substitutions.Command(
+                                                                   ['xacro ', tf_tree_model_path,
+                                                                    ' ', 'vehicle_name:=', vehicle_name]),
+                                                               value_type=str)}])  # pi: 3.14159265359
 
     launch_path = str(
         get_package_share_path('hippo_common') /
@@ -118,14 +117,14 @@ def generate_launch_description():
         launch_arguments={
             'visualization_modules': "[1, 2, 4, 5, 7, 8, 9]",
             'vehicle_name': vehicle_name,
-            'use_sim_time' : str(use_sim_time)}.items()
+            'use_sim_time': str(use_sim_time)}.items()
     )
 
     rviz = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
             str(uvms_kin_ctrl_path / 'launch/rviz.launch.py')),
         launch_arguments={
-            'use_sim_time' : str(use_sim_time)
+            'use_sim_time': str(use_sim_time)
         }.items()
     )
 
@@ -136,7 +135,7 @@ def generate_launch_description():
         bluerov_ctrl,
         bluerov_mixer,
         uvms_kinematic_ctrl,
-        #estimation_drift_watchdog,
+        # estimation_drift_watchdog,
         state_publisher,
         tf_publisher_vehicle,
         uvms_visualization,

@@ -2,14 +2,13 @@ from ament_index_python.packages import get_package_share_path
 import launch
 import launch_ros
 
+
 def generate_launch_description():
     config_file = launch.substitutions.LaunchConfiguration('config_file')
     use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
     vehicle_name = launch.substitutions.LaunchConfiguration('vehicle_name')
     controller_type = launch.substitutions.LaunchConfiguration('controller_type')
     model_params = str(get_package_share_path('bluerov_ctrl') / "config/model_params.yaml")
-
-
 
     use_sim_time_launch_arg = launch.actions.DeclareLaunchArgument(
         name='use_sim_time',

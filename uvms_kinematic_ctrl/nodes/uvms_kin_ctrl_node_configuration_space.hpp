@@ -15,99 +15,103 @@
 
 #ifndef UVMS_TRAJECTORY_GEN_UVMS_KIN_CTRL_NODE_CONFIGURATION_SPACE_HPP
 #define UVMS_TRAJECTORY_GEN_UVMS_KIN_CTRL_NODE_CONFIGURATION_SPACE_HPP
-#include <rclcpp/rclcpp.hpp>
 #include <eigen3/Eigen/Dense>
-#include "alpha_ctrl/joint_kinematic_control_interface.hpp"
-#include "bluerov_ctrl/position_p_module_interface.hpp"
-#include "bluerov_ctrl/attitude_skew_symmetric_p_module_interface.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
-#include "alpha_msgs/msg/joint_data.hpp"
-#include "uvms_msgs/msg/uvms_control_target.hpp"
-#include <nav_msgs/msg/odometry.hpp>
 #include <geometry_msgs/msg/twist_stamped.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <rclcpp/rclcpp.hpp>
+
+#include "alpha_ctrl/joint_kinematic_control_interface.hpp"
+#include "alpha_msgs/msg/joint_data.hpp"
+#include "bluerov_ctrl/attitude_skew_symmetric_p_module_interface.hpp"
+#include "bluerov_ctrl/position_p_module_interface.hpp"
 #include "hippo_common/tf2_utils.hpp"
+#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "uvms_msgs/msg/uvms_control_target.hpp"
 
 namespace uvms_kin_ctrl {
-    using std::placeholders::_1;
-    using rcl_interfaces::msg::SetParametersResult;
+using rcl_interfaces::msg::SetParametersResult;
+using std::placeholders::_1;
 
-    enum ControllerStatus{
-        undeclared=-1,
-        joint_space_control=1,
-        eef_control=2
-    };
+enum ControllerStatus {
+  undeclared = -1,
+  joint_space_control = 1,
+  eef_control = 2
+};
 
+class UVMSKinematicConfigurationControl {
+ public:
+  UVMSKinematicConfigurationControl();
 
-    class UVMSKinematicConfigurationControl {
-    public:
-        UVMSKinematicConfigurationControl();
+  void setControllerStatusPtr(int *controller_status_ptr) {
+    controller_status_ptr_ = controller_status_ptr;
+  }
 
-        void setControllerStatusPtr(int* controller_status_ptr){
-            controller_status_ptr_ = controller_status_ptr;
-        }
+  void initialize(rclcpp::Node *node_ptr);
 
-        void initialize(rclcpp::Node *node_ptr);
+  void resetConnections();
 
-        void resetConnections();
+  void initializeParameterCallbacks();
 
-        void initializeParameterCallbacks();
+  void setManipulatorCmdPublisherPtr(
+      const rclcpp::Publisher<alpha_msgs::msg::JointData>::SharedPtr &pub) {
+    manipulator_cmd_pub_ = pub;
+  }
+  void setAUVCmdPublisherPtr(
+      const rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
+          &pub) {
+    auv_vel_cmd_pub_ = pub;
+  }
 
-        void setManipulatorCmdPublisherPtr(const rclcpp::Publisher<alpha_msgs::msg::JointData>::SharedPtr &pub){
-            manipulator_cmd_pub_ = pub;
-        }
-        void setAUVCmdPublisherPtr(const rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr &pub){
-            auv_vel_cmd_pub_ = pub;
-        }
+  void publishControlCommands(
+      const nav_msgs::msg::Odometry &auv_msg,
+      const sensor_msgs::msg::JointState &manipulator_msg);
 
-        void publishControlCommands(const nav_msgs::msg::Odometry &auv_msg,
-                                 const sensor_msgs::msg::JointState &manipulator_msg);
+ private:
+  void initController();
 
-    private:
-        void initController();
+  void initTimers();
 
-        void initTimers();
+  void initSubscriptions();
 
-        void initSubscriptions();
+  alpha_msgs::msg::JointData zeroManipulatorMsg(const rclcpp::Time &_stamp);
 
-        alpha_msgs::msg::JointData zeroManipulatorMsg(const rclcpp::Time &_stamp);
+  void onSetpointTimeout();
 
-        void onSetpointTimeout();
+  void onSetpointTarget(
+      const uvms_msgs::msg::UVMSControlTarget::SharedPtr _msg);
 
-        void onSetpointTarget(const uvms_msgs::msg::UVMSControlTarget::SharedPtr _msg);
+  std::mutex mutex_;
 
+  //////////////////////////////////////////////////////////////////////////////
+  // ros params
+  //////////////////////////////////////////////////////////////////////////////
 
-        std::mutex mutex_;
+  rclcpp::Node *node_ptr_;
+  nav_msgs::msg::Odometry last_odometry_;
+  sensor_msgs::msg::JointState last_joint_state_;
+  bool setpoint_timed_out_{false};
 
-        //////////////////////////////////////////////////////////////////////////////
-        // ros params
-        //////////////////////////////////////////////////////////////////////////////
+  bool got_first_setpoint_{false};
 
+  rclcpp::TimerBase::SharedPtr setpoint_timeout_timer_;
 
-        rclcpp::Node* node_ptr_;
-        nav_msgs::msg::Odometry last_odometry_;
-        sensor_msgs::msg::JointState last_joint_state_;
-        bool setpoint_timed_out_{false};
+  /// Publishers
+  rclcpp::Publisher<alpha_msgs::msg::JointData>::SharedPtr manipulator_cmd_pub_;
+  rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
+      auv_vel_cmd_pub_;
 
-        bool got_first_setpoint_{false};
+  /// Subscriptions
+  rclcpp::Subscription<uvms_msgs::msg::UVMSControlTarget>::SharedPtr
+      setpoint_sub_;
 
-        rclcpp::TimerBase::SharedPtr setpoint_timeout_timer_;
+  /// controller interfaces
+  alpha_ctrl::JointKinematicControlInterface *manipulator_controller_interface_;
+  bluerov_ctrl::PosPModuleInterface *auv_position_controller_interface_;
+  bluerov_ctrl::AttSkewSymmetricPModuleInterface
+      *auv_attitude_controller_interface_;
 
-        /// Publishers
-        rclcpp::Publisher<alpha_msgs::msg::JointData>::SharedPtr manipulator_cmd_pub_;
-        rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr auv_vel_cmd_pub_;
+  int *controller_status_ptr_;
+};
+}  // namespace uvms_kin_ctrl
 
-        /// Subscriptions
-        rclcpp::Subscription<uvms_msgs::msg::UVMSControlTarget>::SharedPtr setpoint_sub_;
-
-
-        /// controller interfaces
-        alpha_ctrl::JointKinematicControlInterface *manipulator_controller_interface_;
-        bluerov_ctrl::PosPModuleInterface *auv_position_controller_interface_;
-        bluerov_ctrl::AttSkewSymmetricPModuleInterface *auv_attitude_controller_interface_;
-
-        int* controller_status_ptr_;
-
-    };
-}
-
-#endif //UVMS_TRAJECTORY_GEN_UVMS_KIN_CTRL_NODE_CONFIGURATION_SPACE_HPP
+#endif  // UVMS_TRAJECTORY_GEN_UVMS_KIN_CTRL_NODE_CONFIGURATION_SPACE_HPP

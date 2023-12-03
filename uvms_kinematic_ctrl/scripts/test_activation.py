@@ -2,13 +2,14 @@ import numpy as np
 from scripts.plotting_utils.plotting_utils import c_mum, tikzplotlib_fix_ncols
 import tikzplotlib
 
+
 def sigmoid(x, x_min, buffer):
     if x < x_min:
         return 1.0
     elif x > x_min + buffer:
         return 0.0
     else:
-        return 0.5 * (np.cos((x - x_min)*np.pi / buffer) +1.0)
+        return 0.5 * (np.cos((x - x_min) * np.pi / buffer) + 1.0)
 
 
 def main():
@@ -47,6 +48,7 @@ def main():
         tikzplotlib.save("/home/niklast/MA/documentation/Thesis/Bilder/tikz_raw/activation_functions_merged.tex")
 
     plt.show()
+
 
 if __name__ == "__main__":
     main()

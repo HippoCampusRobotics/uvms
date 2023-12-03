@@ -6,10 +6,10 @@ def main():
     zeta_low_ = -zeta_high_
     zeta_high = zeta_high_
     zeta_low = zeta_low_
-    out_vel = np.zeros((10, ))
+    out_vel = np.zeros((10,))
     for task in range(5):
         scaling = 1.0
-        task_cmd_vel = np.random.uniform(-2, 2, (10, ))
+        task_cmd_vel = np.random.uniform(-2, 2, (10,))
         print(task_cmd_vel)
 
         for i in range(10):
@@ -33,6 +33,7 @@ def main():
     print(out_vel)
     print(np.all(zeta_high_ - out_vel >= 0))
     print(np.all(zeta_low_ - out_vel <= 0))
+
 
 if __name__ == "__main__":
     main()

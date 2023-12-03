@@ -2,18 +2,18 @@ from ament_index_python.packages import get_package_share_path
 import launch
 import launch_ros
 
+
 def generate_launch_description():
     package_path = get_package_share_path('uvms_kinematic_ctrl')
     config_file_path = str(package_path / 'config/ctrl_params.yaml')
     alpha_model_path = get_package_share_path('alpha_model')
     bluerov_manipulator_base_tf_path = str(alpha_model_path / 'config/alpha_base_tf_params_bluerov.yaml')
     manipulator_tf_path = str(alpha_model_path / 'config/alpha_kin_params.yaml')
-    manipulator_joint_space_control_config_path = str(get_package_share_path("alpha_ctrl")/'config/ctrl_param.yaml')
-    bluerov_pose_control_config_path = str(get_package_share_path('bluerov_ctrl')/"config/ctrl_params_real_uvms.yaml")
+    manipulator_joint_space_control_config_path = str(get_package_share_path("alpha_ctrl") / 'config/ctrl_param.yaml')
+    bluerov_pose_control_config_path = str(get_package_share_path('bluerov_ctrl') / "config/ctrl_params_real_uvms.yaml")
 
     use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
     vehicle_name = launch.substitutions.LaunchConfiguration('vehicle_name')
-
 
     use_sim_time_launch_arg = launch.actions.DeclareLaunchArgument(
         name='use_sim_time',
@@ -30,7 +30,7 @@ def generate_launch_description():
                                            executable='uvms_kin_ctrl_node',
                                            namespace=vehicle_name,
                                            parameters=[{'use_sim_time': use_sim_time}
-                                               ,bluerov_manipulator_base_tf_path,
+                                               , bluerov_manipulator_base_tf_path,
                                                        manipulator_tf_path,
                                                        config_file_path,
                                                        manipulator_joint_space_control_config_path,

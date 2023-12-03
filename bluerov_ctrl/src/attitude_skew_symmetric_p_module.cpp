@@ -19,36 +19,34 @@
 #include <iostream>
 
 namespace bluerov_ctrl {
-    void skew(const Eigen::Vector3d &x, Eigen::Matrix3d &x_tilde) {
-        x_tilde << 0, -x(2), x(1),
-                x(2), 0, -x(0),
-                -x(1), x(0), 0;
-    }
-
-    void AttSkewSymmetricPControlModule::update(
-        const Eigen::Quaterniond &_orientation, Eigen::Vector3d &out_vel) {
-
-
-      Eigen::Matrix3d R = _orientation.toRotationMatrix();
-      Eigen::Matrix3d R_desired = orientation_target_.toRotationMatrix();
-      Eigen::Matrix3d R_error =
-          0.5 * (R_desired.transpose() * R - R.transpose() * R_desired); // calculates error in local body fraem
-
-
-      // use array instead of vector to simplify coefficient-wise operations
-      Eigen::Array3d R_error_vector{R_error(1, 2), R_error(2, 0), R_error(0, 1)}; // not the vee map operator that extracts the
-      // vector out of a skew-symmetric matrix, takes negative entries instead!
-
-      out_vel = att_mask_ * (p_gains_ * R_error_vector).matrix() + R.inverse() * v_angular_target_;
-
-
-    }
-
-    void AttSkewSymmetricPControlModule::setOrientationTarget(const double &_roll,
-                                                              const double &_pitch,
-                                                              const double &_yaw) {
-      orientation_target_ = Eigen::AngleAxisd(_yaw, Eigen::Vector3d::UnitZ()) *
-                            Eigen::AngleAxisd(_pitch, Eigen::Vector3d::UnitY()) *
-                            Eigen::AngleAxisd(_roll, Eigen::Vector3d::UnitX());
-    }
+void skew(const Eigen::Vector3d &x, Eigen::Matrix3d &x_tilde) {
+  x_tilde << 0, -x(2), x(1), x(2), 0, -x(0), -x(1), x(0), 0;
 }
+
+void AttSkewSymmetricPControlModule::update(
+    const Eigen::Quaterniond &_orientation, Eigen::Vector3d &out_vel) {
+  Eigen::Matrix3d R = _orientation.toRotationMatrix();
+  Eigen::Matrix3d R_desired = orientation_target_.toRotationMatrix();
+  Eigen::Matrix3d R_error =
+      0.5 *
+      (R_desired.transpose() * R -
+       R.transpose() * R_desired);  // calculates error in local body fraem
+
+  // use array instead of vector to simplify coefficient-wise operations
+  Eigen::Array3d R_error_vector{
+      R_error(1, 2), R_error(2, 0),
+      R_error(0, 1)};  // not the vee map operator that extracts the
+  // vector out of a skew-symmetric matrix, takes negative entries instead!
+
+  out_vel = att_mask_ * (p_gains_ * R_error_vector).matrix() +
+            R.inverse() * v_angular_target_;
+}
+
+void AttSkewSymmetricPControlModule::setOrientationTarget(const double &_roll,
+                                                          const double &_pitch,
+                                                          const double &_yaw) {
+  orientation_target_ = Eigen::AngleAxisd(_yaw, Eigen::Vector3d::UnitZ()) *
+                        Eigen::AngleAxisd(_pitch, Eigen::Vector3d::UnitY()) *
+                        Eigen::AngleAxisd(_roll, Eigen::Vector3d::UnitX());
+}
+}  // namespace bluerov_ctrl

@@ -1,6 +1,7 @@
 import numpy as np
 from manipulator_kinematics import Trafo, Manipulator, JointLimitConstraint, PlaneConstraint, EllipseConstraint, solve
 from visualization import Viz
+
 plane_x_lim = 0.01627
 plane_z_lim = 0.0179
 constr_x_lim = plane_x_lim + 0.05
@@ -10,17 +11,19 @@ ellipse_ax = 0.26 + 0.05
 ellipse_az = 0.2 + 0.05
 ellipse_cx = -0.203
 ellipse_cz = -0.131675
+
+
 def main():
     plot_samples = False
     use_ellipse = True
     unlimited = 10000
     q_lim = np.array([[0.032, 6.02],
-                        [0.0174533, 3.40339],
-                        [0.0174533, 3.40339],
-                        [-unlimited, unlimited],
-                        #[-0.05, 2 * np.pi+0.05],
-                        ])
-                        #[0.0013, 0.0133]])
+                      [0.0174533, 3.40339],
+                      [0.0174533, 3.40339],
+                      [-unlimited, unlimited],
+                      # [-0.05, 2 * np.pi+0.05],
+                      ])
+    # [0.0013, 0.0133]])
 
     base_tf = Trafo()
     base_tf.fromRPY(np.array([[0.0], [0.0], [0.0]]), 3.141592654, 0.0, 0.0)
@@ -33,10 +36,12 @@ def main():
     p = [p_vert, p_horz]
     n = [n_vert, n_horz]
     if use_ellipse:
-        coll_constraints = [EllipseConstraint(ellipse_ax, ellipse_az, ellipse_cx, ellipse_cz, 1), EllipseConstraint(ellipse_ax, ellipse_az, ellipse_cx, ellipse_cz, 4)]
+        coll_constraints = [EllipseConstraint(ellipse_ax, ellipse_az, ellipse_cx, ellipse_cz, 1),
+                            EllipseConstraint(ellipse_ax, ellipse_az, ellipse_cx, ellipse_cz, 4)]
     else:
         coll_constraints = [PlaneConstraint(n, p, 1), PlaneConstraint(n, p, 4)]
-    joint_limit_constraints = [JointLimitConstraint(q_lim[i][0], q_lim[i][1], 0.1, i) for i in range(np.shape(q_lim)[0])]
+    joint_limit_constraints = [JointLimitConstraint(q_lim[i][0], q_lim[i][1], 0.1, i) for i in
+                               range(np.shape(q_lim)[0])]
     if plot_samples:
         n_samples = 300
         viz = Viz()
@@ -75,12 +80,6 @@ def main():
                 positions = manipulator.getLinkPositions()
                 viz.plotManipulator(positions)
                 viz.create()
-
-
-
-
-
-
 
 
 if __name__ == "__main__":

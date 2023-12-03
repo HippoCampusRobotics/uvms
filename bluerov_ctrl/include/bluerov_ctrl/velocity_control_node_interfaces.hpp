@@ -16,96 +16,102 @@
 #ifndef BLUEROV_CTRL_VELOCITY_CONTROL_NODE_INTERFACES_HPP
 #define BLUEROV_CTRL_VELOCITY_CONTROL_NODE_INTERFACES_HPP
 
+#include <eigen3/Eigen/Dense>
+#include <rclcpp/rclcpp.hpp>
+
+#include "hippo_common/convert.hpp"
+#include "hippo_common/param_utils.hpp"
 #include "hippo_msgs/msg/actuator_setpoint.hpp"
 #include "hippo_msgs/msg/velocity_control_target.hpp"
-#include "nav_msgs/msg/odometry.hpp"
-#include "hippo_common/param_utils.hpp"
-#include "hippo_common/convert.hpp"
 #include "manipulator_compensation_interface.hpp"
-#include "twist_pid_interface.hpp"
+#include "nav_msgs/msg/odometry.hpp"
 #include "twist_model_based_interface.hpp"
-#include <rclcpp/rclcpp.hpp>
-#include <eigen3/Eigen/Dense>
+#include "twist_pid_interface.hpp"
 
+namespace bluerov_ctrl {
+enum ControllerType {
+  vel_pid_comp = 1,
+  vel_model_based_comp = 4,
+};
 
-namespace bluerov_ctrl{
-    enum ControllerType{
-        vel_pid_comp = 1,
-        vel_model_based_comp = 4,
-    };
+//////////////////////////////////////////////////////////////////////////////
+// controller interfaces
+//////////////////////////////////////////////////////////////////////////////
+class ControllerNodeInterface {
+ public:
+  ControllerNodeInterface() = default;
+  virtual void initialize(rclcpp::Node *node_ptr) = 0;
 
-    //////////////////////////////////////////////////////////////////////////////
-    // controller interfaces
-    //////////////////////////////////////////////////////////////////////////////
-    class ControllerNodeInterface {
+  bool isOk() {
+    checkStatus();
+    return is_ok_;
+  }
 
-    public:
-        ControllerNodeInterface() = default;
-        virtual void initialize(rclcpp::Node* node_ptr) = 0;
+  //! set setpoint for the controller
+  //! \param _msg
+  virtual void setSetpointTarget(
+      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) = 0;
+  virtual void getControllerOutput(
+      const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
+      hippo_msgs::msg::ActuatorSetpoint &out_thrust,
+      hippo_msgs::msg::ActuatorSetpoint &out_torque) = 0;
+  virtual void onTimeout() = 0;
+  virtual void publishDebugMsgs() = 0;
 
-        bool isOk(){
-            checkStatus();
-            return is_ok_;
-        }
+ protected:
+  virtual void declareParams() = 0;
+  virtual void checkStatus() = 0;
+  bool is_ok_ = true;
+  rclcpp::Node *node_ptr_;
+};
 
-        //! set setpoint for the controller
-        //! \param _msg
-        virtual void setSetpointTarget(const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) = 0;
-        virtual void getControllerOutput(const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-                                        hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-                                        hippo_msgs::msg::ActuatorSetpoint &out_torque) = 0;
-        virtual void onTimeout() = 0;
-        virtual void publishDebugMsgs() = 0;
-    protected:
-        virtual void declareParams() = 0;
-        virtual void checkStatus() = 0;
-        bool is_ok_ = true;
-        rclcpp::Node* node_ptr_;
-    };
+class PIDCompInterface : public ControllerNodeInterface {
+ public:
+  PIDCompInterface() = default;
 
-    class PIDCompInterface : public ControllerNodeInterface {
-    public:
-        PIDCompInterface() = default;
+  void initialize(rclcpp::Node *node_ptr) override;
 
-        void initialize(rclcpp::Node *node_ptr) override;
+  void setSetpointTarget(
+      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) override;
 
-        void setSetpointTarget(const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) override;
+  void getControllerOutput(
+      const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
+      hippo_msgs::msg::ActuatorSetpoint &out_thrust,
+      hippo_msgs::msg::ActuatorSetpoint &out_torque) override;
 
-        void getControllerOutput(const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-                                 hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-                                 hippo_msgs::msg::ActuatorSetpoint &out_torque) override;
+  void onTimeout() override;
 
-        void onTimeout() override;
+  void publishDebugMsgs() override;
 
-        void publishDebugMsgs() override;
+ private:
+  void declareParams() override;
+  void checkStatus() override;
 
-    private:
-        void declareParams() override;
-        void checkStatus() override;
+  TwistPIDInterface *velocity_control_interface_;
+  ManipulatorCompInterface *manipulator_comp_interface_;
+};
 
-        TwistPIDInterface *velocity_control_interface_;
-        ManipulatorCompInterface *manipulator_comp_interface_;
-    };
+class ModelBasedCompInterface : public ControllerNodeInterface {
+ public:
+  ModelBasedCompInterface() = default;
+  void initialize(rclcpp::Node *node_ptr) override;
+  void setSetpointTarget(
+      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) override;
+  void getControllerOutput(
+      const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
+      hippo_msgs::msg::ActuatorSetpoint &out_thrust,
+      hippo_msgs::msg::ActuatorSetpoint &out_torque) override;
+  void onTimeout() override;
+  void publishDebugMsgs() override;
 
-    class ModelBasedCompInterface : public ControllerNodeInterface{
-    public:
-        ModelBasedCompInterface() = default;
-        void initialize(rclcpp::Node* node_ptr) override;
-        void setSetpointTarget(const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) override;
-        void getControllerOutput(const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-                                 hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-                                 hippo_msgs::msg::ActuatorSetpoint &out_torque) override;
-        void onTimeout() override;
-        void publishDebugMsgs() override;
-    private:
-        void declareParams() override;
-        void checkStatus() override;
+ private:
+  void declareParams() override;
+  void checkStatus() override;
 
-        TwistModelBasedInterface* velocity_control_interface_;
-        ManipulatorCompInterface* manipulator_comp_interface_;
+  TwistModelBasedInterface *velocity_control_interface_;
+  ManipulatorCompInterface *manipulator_comp_interface_;
+};
 
-    };
+}  // namespace bluerov_ctrl
 
-}
-
-#endif //BLUEROV_CTRL_VELOCITY_CONTROL_NODE_INTERFACES_HPP
+#endif  // BLUEROV_CTRL_VELOCITY_CONTROL_NODE_INTERFACES_HPP

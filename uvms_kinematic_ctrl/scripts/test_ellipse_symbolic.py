@@ -10,12 +10,10 @@ s = sym.symbols("s", real=True)
 t = sym.symbols("t", real=True)
 x_shifted, z_shifted = sym.symbols("x_shifted, z_shifted", real=True)
 
-
-f = sym.Poly((t + a_x**2)**2 * (t + a_z**2)**2 - a_x**2 * x_shifted**2 * (t + a_z**2)**2 - a_z**2 * z_shifted**2 * (t + a_x**2)**2, t)
+f = sym.Poly((t + a_x ** 2) ** 2 * (t + a_z ** 2) ** 2 - a_x ** 2 * x_shifted ** 2 * (
+            t + a_z ** 2) ** 2 - a_z ** 2 * z_shifted ** 2 * (t + a_x ** 2) ** 2, t)
 print(f)
 print(f.coeffs)
-
-
 
 """
 # in cartesian coordinates:

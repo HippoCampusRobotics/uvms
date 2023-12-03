@@ -16,27 +16,34 @@
 #include "bluerov_ctrl/manipulator_compensation.hpp"
 
 namespace bluerov_ctrl {
-    ManipulatorCompensation::ManipulatorCompensation() {
-        counter_force_.setZero();
-        counter_torque_.setZero();
-    }
-
-    void ManipulatorCompensation::update(const Eigen::Quaterniond &orientation, Eigen::Vector3d &force,
-                                                       Eigen::Vector3d &torque) {
-
-        // calculate forces to counter buoyancy
-        force = - orientation.toRotationMatrix().inverse() * added_buoyancy_mass_ * Eigen::Vector3d::UnitZ() * (param_utils::GRAVITY);
-        torque = - buoyancy_origin_.cross(orientation.toRotationMatrix().inverse() * added_buoyancy_mass_ * Eigen::Vector3d::UnitZ() * (param_utils::GRAVITY));
-        force += counter_force_;
-        torque += counter_torque_;
-    }
-
-    void ManipulatorCompensation::setCompensationForce(const double &x, const double &y, const double &z) {
-        counter_force_ = -Eigen::Vector3d(x, y, z);
-    }
-
-    void ManipulatorCompensation::setCompensationTorque(const double &x, const double &y, const double &z) {
-        counter_torque_ = -Eigen::Vector3d(x, y, z);
-    }
-
+ManipulatorCompensation::ManipulatorCompensation() {
+  counter_force_.setZero();
+  counter_torque_.setZero();
 }
+
+void ManipulatorCompensation::update(const Eigen::Quaterniond &orientation,
+                                     Eigen::Vector3d &force,
+                                     Eigen::Vector3d &torque) {
+  // calculate forces to counter buoyancy
+  force = -orientation.toRotationMatrix().inverse() * added_buoyancy_mass_ *
+          Eigen::Vector3d::UnitZ() * (param_utils::GRAVITY);
+  torque = -buoyancy_origin_.cross(
+      orientation.toRotationMatrix().inverse() * added_buoyancy_mass_ *
+      Eigen::Vector3d::UnitZ() * (param_utils::GRAVITY));
+  force += counter_force_;
+  torque += counter_torque_;
+}
+
+void ManipulatorCompensation::setCompensationForce(const double &x,
+                                                   const double &y,
+                                                   const double &z) {
+  counter_force_ = -Eigen::Vector3d(x, y, z);
+}
+
+void ManipulatorCompensation::setCompensationTorque(const double &x,
+                                                    const double &y,
+                                                    const double &z) {
+  counter_torque_ = -Eigen::Vector3d(x, y, z);
+}
+
+}  // namespace bluerov_ctrl

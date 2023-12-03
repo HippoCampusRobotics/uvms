@@ -10,9 +10,8 @@ class Viz:
         self.axes = plt.axes(projection='3d')
         self.base_trafo = Trafo()
 
-    def setBaseTrafo(self, tf : Trafo):
+    def setBaseTrafo(self, tf: Trafo):
         self.base_trafo = tf
-
 
     def set_axes_equal(self):
         """
@@ -36,13 +35,13 @@ class Viz:
 
         # The plot bounding box is a sphere in the sense of the infinity
         # norm, hence I call half the max range the plot radius.
-        plot_radius = 0.5*max([x_range, y_range, z_range])
+        plot_radius = 0.5 * max([x_range, y_range, z_range])
 
         self.axes.set_xlim3d([x_middle - plot_radius, x_middle + plot_radius])
         self.axes.set_ylim3d([y_middle - plot_radius, y_middle + plot_radius])
         self.axes.set_zlim3d([z_middle - plot_radius, z_middle + plot_radius])
 
-    def plotManipulator(self, positions : np.ndarray):
+    def plotManipulator(self, positions: np.ndarray):
         positions = self.base_trafo.transform(positions)
         self.axes.plot3D(positions[0, :-1], positions[1, :-1], positions[2, :-1], c='k')
         self.axes.plot3D(positions[0, -2:], positions[1, -2:], positions[2, -2:], c='r')
@@ -55,15 +54,16 @@ class Viz:
             ellipse_cx = -0.203
             ellipse_cz = -0.131675
             position_tf = self.base_trafo.inverse_transform(position)
-            jacobian = 2 * np.array([(position_tf[0][0] - ellipse_cx) / ellipse_ax**2, 0.0, \
-                                 (position_tf[2][0] - ellipse_cz) / ellipse_az**2]).reshape(-1, 1)
+            jacobian = 2 * np.array([(position_tf[0][0] - ellipse_cx) / ellipse_ax ** 2, 0.0, \
+                                     (position_tf[2][0] - ellipse_cz) / ellipse_az ** 2]).reshape(-1, 1)
             jacobian /= np.linalg.norm(jacobian)
             jacobian = self.base_trafo.rotate(jacobian)
-            self.axes.plot3D([position[0][0], jacobian[0][0]], [position[1][0], jacobian[1][0]], [position[2][0], jacobian[2][0]], c='g')
+            self.axes.plot3D([position[0][0], jacobian[0][0]], [position[1][0], jacobian[1][0]],
+                             [position[2][0], jacobian[2][0]], c='g')
             position = positions[:, 5].reshape(-1, 1)
             position_tf = self.base_trafo.inverse_transform(position)
-            jacobian = 2 * np.array([(position_tf[0][0] - ellipse_cx) / ellipse_ax**2, 0.0, \
-                                 (position_tf[2][0] - ellipse_cz) / ellipse_az**2]).reshape(-1, 1)
+            jacobian = 2 * np.array([(position_tf[0][0] - ellipse_cx) / ellipse_ax ** 2, 0.0, \
+                                     (position_tf[2][0] - ellipse_cz) / ellipse_az ** 2]).reshape(-1, 1)
             jacobian /= np.linalg.norm(jacobian)
             jacobian = self.base_trafo.rotate(jacobian)
             self.axes.plot3D([position[0], jacobian[0]], [position[1], jacobian[1]], [position[2], jacobian[2]], c='g')
@@ -81,7 +81,6 @@ class Viz:
         self.axes.plot3D(y_axis[0, :], y_axis[1, :], y_axis[2, :], c='g')
         self.axes.plot3D(z_axis[0, :], z_axis[1, :], z_axis[2, :], c='b')
 
-
         x_lim = 0.01627
         x_lim_constr = x_lim + 0.05
         z_lim = 0.0179
@@ -93,36 +92,40 @@ class Viz:
         coord_y = np.array([-plane_scale, plane_scale])
         x, y = np.meshgrid(coord_x, coord_y)
         z = z_lim * np.ones_like(x)
-        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z,-1)))
+        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z, -1)))
         surf_points = self.base_trafo.transform(surf_points)
 
-        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2), surf_points[2, :].reshape(2, 2), color='b', alpha=0.6)
+        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2),
+                               surf_points[2, :].reshape(2, 2), color='b', alpha=0.6)
 
         coord_x = np.array([-plane_scale, x_lim_constr])
         coord_y = np.array([-plane_scale, plane_scale])
         x, y = np.meshgrid(coord_x, coord_y)
         z = z_lim_constr * np.ones_like(x)
-        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z,-1)))
+        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z, -1)))
         surf_points = self.base_trafo.transform(surf_points)
 
-        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2), surf_points[2, :].reshape(2, 2), color='b', alpha=0.4)
+        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2),
+                               surf_points[2, :].reshape(2, 2), color='b', alpha=0.4)
 
         # vertical restricting plane:
         coord_y = np.array([-plane_scale, plane_scale])
         coord_z = np.array([-plane_scale, z_lim])
         y, z = np.meshgrid(coord_y, coord_z)
         x = x_lim * np.ones_like(y)
-        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z,-1)))
+        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z, -1)))
         surf_points = self.base_trafo.transform(surf_points)
-        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2), surf_points[2, :].reshape(2, 2), color='r', alpha=0.6)
+        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2),
+                               surf_points[2, :].reshape(2, 2), color='r', alpha=0.6)
 
         coord_y = np.array([-plane_scale, plane_scale])
         coord_z = np.array([-plane_scale, z_lim_constr])
         y, z = np.meshgrid(coord_y, coord_z)
         x = x_lim_constr * np.ones_like(y)
-        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z,-1)))
+        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z, -1)))
         surf_points = self.base_trafo.transform(surf_points)
-        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2), surf_points[2, :].reshape(2, 2), color='r', alpha=0.4)
+        self.axes.plot_surface(surf_points[0, :].reshape(2, 2), surf_points[1, :].reshape(2, 2),
+                               surf_points[2, :].reshape(2, 2), color='r', alpha=0.4)
 
         # ellipse:
 
@@ -138,9 +141,10 @@ class Viz:
 
         x = (ellipse_ax) * np.cos(theta) + ellipse_cx
         z = (ellipse_az) * np.sin(theta) + ellipse_cz
-        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z,-1)))
+        surf_points = np.vstack((np.reshape(x, -1), np.reshape(y, -1), np.reshape(z, -1)))
         surf_points = self.base_trafo.transform(surf_points)
-        self.axes.plot_surface(surf_points[0, :].reshape(N_grid, 2), surf_points[1, :].reshape(N_grid, 2), surf_points[2, :].reshape(N_grid, 2), color='k', alpha=0.6)
+        self.axes.plot_surface(surf_points[0, :].reshape(N_grid, 2), surf_points[1, :].reshape(N_grid, 2),
+                               surf_points[2, :].reshape(N_grid, 2), color='k', alpha=0.6)
 
         self.set_axes_equal()
         self.axes.set_xlabel('x')

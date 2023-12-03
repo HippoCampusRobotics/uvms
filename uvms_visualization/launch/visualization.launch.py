@@ -2,6 +2,7 @@ from ament_index_python.packages import get_package_share_path
 import launch
 import launch_ros
 
+
 def generate_launch_description():
     use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
     vehicle_name = launch.substitutions.LaunchConfiguration('vehicle_name')
