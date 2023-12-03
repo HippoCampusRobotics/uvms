@@ -1,5 +1,25 @@
 import numpy as np
 
+mumblue = (0,100,222)
+mumred = (220,33,77)
+mumgreen = (0,140,0)
+mumpurple = (102,0,102)
+mumorange = (255,102,0)
+mumteal = (55,200,171)
+
+c_mum = [tuple([float(x) / float(255) for x in y]) for y in [mumblue,
+                                                             mumred,
+                                                             mumgreen,
+                                                             mumpurple,
+                                                             mumorange,
+                                                             mumteal]]
+c_mum_dict = dict()
+c_mum_dict['mumblue'] = c_mum[0]
+c_mum_dict['mumred'] = c_mum[1]
+c_mum_dict['mumgreen'] = c_mum[2]
+c_mum_dict['mumpurple'] = c_mum[3]
+c_mum_dict['mumorange'] = c_mum[4]
+c_mum_dict['mumteal'] = c_mum[5]
 sigma0 = 0.01
 v_smooth = 0.01
 
@@ -285,8 +305,6 @@ def main():
     axes[1, 2].legend()
     axes[1, 2].grid()
     axes[-1, 2].set_xlabel("activation value a(2,2)")
-    tikzplotlib_fix_ncols(fig)
-    tikzplotlib.save("/home/niklast/MA/documentation/Thesis/Bilder/tikz_raw/weighted_regularization_comparison.tex")
 
     # single plots
     fig, axes = plt.subplots(1, 2, sharex='all')

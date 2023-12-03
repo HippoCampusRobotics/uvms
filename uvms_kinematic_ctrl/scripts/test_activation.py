@@ -1,7 +1,19 @@
 import numpy as np
-from scripts.plotting_utils.plotting_utils import c_mum, tikzplotlib_fix_ncols
 import tikzplotlib
 
+mumblue = (0,100,222)
+mumred = (220,33,77)
+mumgreen = (0,140,0)
+mumpurple = (102,0,102)
+mumorange = (255,102,0)
+mumteal = (55,200,171)
+
+c_mum = [tuple([float(x) / float(255) for x in y]) for y in [mumblue,
+                                                             mumred,
+                                                             mumgreen,
+                                                             mumpurple,
+                                                             mumorange,
+                                                             mumteal]]
 
 def sigmoid(x, x_min, buffer):
     if x < x_min:
@@ -31,10 +43,6 @@ def main():
     plt.legend()
     plt.grid()
 
-    if save_tikz:
-        tikzplotlib_fix_ncols(fig)
-        tikzplotlib.save("/home/niklast/MA/documentation/Thesis/Bilder/tikz_raw/activation_functions.tex")
-
     fig = plt.figure()
     plt.plot(x, np.maximum(x_vec_min, x_vec_max), c=c_mum[0])
     plt.vlines([x_min, x_min + buffer, x_max - buffer, x_max], -0.2, 1.2, color="k", linestyles="--")
@@ -42,10 +50,6 @@ def main():
     plt.ylabel('activation value')
     plt.legend()
     plt.grid()
-
-    if save_tikz:
-        tikzplotlib_fix_ncols(fig)
-        tikzplotlib.save("/home/niklast/MA/documentation/Thesis/Bilder/tikz_raw/activation_functions_merged.tex")
 
     plt.show()
 
