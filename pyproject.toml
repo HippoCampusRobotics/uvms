@@ -1,0 +1,9 @@
+[tool.ruff]
+select = ["E", "F", "W", "I", "C", "B"]
+ignore = ["D", "INP001"]
+line-length = 80
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "single"
+multiline-quotes = "single"
+docstring-quotes = "double"
