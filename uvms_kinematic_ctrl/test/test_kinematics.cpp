@@ -32,7 +32,7 @@ bool loadLinkTFParams(bool &active, bool &inertial, param_utils::TFParam &tf,
   return dh_link;
 }
 
-int main(int argc, char **argv) {
+int main() {
   std::string folder_name = "/home/niklast/MA/ros2_ws/src/alpha_model/config/";
   std::string dh_file = folder_name + "alpha_kin_params.yaml";
   std::string base_tf_file = folder_name + "alpha_base_tf_params_bluerov.yaml";
@@ -85,16 +85,10 @@ int main(int argc, char **argv) {
   uvms_kinematics::quaternionError(att_eef_des, att_eef, error.segment<3>(3));
   Eigen::DiagonalMatrix<double, param_utils::n_states_uvms> W;
   W.diagonal() << 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.05, 0.05, 0.05, 0.05;
-  Eigen::Matrix<double, param_utils::n_states_uvms, 6> inverse =
-      J_tmp.transpose() * (J_tmp * J_tmp.transpose()).inverse();
   Eigen::Matrix<double, param_utils::n_states_uvms, 6> inverse_weighted =
       W.inverse() * J_tmp.transpose() *
       (J_tmp * W.inverse() * J_tmp.transpose()).inverse();
-  Eigen::Vector<double, param_utils::n_states_uvms> vel_des = inverse * error;
-  Eigen::Vector<double, param_utils::n_states_uvms> vel_des_weighted =
-      inverse_weighted * error;
-  Eigen::Vector<double, 6> check_eef = J_tmp * vel_des;
-  Eigen::Vector<double, 6> check_eef_weighted = J_tmp * vel_des_weighted;
+  inverse_weighted *error;
 
   Eigen::Quaterniond test_quaternion =
       Eigen::AngleAxisd(0.1, Eigen::Vector3d::UnitZ()) *

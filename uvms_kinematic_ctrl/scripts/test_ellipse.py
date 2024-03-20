@@ -60,7 +60,7 @@ def solve_quartic(a, b, c, d) -> np.ndarray:
     b3 = a * c - 4. * d
     c3 = -a * a * d - c * c + 4.0 * b * d
 
-    x3 = np.zeros((3,))
+    x3 = np.zeros((3, ))
     iZeroes = solveP3(x3, a3, b3, c3)
 
     q1 = float()
@@ -98,7 +98,7 @@ def solve_quartic(a, b, c, d) -> np.ndarray:
         p1 = (a * q1 - c) / (q1 - q2)
         p2 = (c - a * q2) / (q1 - q2)
 
-    retval = np.zeros((4,))
+    retval = np.zeros((4, ))
     counter = 0
     D = p1 * p1 - 4 * q1
     if (D >= 0.0):
@@ -123,17 +123,21 @@ def find_nearest_point(x, z) -> (float, float, float):
     x_centered = x - c_x
     z_centered = z - c_z
     # polynomial coefficients for x^4 + a*x^3 + b*x^2 + c*x + d
-    a = 2 * a_x ** 2 + 2 * a_z ** 2
-    b = a_x ** 4 + 4 * a_x ** 2 * a_z ** 2 - a_x ** 2 * x_centered ** 2 + a_z ** 4 - a_z ** 2 * z_centered ** 2
-    c = 2 * a_x ** 4 * a_z ** 2 + 2 * a_x ** 2 * a_z ** 4 - 2 * a_x ** 2 * a_z ** 2 * x_centered ** 2 - 2 * a_x ** 2 * a_z ** 2 * z_centered ** 2
-    d = a_x ** 4 * a_z ** 4 - a_x ** 4 * a_z ** 2 * z_centered ** 2 - a_x ** 2 * a_z ** 4 * x_centered ** 2
+    a = 2 * a_x**2 + 2 * a_z**2
+    b = (a_x**4 + 4 * a_x**2 * a_z**2 - a_x**2 * x_centered**2 + a_z**4 -
+         a_z**2 * z_centered**2)
+    c = (2 * a_x**4 * a_z**2 + 2 * a_x**2 * a_z**4 -
+         2 * a_x**2 * a_z**2 * x_centered**2 -
+         2 * a_x**2 * a_z**2 * z_centered**2)
+    d = (a_x**4 * a_z**4 - a_x**4 * a_z**2 * z_centered**2 -
+         a_x**2 * a_z**4 * x_centered**2)
     roots = solve_quartic(a, b, c, d)
     t = np.max(roots)
-    e_x = a_x ** 2 * x_centered / (t + a_x ** 2) + c_x
-    e_z = a_z ** 2 * z_centered / (t + a_z ** 2) + c_z
-    normal_x = (e_x - c_x) / a_x ** 2  # calculate gradient
-    normal_z = (e_z - c_z) / a_z ** 2
-    gradient_norm = np.sqrt(normal_x ** 2 + normal_z ** 2)
+    e_x = a_x**2 * x_centered / (t + a_x**2) + c_x
+    e_z = a_z**2 * z_centered / (t + a_z**2) + c_z
+    normal_x = (e_x - c_x) / a_x**2  # calculate gradient
+    normal_z = (e_z - c_z) / a_z**2
+    gradient_norm = np.sqrt(normal_x**2 + normal_z**2)
     dist = t * gradient_norm
     normal_x /= gradient_norm
     normal_z /= gradient_norm
@@ -163,11 +167,12 @@ def main():
     e_points = np.zeros_like(points)
     gradients = np.zeros_like(points)
     vectors = np.zeros_like(points)
-    dists = np.zeros((n,))
+    dists = np.zeros((n, ))
 
     for i in range(n):
-        e_points[0, i], e_points[1, i], dists[i], a, b, c, d, gradients[0, i], gradients[1, i] = find_nearest_point(
-            points[0, i], points[1, i])
+        e_points[0, i], e_points[1, i], dists[i], a, b, c, d, gradients[
+            0, i], gradients[1, i] = find_nearest_point(points[0, i], points[1,
+                                                                             i])
         vectors[:, i] = dists[i] * gradients[:, i]
         print("dist: ", dists[i])
     roots = solve_quartic(a, b, c, d)
@@ -194,9 +199,11 @@ def main():
     plt.gca().set_prop_cycle(None)
     plt.scatter(e_points[0, :], e_points[1, :], c=np.arange(n))
     for i in range(n):
-        plt.plot([e_points[0, i], e_points[0, i] + vectors[0, i]], [e_points[1, i], e_points[1, i] + vectors[1, i]],
+        plt.plot([e_points[0, i], e_points[0, i] + vectors[0, i]],
+                 [e_points[1, i], e_points[1, i] + vectors[1, i]],
                  c='k')
-        plt.plot([e_points[0, i], e_points[0, i] + gradients[0, i]], [e_points[1, i], e_points[1, i] + gradients[1, i]],
+        plt.plot([e_points[0, i], e_points[0, i] + gradients[0, i]],
+                 [e_points[1, i], e_points[1, i] + gradients[1, i]],
                  c='r')
     plt.plot(ell[0, :], ell[1, :])
     plt.gca().set_aspect("equal")

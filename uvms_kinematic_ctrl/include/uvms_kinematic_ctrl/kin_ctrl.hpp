@@ -163,8 +163,8 @@ class Task {
     return A_;
   }
 
-  const Eigen::DiagonalMatrix<double, Eigen::Dynamic>
-      &getTaskWeightingMatrix() {
+  const Eigen::DiagonalMatrix<double, Eigen::Dynamic> &
+  getTaskWeightingMatrix() {
     return P0_sqrt_;
   }
 

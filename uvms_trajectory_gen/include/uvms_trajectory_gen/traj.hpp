@@ -87,7 +87,7 @@ class Traj {
 
   void addStatusPtr(int *status_ptr) { status_ptr_ = status_ptr; }
 
-  virtual bool isFinished(const double &t) { return false; }
+  virtual bool isFinished(const double &t) = 0;
 
   virtual int trajType() = 0;
 

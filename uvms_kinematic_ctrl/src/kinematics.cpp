@@ -87,7 +87,8 @@ void Kinematics::update(const StateVector &q, const Eigen::Vector3d &pos,
   att_eef_ = R_I_B_ * R_B_0_ * att_0_eef_;
 }
 
-void Kinematics::getJacobian(const StateVector &q, const Eigen::Vector3d &pos,
+void Kinematics::getJacobian([[maybe_unused]] const StateVector &q,
+                             [[maybe_unused]] const Eigen::Vector3d &pos,
                              const Eigen::Quaterniond &att,
                              param_utils::UVMSStateMatrix &J) {
   J.setZero();
