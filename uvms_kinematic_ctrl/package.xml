@@ -21,6 +21,7 @@
     <depend>uvms_msgs</depend>
     <depend>alpha_ctrl</depend>
     <depend>bluerov_ctrl</depend>
+    <depend>pkg-config</depend>
 
     <test_depend>ament_lint_auto</test_depend>
     <test_depend>ament_lint_common</test_depend>
