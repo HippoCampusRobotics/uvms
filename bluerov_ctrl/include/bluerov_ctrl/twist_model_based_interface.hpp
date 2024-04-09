@@ -23,7 +23,7 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
 #include "twist_model_based.hpp"
 
 namespace bluerov_ctrl {
@@ -42,8 +42,8 @@ class TwistModelBasedInterface {
   bool isAccelTimedOut() { return accel_timed_out_; }
 
   void update(const double &dt, const nav_msgs::msg::Odometry &msg,
-              hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-              hippo_msgs::msg::ActuatorSetpoint &out_torque);
+              hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+              hippo_control_msgs::msg::ActuatorSetpoint &out_torque);
 
   void setVelocityTarget(const geometry_msgs::msg::Twist &msg);
 
@@ -63,10 +63,10 @@ class TwistModelBasedInterface {
   void onAccelTimeout();
 
   void publishDebugActuator(
-      const rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
-          &thrust_pub,
-      const rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
-          &torque_pub,
+      const rclcpp::Publisher<
+          hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr &thrust_pub,
+      const rclcpp::Publisher<
+          hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr &torque_pub,
       const Vector6d &data);
 
   rcl_interfaces::msg::SetParametersResult onSetPgains(
@@ -99,21 +99,21 @@ class TwistModelBasedInterface {
   bool accel_timed_out_ = false;
 
   // debug publishers for gains
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_thrust_p_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_thrust_i_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_thrust_d_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_thrust_model_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_torque_p_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_torque_i_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_torque_d_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       debug_torque_model_pub_;
 
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr

@@ -38,7 +38,7 @@ void PosPModuleInterface::update(const geometry_msgs::msg::Point &pos,
 }
 
 void PosPModuleInterface::setControlTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr msg) {
   Eigen::Vector3d mask = Eigen::Vector3d::Ones();
   if ((msg->mask & msg->IGNORE_POSITION_X) == msg->IGNORE_POSITION_X) {
     mask(0) = 0.0;

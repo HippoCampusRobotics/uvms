@@ -12,6 +12,7 @@
     <depend>rclcpp</depend>
     <depend>alpha_msgs</depend>
     <depend>hippo_msgs</depend>
+    <depend>hippo_control_msgs</depend>
     <depend>hippo_common</depend>
     <depend>alpha_model</depend>
     <depend>std_msgs</depend>

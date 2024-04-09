@@ -21,8 +21,8 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/velocity_control_target.hpp"
 #include "manipulator_compensation_interface.hpp"
 #include "nav_msgs/msg/odometry.hpp"
 #include "twist_model_based_interface.hpp"
@@ -50,11 +50,11 @@ class ControllerNodeInterface {
   //! set setpoint for the controller
   //! \param _msg
   virtual void setSetpointTarget(
-      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) = 0;
+      const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg) = 0;
   virtual void getControllerOutput(
       const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-      hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-      hippo_msgs::msg::ActuatorSetpoint &out_torque) = 0;
+      hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+      hippo_control_msgs::msg::ActuatorSetpoint &out_torque) = 0;
   virtual void onTimeout() = 0;
   virtual void publishDebugMsgs() = 0;
 
@@ -72,12 +72,13 @@ class PIDCompInterface : public ControllerNodeInterface {
   void initialize(rclcpp::Node *node_ptr) override;
 
   void setSetpointTarget(
-      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) override;
+      const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg)
+      override;
 
   void getControllerOutput(
       const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-      hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-      hippo_msgs::msg::ActuatorSetpoint &out_torque) override;
+      hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+      hippo_control_msgs::msg::ActuatorSetpoint &out_torque) override;
 
   void onTimeout() override;
 
@@ -96,11 +97,12 @@ class ModelBasedCompInterface : public ControllerNodeInterface {
   ModelBasedCompInterface() = default;
   void initialize(rclcpp::Node *node_ptr) override;
   void setSetpointTarget(
-      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) override;
+      const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg)
+      override;
   void getControllerOutput(
       const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-      hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-      hippo_msgs::msg::ActuatorSetpoint &out_torque) override;
+      hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+      hippo_control_msgs::msg::ActuatorSetpoint &out_torque) override;
   void onTimeout() override;
   void publishDebugMsgs() override;
 

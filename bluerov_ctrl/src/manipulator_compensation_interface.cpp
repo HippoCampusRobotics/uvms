@@ -64,8 +64,8 @@ void ManipulatorCompInterface::onTimeout() {
 
 void ManipulatorCompInterface::addCompensation(
     const geometry_msgs::msg::Quaternion &msg,
-    hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-    hippo_msgs::msg::ActuatorSetpoint &out_torque) {
+    hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+    hippo_control_msgs::msg::ActuatorSetpoint &out_torque) {
   if (!first_wrench_msg_) {
     return;
   }

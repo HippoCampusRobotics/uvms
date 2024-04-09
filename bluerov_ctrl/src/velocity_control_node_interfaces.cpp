@@ -27,7 +27,7 @@ void PIDCompInterface::initialize(rclcpp::Node *node_ptr) {
 }
 
 void PIDCompInterface::setSetpointTarget(
-    const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) {
+    const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg) {
   velocity_control_interface_->setVelocityTarget(_msg->velocity);
   if (_msg->use_acceleration) {
     velocity_control_interface_->setAccelerationTarget(_msg->acceleration);
@@ -45,8 +45,8 @@ void PIDCompInterface::setSetpointTarget(
 
 void PIDCompInterface::getControllerOutput(
     const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-    hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-    hippo_msgs::msg::ActuatorSetpoint &out_torque) {
+    hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+    hippo_control_msgs::msg::ActuatorSetpoint &out_torque) {
   velocity_control_interface_->update(dt, *msg, out_thrust, out_torque);
   if (manipulator_comp_interface_->isActive()) {
     manipulator_comp_interface_->addCompensation(msg->pose.pose.orientation,
@@ -85,7 +85,7 @@ void ModelBasedCompInterface::initialize(rclcpp::Node *node_ptr) {
 }
 
 void ModelBasedCompInterface::setSetpointTarget(
-    const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) {
+    const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg) {
   velocity_control_interface_->setVelocityTarget(_msg->velocity);
   if (_msg->use_acceleration) {
     velocity_control_interface_->setAccelerationTarget(_msg->acceleration);
@@ -103,8 +103,8 @@ void ModelBasedCompInterface::setSetpointTarget(
 
 void ModelBasedCompInterface::getControllerOutput(
     const double &dt, const nav_msgs::msg::Odometry::SharedPtr msg,
-    hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-    hippo_msgs::msg::ActuatorSetpoint &out_torque) {
+    hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+    hippo_control_msgs::msg::ActuatorSetpoint &out_torque) {
   velocity_control_interface_->update(dt, *msg, out_thrust, out_torque);
   if (manipulator_comp_interface_->isActive()) {
     manipulator_comp_interface_->addCompensation(msg->pose.pose.orientation,

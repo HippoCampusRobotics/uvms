@@ -29,6 +29,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(hippo_common REQUIRED)
 find_package(hippo_msgs REQUIRED)
+find_package(hippo_control_msgs REQUIRED)
 find_package(uvms_common REQUIRED)
 
 add_library(traj
@@ -39,6 +40,7 @@ ament_target_dependencies(traj
         uvms_common
         hippo_common
         hippo_msgs
+        hippo_control_msgs
         )
 
 target_include_directories(traj PUBLIC
@@ -61,6 +63,7 @@ ament_target_dependencies(trajectory_gen_node
         nav_msgs
         hippo_common
         hippo_msgs
+        hippo_control_msgs
         uvms_common
         )
 target_link_libraries(trajectory_gen_node

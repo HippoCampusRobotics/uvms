@@ -15,9 +15,9 @@
 
 #include <geometry_msgs/msg/twist_stamped.hpp>
 #include <geometry_msgs/msg/vector3_stamped.hpp>
-#include <hippo_msgs/msg/actuator_controls.hpp>
+#include <hippo_control_msgs/msg/actuator_controls.hpp>
+#include <hippo_control_msgs/msg/thruster_forces.hpp>
 #include <hippo_msgs/msg/esc_rpms.hpp>
-#include <hippo_msgs/msg/thruster_forces.hpp>
 #include <ignition/transport/Node.hh>
 #include <rclcpp/node_interfaces/node_topics.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -25,12 +25,13 @@
 #include <sensor_msgs/msg/fluid_pressure.hpp>
 
 #include "alpha_msgs/msg/joint_data.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "hippo_control_msgs/msg/velocity_control_target.hpp"
 
 using namespace geometry_msgs::msg;
 using namespace sensor_msgs::msg;
 using namespace std_msgs::msg;
 using namespace hippo_msgs::msg;
+using namespace hippo_control_msgs::msg;
 using namespace ignition;
 using namespace nav_msgs::msg;
 namespace gz_msgs = ignition::msgs;
@@ -178,10 +179,10 @@ class Bridge {
   }
 
   void CreateVelocityCommandBridge() {
-    vel_cmd_sub_ =
-        ros_node_->create_subscription<hippo_msgs::msg::VelocityControlTarget>(
-            "velocity_setpoint", rclcpp::SystemDefaultsQoS(),
-            std::bind(&Bridge::OnVelocityCommand, this, _1));
+    vel_cmd_sub_ = ros_node_->create_subscription<
+        hippo_control_msgs::msg::VelocityControlTarget>(
+        "velocity_setpoint", rclcpp::SystemDefaultsQoS(),
+        std::bind(&Bridge::OnVelocityCommand, this, _1));
     vel_cmd_pub_ = gz_node_->Advertise<ignition::msgs::Twist>(
         std::string(ros_node_->get_namespace()) + "/vel_cmds");
   }
@@ -312,7 +313,7 @@ class Bridge {
   }
 
   void OnVelocityCommand(
-      const hippo_msgs::msg::VelocityControlTarget::SharedPtr ros_msg) {
+      const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr ros_msg) {
     ignition::msgs::Twist msg;
     msg.mutable_linear()->set_x(ros_msg->velocity.linear.x);
     msg.mutable_linear()->set_y(ros_msg->velocity.linear.y);
@@ -442,9 +443,10 @@ class Bridge {
 
   std::map<int, transport::Node::Publisher> throttle_cmd_pubs_;
   rclcpp::Publisher<EscRpms>::SharedPtr rpm_pub_;
-  rclcpp::Subscription<ActuatorControls>::SharedPtr thrust_sub_;
-  rclcpp::Subscription<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
-      vel_cmd_sub_;
+  rclcpp::Subscription<hippo_control_msgs::msg::ActuatorControls>::SharedPtr
+      thrust_sub_;
+  rclcpp::Subscription<
+      hippo_control_msgs::msg::VelocityControlTarget>::SharedPtr vel_cmd_sub_;
   // ignition::transport::Node::Publisher linear_vel_cmd_pub_;
   // ignition::transport::Node::Publisher angular_vel_cmd_pub_;
   ignition::transport::Node::Publisher vel_cmd_pub_;

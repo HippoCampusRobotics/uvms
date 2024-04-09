@@ -28,6 +28,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(uvms_common REQUIRED)
 find_package(hippo_msgs REQUIRED)
+find_package(hippo_control_msgs REQUIRED)
 find_package(hippo_common REQUIRED)
 find_package(uvms_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
@@ -45,6 +46,7 @@ ament_target_dependencies(uvms_traj_gen
         uvms_common
         rclcpp
         hippo_msgs
+        hippo_control_msgs
         hippo_common
         uvms_msgs
         )
@@ -70,6 +72,7 @@ add_executable(uvms_traj_gen_node
 ament_target_dependencies(uvms_traj_gen_node
         rclcpp
         hippo_msgs
+        hippo_control_msgs
         hippo_common
         nav_msgs
         sensor_msgs

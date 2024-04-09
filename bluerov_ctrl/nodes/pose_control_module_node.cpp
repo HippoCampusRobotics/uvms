@@ -23,8 +23,8 @@
 #include "bluerov_ctrl/attitude_skew_symmetric_p_module_interface.hpp"
 #include "bluerov_ctrl/position_p_module_interface.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/velocity_control_target.hpp"
 
 namespace bluerov_ctrl {
 using std::placeholders::_1;
@@ -61,7 +61,7 @@ class AUVPoseControlModuleNode : public rclcpp::Node {
 
     topic = "velocity_setpoint";
     velocity_setpoint_pub_ =
-        create_publisher<hippo_msgs::msg::VelocityControlTarget>(
+        create_publisher<hippo_control_msgs::msg::VelocityControlTarget>(
             topic, rclcpp::SensorDataQoS());
   }
 
@@ -70,7 +70,7 @@ class AUVPoseControlModuleNode : public rclcpp::Node {
     rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
 
     topic = "traj_setpoint";
-    target_sub_ = create_subscription<hippo_msgs::msg::ControlTarget>(
+    target_sub_ = create_subscription<hippo_control_msgs::msg::ControlTarget>(
         topic, qos,
         std::bind(&AUVPoseControlModuleNode::onSetpointTarget, this, _1));
 
@@ -86,7 +86,8 @@ class AUVPoseControlModuleNode : public rclcpp::Node {
     RCLCPP_WARN(get_logger(), "Setpoint timed out. Stop sending commands.");
     setpoint_timed_out_ = true;
   }
-  void onSetpointTarget(const hippo_msgs::msg::ControlTarget::SharedPtr _msg) {
+  void onSetpointTarget(
+      const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg) {
     if (_msg->header.frame_id !=
         hippo_common::tf2_utils::frame_id::kInertialName) {
       RCLCPP_WARN_THROTTLE(
@@ -120,7 +121,7 @@ class AUVPoseControlModuleNode : public rclcpp::Node {
     if (setpoint_timed_out_) {
       return;
     }
-    hippo_msgs::msg::VelocityControlTarget velocity_setpoint_msg;
+    hippo_control_msgs::msg::VelocityControlTarget velocity_setpoint_msg;
     velocity_setpoint_msg.header.stamp = this->now();
     velocity_setpoint_msg.header.frame_id =
         hippo_common::tf2_utils::frame_id::BaseLink(this);
@@ -147,7 +148,7 @@ class AUVPoseControlModuleNode : public rclcpp::Node {
 
   PosPModuleInterface* pos_control_module_interface;
   AttSkewSymmetricPModuleInterface* att_control_module_interface;
-  hippo_msgs::msg::ControlTarget setpoint_target_;
+  hippo_control_msgs::msg::ControlTarget setpoint_target_;
   bool setpoint_timed_out_{false};
 
   bool got_first_setpoint_;
@@ -157,13 +158,14 @@ class AUVPoseControlModuleNode : public rclcpp::Node {
   //////////////////////////////////////////////////////////////////////////////
   // publishers
   //////////////////////////////////////////////////////////////////////////////
-  rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::VelocityControlTarget>::SharedPtr
       velocity_setpoint_pub_;
 
   //////////////////////////////////////////////////////////////////////////////
   // subscriptions
   //////////////////////////////////////////////////////////////////////////////
-  rclcpp::Subscription<hippo_msgs::msg::ControlTarget>::SharedPtr target_sub_;
+  rclcpp::Subscription<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      target_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_sub_;
 };
 }  // namespace bluerov_ctrl

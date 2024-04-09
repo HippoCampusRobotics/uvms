@@ -225,12 +225,12 @@ void EKFInterface::initialize(rclcpp::Node *node_ptr, bool publish_debug_info) {
       node_ptr_->create_publisher<geometry_msgs::msg::TwistStamped>(
           "~/ekf/accelerations", rclcpp::SystemDefaultsQoS());
   thrust_setpoint_sub_ =
-      node_ptr_->create_subscription<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ActuatorSetpoint>(
           "thrust_setpoint", rclcpp::SystemDefaultsQoS(),
           std::bind(&EKFInterface::thrustSetpointCallback, this,
                     std::placeholders::_1));
   torque_setpoint_sub_ =
-      node_ptr_->create_subscription<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ActuatorSetpoint>(
           "torque_setpoint", rclcpp::SystemDefaultsQoS(),
           std::bind(&EKFInterface::torqueSetpointCallback, this,
                     std::placeholders::_1));
@@ -535,12 +535,12 @@ rcl_interfaces::msg::SetParametersResult EKFInterface::onSetNoiseParamCallback(
 }
 
 void EKFInterface::thrustSetpointCallback(
-    const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
+    const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
   tau_thrusters_.segment<3>(0) = Eigen::Vector3d(msg->x, msg->y, msg->z);
 }
 
 void EKFInterface::torqueSetpointCallback(
-    const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
+    const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
   tau_thrusters_.segment<3>(3) = Eigen::Vector3d(msg->x, msg->y, msg->z);
 }
 
@@ -562,12 +562,12 @@ void KFFeedforwardInterface::initialize(rclcpp::Node *node_ptr,
       node_ptr_->create_publisher<geometry_msgs::msg::TwistStamped>(
           "~/kf_ff/accelerations", rclcpp::SystemDefaultsQoS());
   thrust_setpoint_sub_ =
-      node_ptr_->create_subscription<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ActuatorSetpoint>(
           "thrust_setpoint", rclcpp::SystemDefaultsQoS(),
           std::bind(&KFFeedforwardInterface::thrustSetpointCallback, this,
                     std::placeholders::_1));
   torque_setpoint_sub_ =
-      node_ptr_->create_subscription<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ActuatorSetpoint>(
           "torque_setpoint", rclcpp::SystemDefaultsQoS(),
           std::bind(&KFFeedforwardInterface::torqueSetpointCallback, this,
                     std::placeholders::_1));
@@ -942,12 +942,12 @@ KFFeedforwardInterface::onSetMovingAverageParamCallback(
 }
 
 void KFFeedforwardInterface::thrustSetpointCallback(
-    const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
+    const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
   tau_thrusters_.segment<3>(0) = Eigen::Vector3d(msg->x, msg->y, msg->z);
 }
 
 void KFFeedforwardInterface::torqueSetpointCallback(
-    const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
+    const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
   tau_thrusters_.segment<3>(3) = Eigen::Vector3d(msg->x, msg->y, msg->z);
 }
 

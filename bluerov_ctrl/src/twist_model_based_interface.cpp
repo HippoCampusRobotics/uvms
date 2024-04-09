@@ -32,28 +32,28 @@ void TwistModelBasedInterface::initialize(rclcpp::Node *node_ptr) {
   acceleration_msg_.twist.angular.z = 0.0;
   // initialize debug publishers
   debug_thrust_p_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/thrust_p_component", rclcpp::SystemDefaultsQoS());
   debug_thrust_i_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/thrust_i_component", rclcpp::SystemDefaultsQoS());
   debug_thrust_d_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/thrust_d_component", rclcpp::SystemDefaultsQoS());
   debug_thrust_model_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/thrust_model_component", rclcpp::SystemDefaultsQoS());
   debug_torque_p_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/torque_p_component", rclcpp::SystemDefaultsQoS());
   debug_torque_i_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/torque_i_component", rclcpp::SystemDefaultsQoS());
   debug_torque_d_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/torque_d_component", rclcpp::SystemDefaultsQoS());
   debug_torque_model_pub_ =
-      node_ptr_->create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
           "~/torque_model_component", rclcpp::SystemDefaultsQoS());
 
   accel_timeout_timer_ = rclcpp::create_timer(
@@ -200,8 +200,8 @@ void TwistModelBasedInterface::initializeController() {
 
 void TwistModelBasedInterface::update(
     const double &dt, const nav_msgs::msg::Odometry &msg,
-    hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-    hippo_msgs::msg::ActuatorSetpoint &out_torque) {
+    hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+    hippo_control_msgs::msg::ActuatorSetpoint &out_torque) {
   Eigen::Quaterniond att_eigen;
   Eigen::Vector3d vel_eigen, acc_eigen, ang_vel_eigen, ang_acc_eigen;
   Vector6d out_controls;
@@ -373,12 +373,12 @@ void TwistModelBasedInterface::publishDebugMsgs() {
 }
 
 void TwistModelBasedInterface::publishDebugActuator(
-    const rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
-        &thrust_pub,
-    const rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
-        &torque_pub,
+    const rclcpp::Publisher<
+        hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr &thrust_pub,
+    const rclcpp::Publisher<
+        hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr &torque_pub,
     const Vector6d &data) {
-  hippo_msgs::msg::ActuatorSetpoint setpoint;
+  hippo_control_msgs::msg::ActuatorSetpoint setpoint;
   setpoint.x = data(0);
   setpoint.y = data(1);
   setpoint.z = data(2);

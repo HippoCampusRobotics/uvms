@@ -28,6 +28,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(alpha_msgs REQUIRED)
 find_package(hippo_msgs REQUIRED)
+find_package(hippo_control_msgs REQUIRED)
 find_package(hippo_common REQUIRED)
 find_package(alpha_model REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -62,6 +63,7 @@ ament_target_dependencies(kin_ctrl_interface
         rclcpp
         alpha_msgs
         hippo_msgs
+        hippo_control_msgs
         hippo_common
         std_msgs
         sensor_msgs
@@ -102,6 +104,7 @@ ament_target_dependencies(estimation_drift_watchdog_node
         rclcpp
         nav_msgs
         hippo_msgs
+        hippo_control_msgs
         hippo_common)
 
 install(

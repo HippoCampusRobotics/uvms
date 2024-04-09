@@ -34,6 +34,7 @@ if (BUILD_TESTING)
     find_package(geometry_msgs)
     find_package(nav_msgs)
     find_package(hippo_msgs)
+    find_package(hippo_control_msgs)
     find_package(hippo_common)
     find_package(visualization_msgs)
     find_package(uvms_common)
@@ -51,6 +52,7 @@ if (BUILD_TESTING)
             geometry_msgs
             nav_msgs
             hippo_msgs
+            hippo_control_msgs
             hippo_common
             visualization_msgs
             uvms_msgs)
@@ -62,6 +64,7 @@ if (BUILD_TESTING)
             rclcpp
             geometry_msgs
             hippo_msgs
+            hippo_control_msgs
             hippo_common
             visualization_msgs
             uvms_common

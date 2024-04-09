@@ -1341,7 +1341,7 @@ void UVMSKinematicControlInterface::getEndeffectorPose(
 void UVMSKinematicControlInterface::onSetpointTimeout() {}
 
 void UVMSKinematicControlInterface::setSetpointTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr _msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg) {
   Eigen::Matrix<bool, 6, 1> mask = Eigen::Matrix<bool, 6, 1>::Ones();
   if ((_msg->mask & _msg->IGNORE_POSITION_X) == _msg->IGNORE_POSITION_X) {
     mask(0) = false;
@@ -1373,7 +1373,8 @@ void UVMSKinematicControlInterface::setSetpointTarget(
 }
 
 void UVMSKinematicControlInterface::setSetpointTargetForward(
-    const hippo_msgs::msg::ControlTarget::SharedPtr _msg, const double &dt) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg,
+    const double &dt) {
   Eigen::Vector3d pos_des, vel_des, ang_vel_des;
   Eigen::Quaterniond att_des;
   hippo_common::convert::RosToEigen(_msg->position, pos_des);

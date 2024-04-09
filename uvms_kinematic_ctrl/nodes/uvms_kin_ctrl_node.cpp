@@ -55,7 +55,8 @@ void UVMSKinematicControlNode::initPublishers() {
       create_publisher<alpha_msgs::msg::JointData>(topic, qos);
   topic = "velocity_setpoint";
   auv_vel_cmd_pub_ =
-      create_publisher<hippo_msgs::msg::VelocityControlTarget>(topic, qos);
+      create_publisher<hippo_control_msgs::msg::VelocityControlTarget>(topic,
+                                                                       qos);
 
   topic = "pose_endeffector";
   eef_pose_pub_ = create_publisher<geometry_msgs::msg::PoseStamped>(topic, qos);
@@ -79,7 +80,7 @@ void UVMSKinematicControlNode::initSubscriptions() {
 
   if (!use_prediction_) {
     topic = "traj_setpoint";
-    eef_traj_sub_ = create_subscription<hippo_msgs::msg::ControlTarget>(
+    eef_traj_sub_ = create_subscription<hippo_control_msgs::msg::ControlTarget>(
         topic, qos,
         std::bind(&UVMSKinematicControlNode::onSetpointTarget, this, _1));
   } else {
@@ -118,7 +119,7 @@ void UVMSKinematicControlNode::onSetpointTimeout() {
 }
 
 void UVMSKinematicControlNode::onSetpointTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr _msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg) {
   if (_msg->header.frame_id != "map") {
     RCLCPP_WARN_THROTTLE(
         get_logger(), *get_clock(), 1000, "%s",
@@ -180,9 +181,9 @@ void UVMSKinematicControlNode::onSetpointTargetPrediction(
                 "out anymore.");
     setpoint_timed_out_ = false;
   }
-  hippo_msgs::msg::ControlTarget target = _msg->target;
-  hippo_msgs::msg::ControlTarget::SharedPtr target_ptr =
-      std::make_shared<hippo_msgs::msg::ControlTarget>(target);
+  hippo_control_msgs::msg::ControlTarget target = _msg->target;
+  hippo_control_msgs::msg::ControlTarget::SharedPtr target_ptr =
+      std::make_shared<hippo_control_msgs::msg::ControlTarget>(target);
   controller_interface_->setSetpointTarget(target_ptr);
   *target_ptr = _msg->target_forward;
   controller_interface_->setSetpointTargetForward(target_ptr, _msg->dt);
@@ -210,7 +211,7 @@ void UVMSKinematicControlNode::onJointState(
 }
 
 void UVMSKinematicControlNode::publishControlCmds() {
-  hippo_msgs::msg::VelocityControlTarget auv_vel_msg;
+  hippo_control_msgs::msg::VelocityControlTarget auv_vel_msg;
   alpha_msgs::msg::JointData joint_vel_msg;
   geometry_msgs::msg::PoseStamped eef_pose;
 

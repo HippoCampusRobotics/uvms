@@ -54,8 +54,9 @@ UVMSTrajGen::UVMSTrajGen() : Node("traj_gen_node") {
   first_state_ = false;
   start_time_ = this->now();
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
-  eef_traj_pub_ = this->create_publisher<hippo_msgs::msg::ControlTarget>(
-      "traj_setpoint", qos);
+  eef_traj_pub_ =
+      this->create_publisher<hippo_control_msgs::msg::ControlTarget>(
+          "traj_setpoint", qos);
   if (publish_prediction_) {
     eef_traj_pub_prediction_ =
         this->create_publisher<uvms_msgs::msg::ControlTargetPrediction>(

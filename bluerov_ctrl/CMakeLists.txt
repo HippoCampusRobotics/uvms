@@ -30,6 +30,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(hippo_common REQUIRED)
 find_package(hippo_msgs REQUIRED)
+find_package(hippo_control_msgs REQUIRED)
 find_package(uvms_common REQUIRED)
 
 
@@ -63,7 +64,8 @@ ament_target_dependencies(velocity_control_interfaces_lib PUBLIC
         rclcpp
         nav_msgs
         hippo_common
-        hippo_msgs)
+        hippo_msgs
+        hippo_control_msgs)
 
 target_link_libraries(velocity_control_interfaces_lib PUBLIC
         velocity_control_lib)
@@ -79,6 +81,7 @@ ament_target_dependencies(velocity_control_node PUBLIC
         rclcpp
         nav_msgs
         hippo_msgs
+        hippo_control_msgs
         hippo_common
         uvms_common
         )
@@ -114,6 +117,7 @@ ament_target_dependencies(pose_control_module_interfaces_lib PUBLIC
         rclcpp
         nav_msgs
         hippo_common
+        hippo_control_msgs
         hippo_msgs)
 
 target_link_libraries(pose_control_module_interfaces_lib PUBLIC
@@ -130,6 +134,7 @@ ament_target_dependencies(pose_control_module_node PUBLIC
         rclcpp
         nav_msgs
         hippo_msgs
+        hippo_control_msgs
         hippo_common
         uvms_common
         )
@@ -145,6 +150,7 @@ ament_target_dependencies(estimation_drift_watchdog_node
         rclcpp
         nav_msgs
         hippo_msgs
+        hippo_control_msgs
         hippo_common)
 
 install(DIRECTORY launch config rviz
@@ -173,6 +179,7 @@ ament_export_dependencies(
         nav_msgs
         hippo_common
         hippo_msgs
+        hippo_control_msgs
         uvms_common)
 
 

@@ -23,7 +23,7 @@
 #include "bluerov_trajectory_gen/traj.hpp"
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "uvms_common/pose_to_pose_trajectory.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 
@@ -79,8 +79,9 @@ class MotionPlanner : public rclcpp::Node {
         break;
     }
 
-    setpoint_pub_ = this->create_publisher<hippo_msgs::msg::ControlTarget>(
-        "traj_setpoint", rclcpp::SystemDefaultsQoS());
+    setpoint_pub_ =
+        this->create_publisher<hippo_control_msgs::msg::ControlTarget>(
+            "traj_setpoint", rclcpp::SystemDefaultsQoS());
     state_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
         "odometry", rclcpp::SystemDefaultsQoS(),
         std::bind(&MotionPlanner::update_state, this, _1));
@@ -185,14 +186,15 @@ class MotionPlanner : public rclcpp::Node {
   Eigen::Quaterniond att_;
   rclcpp::Time stamp_;
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Publisher<hippo_msgs::msg::ControlTarget>::SharedPtr setpoint_pub_;
+  rclcpp::Publisher<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      setpoint_pub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr state_sub_;
   rclcpp::Publisher<std_msgs::msg::Int64>::SharedPtr status_pub_;
 
   uvms_common::p2p_trajectory::Pose2PoseTrajectory start_traj_;
   Traj* traj_gen_;
   rclcpp::Time start_time_;
-  hippo_msgs::msg::ControlTarget out_msg_;
+  hippo_control_msgs::msg::ControlTarget out_msg_;
   double v_max_init_;
   double w_max_init_;
   double t_;

@@ -12,6 +12,7 @@
     <depend>rclcpp</depend>
     <depend>uvms_common</depend>
     <depend>hippo_msgs</depend>
+    <depend>hippo_control_msgs</depend>
     <depend>hippo_common</depend>
     <depend>uvms_msgs</depend>
     <depend>nav_msgs</depend>

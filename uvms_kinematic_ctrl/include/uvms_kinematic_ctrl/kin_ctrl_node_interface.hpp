@@ -25,7 +25,7 @@
 #include "alpha_msgs/msg/joint_data.hpp"
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "kin_ctrl.hpp"
 #include "uvms_common/param_utils.hpp"
 #include "uvms_common/ros_param_utils.hpp"
@@ -364,10 +364,12 @@ class UVMSKinematicControlInterface {
                           const sensor_msgs::msg::JointState &manipulator_msg,
                           geometry_msgs::msg::Pose &out);
 
-  void setSetpointTarget(const hippo_msgs::msg::ControlTarget::SharedPtr _msg);
+  void setSetpointTarget(
+      const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg);
 
   void setSetpointTargetForward(
-      const hippo_msgs::msg::ControlTarget::SharedPtr _msg, const double &dt);
+      const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg,
+      const double &dt);
 
   void getControllerOutput(const nav_msgs::msg::Odometry &auv_msg,
                            const sensor_msgs::msg::JointState &manipulator_msg,

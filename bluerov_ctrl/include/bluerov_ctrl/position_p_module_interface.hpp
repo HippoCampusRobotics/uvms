@@ -23,8 +23,8 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "position_p_module.hpp"
 
 namespace bluerov_ctrl {
@@ -42,7 +42,8 @@ class PosPModuleInterface {
               const geometry_msgs::msg::Quaternion &att,
               geometry_msgs::msg::Vector3 &out_vel);
 
-  void setControlTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
+  void setControlTarget(
+      const hippo_control_msgs::msg::ControlTarget::SharedPtr msg);
   rcl_interfaces::msg::SetParametersResult onSetPgains(
       const std::vector<rclcpp::Parameter> &parameters);
   void declareParams();

@@ -288,9 +288,11 @@ void TargetVisualization::initialize(
   node_ptr_ = node_ptr;
   marker_ptr_ = marker_ptr;
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
-  target_sub_ = node_ptr_->create_subscription<hippo_msgs::msg::ControlTarget>(
-      "traj_setpoint", qos,
-      std::bind(&TargetVisualization::onTarget, this, std::placeholders::_1));
+  target_sub_ =
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ControlTarget>(
+          "traj_setpoint", qos,
+          std::bind(&TargetVisualization::onTarget, this,
+                    std::placeholders::_1));
 }
 
 void TargetVisualization::initializeMarkers() {
@@ -315,7 +317,7 @@ void TargetVisualization::initializeMarkers() {
 }
 
 void TargetVisualization::onTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr msg) {
   geometry_msgs::msg::Point p;
   if (msg->mask != msg->IGNORE_POSITION && msg->mask != msg->IGNORE_POSE) {
     marker_ptr_->markers[idx_map_.at("pos_des")].header.stamp =
@@ -343,10 +345,11 @@ void TargetFrameVisualization::initialize(
   node_ptr_ = node_ptr;
   marker_ptr_ = marker_ptr;
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
-  target_sub_ = node_ptr_->create_subscription<hippo_msgs::msg::ControlTarget>(
-      "traj_setpoint", qos,
-      std::bind(&TargetFrameVisualization::onTarget, this,
-                std::placeholders::_1));
+  target_sub_ =
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ControlTarget>(
+          "traj_setpoint", qos,
+          std::bind(&TargetFrameVisualization::onTarget, this,
+                    std::placeholders::_1));
 }
 
 void TargetFrameVisualization::initializeMarkers() {
@@ -422,7 +425,7 @@ void TargetFrameVisualization::initializeMarkers() {
 }
 
 void TargetFrameVisualization::onTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr msg) {
   geometry_msgs::msg::Point p;
 
   if (msg->mask != msg->IGNORE_POSE) {
@@ -498,10 +501,11 @@ void VelocityTargetVisualization::initialize(
   node_ptr_ = node_ptr;
   marker_ptr_ = marker_ptr;
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
-  target_sub_ = node_ptr_->create_subscription<hippo_msgs::msg::ControlTarget>(
-      "traj_setpoint", qos,
-      std::bind(&VelocityTargetVisualization::onTarget, this,
-                std::placeholders::_1));
+  target_sub_ =
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ControlTarget>(
+          "traj_setpoint", qos,
+          std::bind(&VelocityTargetVisualization::onTarget, this,
+                    std::placeholders::_1));
 }
 
 void VelocityTargetVisualization::initializeMarkers() {
@@ -531,7 +535,7 @@ void VelocityTargetVisualization::initializeMarkers() {
 }
 
 void VelocityTargetVisualization::onTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr msg) {
   double norm =
       sqrt(std::pow(msg->velocity.x, 2) + std::pow(msg->velocity.y, 2) +
            std::pow(msg->velocity.z, 2));
@@ -758,10 +762,11 @@ void AUVVelocityTargetVisualization::initialize(
   marker_ptr_ = marker_ptr;
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
   velocity_target_sub_ =
-      node_ptr_->create_subscription<hippo_msgs::msg::VelocityControlTarget>(
-          "velocity_setpoint", qos,
-          std::bind(&AUVVelocityTargetVisualization::onVelocityTarget, this,
-                    std::placeholders::_1));
+      node_ptr_
+          ->create_subscription<hippo_control_msgs::msg::VelocityControlTarget>(
+              "velocity_setpoint", qos,
+              std::bind(&AUVVelocityTargetVisualization::onVelocityTarget, this,
+                        std::placeholders::_1));
 }
 
 void AUVVelocityTargetVisualization::initializeMarkers() {
@@ -791,7 +796,7 @@ void AUVVelocityTargetVisualization::initializeMarkers() {
 }
 
 void AUVVelocityTargetVisualization::onVelocityTarget(
-    const hippo_msgs::msg::VelocityControlTarget::SharedPtr msg) {
+    const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr msg) {
   double norm = sqrt(std::pow(msg->velocity.linear.x, 2) +
                      std::pow(msg->velocity.linear.y, 2) +
                      std::pow(msg->velocity.linear.z, 2));
@@ -829,7 +834,7 @@ void AUVThrustVisualization::initialize(
   marker_ptr_ = marker_ptr;
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
   thrust_sub_ =
-      node_ptr_->create_subscription<hippo_msgs::msg::ActuatorSetpoint>(
+      node_ptr_->create_subscription<hippo_control_msgs::msg::ActuatorSetpoint>(
           "thrust_setpoint", qos,
           std::bind(&AUVThrustVisualization::onThrust, this,
                     std::placeholders::_1));
@@ -862,7 +867,7 @@ void AUVThrustVisualization::initializeMarkers() {
 }
 
 void AUVThrustVisualization::onThrust(
-    const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
+    const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg) {
   marker_ptr_->markers[idx_map_.at("thrust_dir")].header.stamp =
       msg->header.stamp;
 
@@ -898,11 +903,11 @@ void UVMSTargetVisualization::initialize(
 
 void UVMSTargetVisualization::onUVMSTarget(
     const uvms_msgs::msg::UVMSControlTarget::SharedPtr msg) {
-  hippo_msgs::msg::ControlTarget auv_msg;
+  hippo_control_msgs::msg::ControlTarget auv_msg;
   auv_msg = msg->auv;
   auv_msg.header = msg->header;
-  hippo_msgs::msg::ControlTarget::SharedPtr auv_msg_ptr =
-      std::make_shared<hippo_msgs::msg::ControlTarget>(auv_msg);
+  hippo_control_msgs::msg::ControlTarget::SharedPtr auv_msg_ptr =
+      std::make_shared<hippo_control_msgs::msg::ControlTarget>(auv_msg);
   onTarget(auv_msg_ptr);
 }
 }  // namespace uvms_visualization

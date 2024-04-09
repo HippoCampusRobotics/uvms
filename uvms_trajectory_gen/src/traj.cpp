@@ -104,7 +104,7 @@ void Traj::getSetpoint(const double &t, EefTrajSetpoint &out) {
 }
 
 void Traj::getSetpointMsg(const double &t,
-                          hippo_msgs::msg::ControlTarget &out) {
+                          hippo_control_msgs::msg::ControlTarget &out) {
   if (isFinished(t)) {
     *status_ptr_ = TrajStatus::finished_motion;
     publishStatus(TrajStatus::finished_motion);
@@ -125,19 +125,19 @@ void Traj::getSetpointMsg(const double &t,
       out.mask = 0;
       break;
     case 2:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Y;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Y;
       break;
     case 1:
       RCLCPP_ERROR(node_ptr_->get_logger(),
                    "No valid number of attitude dofs specified to be tracked. "
                    "Track only position");
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE;
       break;
     case 0:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE;
       break;
     default:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Y;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Y;
       break;
   }
 }

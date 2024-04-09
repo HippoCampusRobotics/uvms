@@ -23,7 +23,7 @@
 
 #include "hippo_common/param_utils.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 
 namespace bluerov_ctrl {
 using std::placeholders::_1;
@@ -74,7 +74,7 @@ class AUVEstimationWatchdogNode : public rclcpp::Node {
     rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
 
     topic = "traj_setpoint";
-    target_sub_ = create_subscription<hippo_msgs::msg::ControlTarget>(
+    target_sub_ = create_subscription<hippo_control_msgs::msg::ControlTarget>(
         topic, qos,
         std::bind(&AUVEstimationWatchdogNode::onSetpointTarget, this, _1));
 
@@ -84,7 +84,8 @@ class AUVEstimationWatchdogNode : public rclcpp::Node {
         std::bind(&AUVEstimationWatchdogNode::onOdometry, this, _1));
   }
 
-  void onSetpointTarget(const hippo_msgs::msg::ControlTarget::SharedPtr _msg) {
+  void onSetpointTarget(
+      const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg) {
     if (_msg->header.frame_id !=
         hippo_common::tf2_utils::frame_id::kInertialName) {
       RCLCPP_WARN_THROTTLE(
@@ -204,7 +205,8 @@ class AUVEstimationWatchdogNode : public rclcpp::Node {
   //////////////////////////////////////////////////////////////////////////////
   // subscriptions
   //////////////////////////////////////////////////////////////////////////////
-  rclcpp::Subscription<hippo_msgs::msg::ControlTarget>::SharedPtr target_sub_;
+  rclcpp::Subscription<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      target_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_sub_;
 };
 }  // namespace bluerov_ctrl

@@ -21,7 +21,7 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "uvms_common/param_utils.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 #include "uvms_common/rotation_utils.hpp"
@@ -69,7 +69,7 @@ class Traj {
   virtual void getSetpoint(const double &t, TrajSetpoint &out) = 0;
 
   virtual void getSetpointMsg(const double &t,
-                              hippo_msgs::msg::ControlTarget &out) = 0;
+                              hippo_control_msgs::msg::ControlTarget &out) = 0;
 
  protected:
   void publishStatus(int status);
@@ -85,7 +85,7 @@ class SingleDOFVelTraj : public Traj {
   void initialize(rclcpp::Node *node_ptr, bool output) override;
   void getSetpoint(const double &t, TrajSetpoint &out) override;
   void getSetpointMsg(const double &t,
-                      hippo_msgs::msg::ControlTarget &out) override;
+                      hippo_control_msgs::msg::ControlTarget &out) override;
   void setPositionPtr(Eigen::Vector3d *pos_ptr) { pos_ptr_ = pos_ptr; }
   void setAttitudePtr(Eigen::Quaterniond *att_ptr) { att_ptr_ = att_ptr; }
   void setStartedLoopFlagPtr(bool *started_loop) {
@@ -118,7 +118,7 @@ class SingleDOFSetpoints : public Traj {
   void initialize(rclcpp::Node *node_ptr, bool output) override;
   void getSetpoint(const double &t, TrajSetpoint &out) override;
   void getSetpointMsg(const double &t,
-                      hippo_msgs::msg::ControlTarget &out) override;
+                      hippo_control_msgs::msg::ControlTarget &out) override;
   void setPositionPtr(Eigen::Vector3d *pos_ptr) { pos_ptr_ = pos_ptr; }
   void setAttitudePtr(Eigen::Quaterniond *att_ptr) { att_ptr_ = att_ptr; }
 
@@ -145,7 +145,7 @@ class SingleDOFSinusoidal : public Traj {
   void initialize(rclcpp::Node *node_ptr, bool output) override;
   void getSetpoint(const double &t, TrajSetpoint &out) override;
   void getSetpointMsg(const double &t,
-                      hippo_msgs::msg::ControlTarget &out) override;
+                      hippo_control_msgs::msg::ControlTarget &out) override;
   void setPositionPtr(Eigen::Vector3d *pos_ptr) { pos_ptr_ = pos_ptr; }
   void setAttitudePtr(Eigen::Quaterniond *att_ptr) { att_ptr_ = att_ptr; }
 
@@ -167,7 +167,7 @@ class StationKeeping : public Traj {
   void initialize(rclcpp::Node *node_ptr, bool output) override;
   void getSetpoint(const double &t, TrajSetpoint &out) override;
   void getSetpointMsg(const double &t,
-                      hippo_msgs::msg::ControlTarget &out) override;
+                      hippo_control_msgs::msg::ControlTarget &out) override;
   void setPositionPtr(Eigen::Vector3d *pos_ptr) { pos_ptr_ = pos_ptr; }
   void setAttitudePtr(Eigen::Quaterniond *att_ptr) { att_ptr_ = att_ptr; }
 
@@ -187,7 +187,7 @@ class EightTraj : public Traj {
   void getSetpoint(const double &t, TrajSetpoint &out) override;
 
   void getSetpointMsg(const double &t,
-                      hippo_msgs::msg::ControlTarget &out) override;
+                      hippo_control_msgs::msg::ControlTarget &out) override;
 
  private:
   void getEightPos(Eigen::Vector3d &pos, const double &t);

@@ -23,9 +23,9 @@
 #include <visualization_msgs/msg/marker_array.hpp>
 
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/velocity_control_target.hpp"
 #include "uvms_msgs/msg/uvms_control_target.hpp"
 
 namespace uvms_visualization {
@@ -106,8 +106,9 @@ class TargetVisualization : public Visualization {
   void initializeMarkers() override;
 
  protected:
-  void onTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
-  rclcpp::Subscription<hippo_msgs::msg::ControlTarget>::SharedPtr target_sub_;
+  void onTarget(const hippo_control_msgs::msg::ControlTarget::SharedPtr msg);
+  rclcpp::Subscription<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      target_sub_;
 };
 
 class TargetFrameVisualization : public Visualization {
@@ -119,8 +120,9 @@ class TargetFrameVisualization : public Visualization {
   void initializeMarkers() override;
 
  protected:
-  void onTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
-  rclcpp::Subscription<hippo_msgs::msg::ControlTarget>::SharedPtr target_sub_;
+  void onTarget(const hippo_control_msgs::msg::ControlTarget::SharedPtr msg);
+  rclcpp::Subscription<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      target_sub_;
 };
 
 class UVMSTargetVisualization : public TargetVisualization {
@@ -144,8 +146,9 @@ class VelocityTargetVisualization : public Visualization {
   void initializeMarkers() override;
 
  private:
-  void onTarget(const hippo_msgs::msg::ControlTarget::SharedPtr msg);
-  rclcpp::Subscription<hippo_msgs::msg::ControlTarget>::SharedPtr target_sub_;
+  void onTarget(const hippo_control_msgs::msg::ControlTarget::SharedPtr msg);
+  rclcpp::Subscription<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      target_sub_;
 };
 
 class AUVPoseVisualization : public Visualization {
@@ -171,9 +174,9 @@ class AUVVelocityTargetVisualization : public Visualization {
 
  private:
   void onVelocityTarget(
-      const hippo_msgs::msg::VelocityControlTarget::SharedPtr msg);
-  rclcpp::Subscription<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
-      velocity_target_sub_;
+      const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr msg);
+  rclcpp::Subscription<hippo_control_msgs::msg::VelocityControlTarget>::
+      SharedPtr velocity_target_sub_;
 };
 
 class AUVThrustVisualization : public Visualization {
@@ -185,8 +188,8 @@ class AUVThrustVisualization : public Visualization {
   void initializeMarkers() override;
 
  private:
-  void onThrust(const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg);
-  rclcpp::Subscription<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  void onThrust(const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg);
+  rclcpp::Subscription<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       thrust_sub_;
 };
 

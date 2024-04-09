@@ -25,7 +25,7 @@
 #include "bluerov_ctrl/attitude_skew_symmetric_p_module_interface.hpp"
 #include "bluerov_ctrl/position_p_module_interface.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "hippo_control_msgs/msg/velocity_control_target.hpp"
 #include "uvms_msgs/msg/uvms_control_target.hpp"
 
 namespace uvms_kin_ctrl {
@@ -57,8 +57,8 @@ class UVMSKinematicConfigurationControl {
     manipulator_cmd_pub_ = pub;
   }
   void setAUVCmdPublisherPtr(
-      const rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
-          &pub) {
+      const rclcpp::Publisher<
+          hippo_control_msgs::msg::VelocityControlTarget>::SharedPtr &pub) {
     auv_vel_cmd_pub_ = pub;
   }
 
@@ -97,7 +97,7 @@ class UVMSKinematicConfigurationControl {
 
   /// Publishers
   rclcpp::Publisher<alpha_msgs::msg::JointData>::SharedPtr manipulator_cmd_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
+  rclcpp::Publisher<hippo_control_msgs::msg::VelocityControlTarget>::SharedPtr
       auv_vel_cmd_pub_;
 
   /// Subscriptions

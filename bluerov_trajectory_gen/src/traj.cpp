@@ -204,8 +204,8 @@ void SingleDOFVelTraj::getSetpoint(const double &t, TrajSetpoint &out) {
   *gen_start_traj_ptr_ = true;
 }
 
-void SingleDOFVelTraj::getSetpointMsg(const double &t,
-                                      hippo_msgs::msg::ControlTarget &out) {
+void SingleDOFVelTraj::getSetpointMsg(
+    const double &t, hippo_control_msgs::msg::ControlTarget &out) {
   TrajSetpoint setpoint;
   getSetpoint(t, setpoint);
   out.header.stamp = node_ptr_->now();
@@ -222,22 +222,22 @@ void SingleDOFVelTraj::getSetpointMsg(const double &t,
   }
   switch (idx_) {
     case 0:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_POSITION_Y;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_POSITION_Y;
       break;
     case 1:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_POSITION_Y;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_POSITION_Y;
       break;
     case 2:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_POSITION_Z;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_POSITION_Z;
       break;
     case 3:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE_X;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE_X;
       break;
     case 4:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Y;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Y;
       break;
     case 5:
-      out.mask = hippo_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Z;
+      out.mask = hippo_control_msgs::msg::ControlTarget::IGNORE_ATTITUDE_Z;
       break;
     default:
       std::cerr << "Index " << idx_ << " is out of range for ignoring state"
@@ -346,8 +346,8 @@ void SingleDOFSetpoints::getSetpoint(const double &t, TrajSetpoint &out) {
   // out.ang_vel(idx_) = setpoints_[idx_setpoint_] - rpy(idx_);
 }
 
-void SingleDOFSetpoints::getSetpointMsg(const double &t,
-                                        hippo_msgs::msg::ControlTarget &out) {
+void SingleDOFSetpoints::getSetpointMsg(
+    const double &t, hippo_control_msgs::msg::ControlTarget &out) {
   TrajSetpoint setpoint;
   getSetpoint(t, setpoint);
   out.header.stamp = node_ptr_->now();
@@ -475,8 +475,8 @@ void SingleDOFSinusoidal::getSetpoint(const double &t, TrajSetpoint &out) {
   }
 }
 
-void SingleDOFSinusoidal::getSetpointMsg(const double &t,
-                                         hippo_msgs::msg::ControlTarget &out) {
+void SingleDOFSinusoidal::getSetpointMsg(
+    const double &t, hippo_control_msgs::msg::ControlTarget &out) {
   TrajSetpoint setpoint;
   getSetpoint(t, setpoint);
   out.header.stamp = node_ptr_->now();
@@ -538,8 +538,8 @@ void StationKeeping::getSetpoint(const double &t, TrajSetpoint &out) {
   publishStatus(1);
 }
 
-void StationKeeping::getSetpointMsg(const double &t,
-                                    hippo_msgs::msg::ControlTarget &out) {
+void StationKeeping::getSetpointMsg(
+    const double &t, hippo_control_msgs::msg::ControlTarget &out) {
   TrajSetpoint setpoint;
   getSetpoint(t, setpoint);
   out.header.stamp = node_ptr_->now();
@@ -604,7 +604,7 @@ void EightTraj::getSetpoint(const double &t, TrajSetpoint &out) {
 }
 
 void EightTraj::getSetpointMsg(const double &t,
-                               hippo_msgs::msg::ControlTarget &out) {
+                               hippo_control_msgs::msg::ControlTarget &out) {
   TrajSetpoint setpoint;
   getSetpoint(t, setpoint);
   out.header.stamp = node_ptr_->now();

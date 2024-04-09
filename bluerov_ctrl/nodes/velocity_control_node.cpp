@@ -64,11 +64,11 @@ void AUVVelocityControlNode::initPublishers() {
   std::string topic;
 
   topic = "thrust_setpoint";
-  thrust_pub_ = create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+  thrust_pub_ = create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
       topic, rclcpp::SensorDataQoS());
 
   topic = "torque_setpoint";
-  torque_pub_ = create_publisher<hippo_msgs::msg::ActuatorSetpoint>(
+  torque_pub_ = create_publisher<hippo_control_msgs::msg::ActuatorSetpoint>(
       topic, rclcpp::SensorDataQoS());
 }
 
@@ -77,9 +77,10 @@ void AUVVelocityControlNode::initSubscriptions() {
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
 
   topic = "velocity_setpoint";
-  target_sub_ = create_subscription<hippo_msgs::msg::VelocityControlTarget>(
-      topic, qos,
-      std::bind(&AUVVelocityControlNode::onSetpointTarget, this, _1));
+  target_sub_ =
+      create_subscription<hippo_control_msgs::msg::VelocityControlTarget>(
+          topic, qos,
+          std::bind(&AUVVelocityControlNode::onSetpointTarget, this, _1));
 
   topic = "odometry";
   odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
@@ -92,9 +93,9 @@ void AUVVelocityControlNode::initSubscriptions() {
                 std::placeholders::_1));
 }
 
-hippo_msgs::msg::ActuatorSetpoint AUVVelocityControlNode::zeroMsg(
+hippo_control_msgs::msg::ActuatorSetpoint AUVVelocityControlNode::zeroMsg(
     rclcpp::Time _stamp) {
-  hippo_msgs::msg::ActuatorSetpoint msg;
+  hippo_control_msgs::msg::ActuatorSetpoint msg;
   msg.header.stamp = _stamp;
   msg.x = 0.0;
   msg.y = 0.0;
@@ -129,7 +130,7 @@ void AUVVelocityControlNode::onStateTimeout() {
 }
 
 void AUVVelocityControlNode::onSetpointTarget(
-    const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg) {
+    const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg) {
   if (_msg->header.frame_id !=
       hippo_common::tf2_utils::frame_id::BaseLink(this)) {
     RCLCPP_WARN_THROTTLE(
@@ -174,8 +175,8 @@ void AUVVelocityControlNode::onOdometry(
     states_timed_out_ = false;
   }
 
-  hippo_msgs::msg::ActuatorSetpoint thrust_msg;
-  hippo_msgs::msg::ActuatorSetpoint torque_msg;
+  hippo_control_msgs::msg::ActuatorSetpoint thrust_msg;
+  hippo_control_msgs::msg::ActuatorSetpoint torque_msg;
 
   if (!estimation_feasible_) {
     thrust_msg = zeroMsg(now());

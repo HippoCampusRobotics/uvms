@@ -37,7 +37,7 @@ void AttSkewSymmetricPModuleInterface::update(
 }
 
 void AttSkewSymmetricPModuleInterface::setControlTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr msg) {
   Eigen::Quaterniond attitude;
   hippo_common::convert::RosToEigen(msg->attitude, attitude);
   Eigen::Vector3d mask = Eigen::Vector3d::Ones();

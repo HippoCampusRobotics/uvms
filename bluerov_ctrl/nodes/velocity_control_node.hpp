@@ -24,8 +24,8 @@
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
-#include "hippo_msgs/msg/velocity_control_target.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/velocity_control_target.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 
 namespace bluerov_ctrl {
@@ -42,11 +42,11 @@ class AUVVelocityControlNode : public rclcpp::Node {
   void declareParams();
   void initPublishers();
   void initSubscriptions();
-  hippo_msgs::msg::ActuatorSetpoint zeroMsg(rclcpp::Time _stamp);
+  hippo_control_msgs::msg::ActuatorSetpoint zeroMsg(rclcpp::Time _stamp);
   void onSetpointTimeout();
   void onStateTimeout();
   void onSetpointTarget(
-      const hippo_msgs::msg::VelocityControlTarget::SharedPtr _msg);
+      const hippo_control_msgs::msg::VelocityControlTarget::SharedPtr _msg);
   void onOdometry(const nav_msgs::msg::Odometry::SharedPtr _msg);
   void onEstimationDriftShutdown(const std_msgs::msg::Bool::SharedPtr _msg);
 
@@ -73,16 +73,18 @@ class AUVVelocityControlNode : public rclcpp::Node {
   //////////////////////////////////////////////////////////////////////////////
   // publishers
   //////////////////////////////////////////////////////////////////////////////
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr thrust_pub_;
-  rclcpp::Publisher<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr torque_pub_;
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
+      thrust_pub_;
+  rclcpp::Publisher<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
+      torque_pub_;
   // rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr
   // setpoint_pub_;
 
   //////////////////////////////////////////////////////////////////////////////
   // subscriptions
   //////////////////////////////////////////////////////////////////////////////
-  rclcpp::Subscription<hippo_msgs::msg::VelocityControlTarget>::SharedPtr
-      target_sub_;
+  rclcpp::Subscription<
+      hippo_control_msgs::msg::VelocityControlTarget>::SharedPtr target_sub_;
   rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_sub_;
   rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr
       estimation_drift_shutdown_sub_;

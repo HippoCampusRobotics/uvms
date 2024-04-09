@@ -24,7 +24,7 @@
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
 #include "kf.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 
@@ -128,17 +128,17 @@ class EKFInterface : public KFInterface {
       const std::vector<rclcpp::Parameter> &parameters) override;
 
   void thrustSetpointCallback(
-      const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg);
+      const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg);
 
   void torqueSetpointCallback(
-      const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg);
+      const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg);
 
   void manipulatorWrenchCallback(
       const geometry_msgs::msg::WrenchStamped::SharedPtr msg);
 
-  rclcpp::Subscription<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Subscription<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       thrust_setpoint_sub_;
-  rclcpp::Subscription<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Subscription<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       torque_setpoint_sub_;
   rclcpp::Subscription<geometry_msgs::msg::WrenchStamped>::SharedPtr
       tau_manipulator_sub_;
@@ -175,17 +175,17 @@ class KFFeedforwardInterface : public KFInterface {
       const std::vector<rclcpp::Parameter> &parameters);
 
   void thrustSetpointCallback(
-      const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg);
+      const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg);
 
   void torqueSetpointCallback(
-      const hippo_msgs::msg::ActuatorSetpoint::SharedPtr msg);
+      const hippo_control_msgs::msg::ActuatorSetpoint::SharedPtr msg);
 
   void manipulatorWrenchCallback(
       const geometry_msgs::msg::WrenchStamped::SharedPtr msg);
 
-  rclcpp::Subscription<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Subscription<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       thrust_setpoint_sub_;
-  rclcpp::Subscription<hippo_msgs::msg::ActuatorSetpoint>::SharedPtr
+  rclcpp::Subscription<hippo_control_msgs::msg::ActuatorSetpoint>::SharedPtr
       torque_setpoint_sub_;
   rclcpp::Subscription<geometry_msgs::msg::WrenchStamped>::SharedPtr
       tau_manipulator_sub_;

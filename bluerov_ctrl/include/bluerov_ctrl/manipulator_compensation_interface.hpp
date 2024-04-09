@@ -24,7 +24,7 @@
 #include "hippo_common/convert.hpp"
 #include "hippo_common/param_utils.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/actuator_setpoint.hpp"
+#include "hippo_control_msgs/msg/actuator_setpoint.hpp"
 #include "manipulator_compensation.hpp"
 
 namespace bluerov_ctrl {
@@ -41,8 +41,8 @@ class ManipulatorCompInterface {
   bool isTimedOut() { return timed_out_; }
 
   void addCompensation(const geometry_msgs::msg::Quaternion &msg,
-                       hippo_msgs::msg::ActuatorSetpoint &out_thrust,
-                       hippo_msgs::msg::ActuatorSetpoint &out_torque);
+                       hippo_control_msgs::msg::ActuatorSetpoint &out_thrust,
+                       hippo_control_msgs::msg::ActuatorSetpoint &out_torque);
 
   void onWrench(const geometry_msgs::msg::WrenchStamped::SharedPtr msg);
 

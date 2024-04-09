@@ -42,17 +42,20 @@ find_package(ignition-common4 REQUIRED)
 set(GZ_COMMON_VER ${ignition-common4_VERSION_MAJOR})
 
 find_package(alpha_msgs REQUIRED)
+find_package(hippo_control_msgs REQUIRED)
 find_package(hippo_msgs REQUIRED)
 
 add_executable(bridge
         src/static_bridge.cpp)
 
 ament_target_dependencies(bridge
-        rclcpp
-        ros_gz_bridge
-        ignition-transport${GZ_TRANSPORT_VER}
-        alpha_msgs
-        hippo_msgs)
+  rclcpp
+  ros_gz_bridge
+  ignition-transport${GZ_TRANSPORT_VER}
+  alpha_msgs
+  hippo_msgs
+  hippo_control_msgs
+)
 
 
 install(DIRECTORY launch config models

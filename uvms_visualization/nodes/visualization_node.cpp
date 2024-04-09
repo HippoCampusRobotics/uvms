@@ -17,7 +17,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <visualization_msgs/msg/marker_array.hpp>
 
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 #include "uvms_visualization/visualizations.hpp"
 

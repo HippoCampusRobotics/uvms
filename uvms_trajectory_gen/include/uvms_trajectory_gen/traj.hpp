@@ -21,7 +21,7 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "uvms_common/param_utils.hpp"
 #include "uvms_common/pose_to_pose_trajectory.hpp"
 #include "uvms_common/ros_param_utils.hpp"
@@ -103,7 +103,8 @@ class Traj {
 
   virtual void getSetpoint(const double &t, EefTrajSetpoint &out);
 
-  void getSetpointMsg(const double &t, hippo_msgs::msg::ControlTarget &out);
+  void getSetpointMsg(const double &t,
+                      hippo_control_msgs::msg::ControlTarget &out);
 
  protected:
   void declareStandardParams(bool output);

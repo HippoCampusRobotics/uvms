@@ -22,7 +22,7 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "uvms_common/pose_to_pose_trajectory.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 #include "uvms_msgs/msg/control_target_prediction.hpp"
@@ -54,7 +54,8 @@ class UVMSTrajGen : public rclcpp::Node {
   void sendSetpoint();
   void updateEef(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
 
-  rclcpp::Publisher<hippo_msgs::msg::ControlTarget>::SharedPtr eef_traj_pub_;
+  rclcpp::Publisher<hippo_control_msgs::msg::ControlTarget>::SharedPtr
+      eef_traj_pub_;
   rclcpp::Publisher<uvms_msgs::msg::ControlTargetPrediction>::SharedPtr
       eef_traj_pub_prediction_;
   rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr
@@ -80,7 +81,7 @@ class UVMSTrajGen : public rclcpp::Node {
   int n_runs_;
   int run_counter_ = 0;
 
-  hippo_msgs::msg::ControlTarget out_msg_;
+  hippo_control_msgs::msg::ControlTarget out_msg_;
   uvms_msgs::msg::ControlTargetPrediction out_msg_prediction_;
   bool publish_prediction_ = false;
 
