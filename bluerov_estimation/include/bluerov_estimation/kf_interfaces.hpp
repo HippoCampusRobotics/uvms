@@ -38,7 +38,7 @@ enum KFType : int {
 
 class KFInterface {
  public:
-  KFInterface(){};
+  KFInterface() {};
 
   bool isInitialized() { return initialized_; }
 
@@ -79,7 +79,7 @@ class KFInterface {
 
 class KFLinearInterface : public KFInterface {
  public:
-  KFLinearInterface(){};
+  KFLinearInterface() {};
   void initialize(rclcpp::Node *node_ptr, bool publish_debug_info) override;
 
   void initializeKF() override;
@@ -108,7 +108,7 @@ class KFLinearInterface : public KFInterface {
 
 class EKFInterface : public KFInterface {
  public:
-  EKFInterface(){};
+  EKFInterface() {};
   void initialize(rclcpp::Node *node_ptr, bool publish_debug_info) override;
 
   void initializeKF() override;
@@ -152,7 +152,7 @@ class EKFInterface : public KFInterface {
 
 class KFFeedforwardInterface : public KFInterface {
  public:
-  KFFeedforwardInterface(){};
+  KFFeedforwardInterface() {};
   void initialize(rclcpp::Node *node_ptr, bool publish_debug_info) override;
 
   void initializeKF() override;

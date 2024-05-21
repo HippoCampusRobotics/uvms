@@ -12,25 +12,31 @@ def generate_launch_description():
     use_sim_time_launch_arg = launch.actions.DeclareLaunchArgument(
         name='use_sim_time',
         default_value=str(False),
-        description='decide if sim time should be used for nodes')
+        description='decide if sim time should be used for nodes',
+    )
     vehicle_name_launch_arg = launch.actions.DeclareLaunchArgument(
         name='vehicle_name',
         default_value='bluerov',
-        description='used for node namespace')
+        description='used for node namespace',
+    )
 
     config_file_launch_arg = launch.actions.DeclareLaunchArgument(
-        name='config_file', description='config file with control parameters')
+        name='config_file', description='config file with control parameters'
+    )
 
     control_node = launch_ros.actions.Node(
         package='bluerov_ctrl',
         executable='pose_control_module_node',
         namespace=vehicle_name,
-        parameters=[{
-            'use_sim_time': use_sim_time
-        }, config_file],
-        output='screen')
+        parameters=[{'use_sim_time': use_sim_time}, config_file],
+        output='screen',
+    )
 
-    return launch.LaunchDescription([
-        use_sim_time_launch_arg, vehicle_name_launch_arg,
-        config_file_launch_arg, control_node
-    ])
+    return launch.LaunchDescription(
+        [
+            use_sim_time_launch_arg,
+            vehicle_name_launch_arg,
+            config_file_launch_arg,
+            control_node,
+        ]
+    )

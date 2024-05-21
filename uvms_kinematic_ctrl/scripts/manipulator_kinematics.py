@@ -9,9 +9,12 @@ e3 = np.array([[0.0], [0.0], [1.0]])
 
 
 def solve(  # noqa: C901
-        manipulator: Manipulator, col_constr: [],
-        joint_limits: [JointLimitConstraint], q0: np.ndarray,
-        eps: float) -> (bool, np.ndarray):
+    manipulator: Manipulator,
+    col_constr: [],
+    joint_limits: [JointLimitConstraint],
+    q0: np.ndarray,
+    eps: float,
+) -> (bool, np.ndarray):
     q = q0  # initialize
 
     manipulator.updateTrafos(q)
@@ -45,13 +48,17 @@ def solve(  # noqa: C901
                     jacobian = np.vstack((jacobian, jacobian_tmp))
                 else:
                     jacobian = jacobian_tmp
-                dq += projector @ (jacobian_tmp.transpose() @ np.linalg.inv(
-                    (jacobian_tmp @ jacobian_tmp.transpose()))
-                                   @ constraint.getTaskError()).reshape(-1, 1)
+                dq += projector @ (
+                    jacobian_tmp.transpose()
+                    @ np.linalg.inv((jacobian_tmp @ jacobian_tmp.transpose()))
+                    @ constraint.getTaskError()
+                ).reshape(-1, 1)
                 projector = projector @ (
-                    np.eye(4) - jacobian_tmp.transpose() @ np.linalg.inv(
-                        (jacobian_tmp @ jacobian_tmp.transpose()))
-                    @ jacobian_tmp)
+                    np.eye(4)
+                    - jacobian_tmp.transpose()
+                    @ np.linalg.inv((jacobian_tmp @ jacobian_tmp.transpose()))
+                    @ jacobian_tmp
+                )
         q += dq
         manipulator.updateTrafos(q)
 
@@ -82,7 +89,6 @@ def solve(  # noqa: C901
 
 
 class JointLimitConstraint:
-
     def __init__(self, q_low: float, q_up: float, delta: float, idx: int):
         self.low = q_low
         self.up = q_up
@@ -94,14 +100,16 @@ class JointLimitConstraint:
         self.idx = idx
 
     def update(self, q: np.ndarray):
-        if (q[self.idx] >= self.up - self.delta):
+        if q[self.idx] >= self.up - self.delta:
             self.active = True
-            self.error = np.array([[self.up - self.delta - q[self.idx]]
-                                   ]).reshape(-1, 1)
-        elif (q[self.idx] <= self.low + self.delta):
+            self.error = np.array(
+                [[self.up - self.delta - q[self.idx]]]
+            ).reshape(-1, 1)
+        elif q[self.idx] <= self.low + self.delta:
             self.active = True
-            self.error = np.array([[self.low + self.delta - q[self.idx]]
-                                   ]).reshape(-1, 1)
+            self.error = np.array(
+                [[self.low + self.delta - q[self.idx]]]
+            ).reshape(-1, 1)
         else:
             self.active = False
 
@@ -116,9 +124,8 @@ class JointLimitConstraint:
 
 
 class PlaneConstraint:
-
     def __init__(self, n: [np.ndarray], p: [np.ndarray], link_idx: int):
-        assert (len(n) == len(p))
+        assert len(n) == len(p)
         self.n = n
         self.plane_index = 0
         self.p = p
@@ -134,7 +141,6 @@ class PlaneConstraint:
         return self.error
 
     def getDistance(self, p: np.ndarray, idx) -> float:
-
         return (self.n[idx].transpose() @ (p - self.p[idx])).item()
 
     def inCollision(self, p: np.ndarray) -> bool:
@@ -165,9 +171,9 @@ class PlaneConstraint:
 
 
 class EllipseConstraint:
-
-    def __init__(self, ax: float, az: float, cx: float, cz: float,
-                 link_idx: int):
+    def __init__(
+        self, ax: float, az: float, cx: float, cz: float, link_idx: int
+    ):
         self.ax = ax
         self.az = az
         self.cx = cx
@@ -184,9 +190,11 @@ class EllipseConstraint:
         return self.error
 
     def getDistance(self, p: np.ndarray) -> float:
-
-        return (p[0] - self.cx)**2 / self.ax**2 + (p[2] -
-                                                   self.cz)**2 / self.az**2 - 1
+        return (
+            (p[0] - self.cx) ** 2 / self.ax**2
+            + (p[2] - self.cz) ** 2 / self.az**2
+            - 1
+        )
 
     def inCollision(self, p: np.ndarray) -> bool:
         if self.getDistance(p) >= 0:
@@ -198,8 +206,9 @@ class EllipseConstraint:
         J_tmp = np.zeros((3, 4))
         manipulator.getLinkPositionJacobian(J_tmp, self.link_idx)
         self.jacobian = 2 * (
-            (position[0] - self.cx) / self.ax**2 * J_tmp[0, :].reshape(1, -1) +
-            (position[2] - self.cz) / self.az**2 * J_tmp[2, :].reshape(1, -1))
+            (position[0] - self.cx) / self.ax**2 * J_tmp[0, :].reshape(1, -1)
+            + (position[2] - self.cz) / self.az**2 * J_tmp[2, :].reshape(1, -1)
+        )
         self.error = np.array([[np.inf]])
 
         if self.inCollision(position):
@@ -214,39 +223,45 @@ class EllipseConstraint:
 
 
 class Trafo:
-
     def __init__(self, R=None, p=None):
         self.R = R if R is not None else np.zeros((3, 3))
         self.p = p if p is not None else np.zeros((3, 1))
 
     def fromDH(self, d, theta, a, alpha):
         self.p = np.array([[a * np.cos(theta)], [a * np.sin(theta)], [d]])
-        self.R = np.array([[
-            np.cos(theta), -np.sin(theta) * np.cos(alpha),
-            np.sin(theta) * np.sin(alpha)
-        ],
-                           [
-                               np.sin(theta),
-                               np.cos(theta) * np.cos(alpha),
-                               -np.cos(theta) * np.sin(alpha)
-                           ], [0, np.sin(alpha),
-                               np.cos(alpha)]])
+        self.R = np.array(
+            [
+                [
+                    np.cos(theta),
+                    -np.sin(theta) * np.cos(alpha),
+                    np.sin(theta) * np.sin(alpha),
+                ],
+                [
+                    np.sin(theta),
+                    np.cos(theta) * np.cos(alpha),
+                    -np.cos(theta) * np.sin(alpha),
+                ],
+                [0, np.sin(alpha), np.cos(alpha)],
+            ]
+        )
 
     def fromRPY(self, vec: np.ndarray, r, p, y):
         self.p = vec
         self.R = np.array(
-            [[
-                np.cos(y) * np.cos(p),
-                np.cos(y) * np.sin(p) * np.sin(r) - np.cos(r) * np.sin(y),
-                np.sin(y) * np.sin(r) + np.cos(y) * np.cos(r) * np.sin(p)
-            ],
-             [
-                 np.cos(p) * np.sin(y),
-                 np.cos(y) * np.cos(r) + np.sin(y) * np.sin(p) * np.sin(r),
-                 np.cos(r) * np.sin(y) * np.sin(p) - np.cos(y) * np.sin(r)
-             ], [-np.sin(p),
-                 np.cos(p) * np.sin(r),
-                 np.cos(p) * np.cos(r)]])
+            [
+                [
+                    np.cos(y) * np.cos(p),
+                    np.cos(y) * np.sin(p) * np.sin(r) - np.cos(r) * np.sin(y),
+                    np.sin(y) * np.sin(r) + np.cos(y) * np.cos(r) * np.sin(p),
+                ],
+                [
+                    np.cos(p) * np.sin(y),
+                    np.cos(y) * np.cos(r) + np.sin(y) * np.sin(p) * np.sin(r),
+                    np.cos(r) * np.sin(y) * np.sin(p) - np.cos(y) * np.sin(r),
+                ],
+                [-np.sin(p), np.cos(p) * np.sin(r), np.cos(p) * np.cos(r)],
+            ]
+        )
 
     def transform(self, vec: np.ndarray) -> np.ndarray:
         return self.R @ vec + self.p
@@ -261,8 +276,9 @@ class Trafo:
         return self.R.transpose() @ vec
 
     def matrix(self):
-        return np.vstack((np.hstack(
-            (self.R, self.p)), np.array([[0.0, 0.0, 0.0, 1.0]])))
+        return np.vstack(
+            (np.hstack((self.R, self.p)), np.array([[0.0, 0.0, 0.0, 1.0]]))
+        )
 
     def __rmul__(self, other: Trafo) -> Trafo:
         return Trafo(other.R @ self.R, other.R @ self.p + other.p)
@@ -272,12 +288,10 @@ class Trafo:
 
 
 class Manipulator:
-
     def __init__(self):
         self.tfs = [Trafo() for i in range(6)]
 
     def updateTrafos(self, q: np.ndarray):
-
         assert len(self.tfs) == 6
         assert np.shape(q)[0] == 4
         self.tfs[0].fromDH(0.0462, q[0][0] + np.pi, 0.02, np.pi / 2)
@@ -298,32 +312,39 @@ class Manipulator:
     def getEefPositionJacobian(self, J: np.ndarray):
         for i in range(0, 4):
             if i == 0:
-
-                J[:, i] = np.cross(e3,
-                                   self.tfs[-1].matrix()[0:3, 3].reshape(3, 1),
-                                   axis=0).reshape(-1)
+                J[:, i] = np.cross(
+                    e3, self.tfs[-1].matrix()[0:3, 3].reshape(3, 1), axis=0
+                ).reshape(-1)
             else:
                 J[:, i] = np.cross(
                     self.tfs[i - 1].matrix()[0:3, 0:3] @ e3,
-                    (self.tfs[-1].matrix()[0:3, 3].reshape(3, 1) -
-                     self.tfs[i - 1].matrix()[0:3, 3].reshape(3, 1)),
-                    axis=0).reshape(-1)
+                    (
+                        self.tfs[-1].matrix()[0:3, 3].reshape(3, 1)
+                        - self.tfs[i - 1].matrix()[0:3, 3].reshape(3, 1)
+                    ),
+                    axis=0,
+                ).reshape(-1)
 
     # idx 0 => link 1
     def getLinkPositionJacobian(self, J: np.ndarray, idx):
         for i in range(0, 4):
             if i == 0:
-                J[:, i] = np.cross(e3,
-                                   self.tfs[idx].matrix()[0:3, 3].reshape(3, 1),
-                                   axis=0).reshape(-1)
+                J[:, i] = np.cross(
+                    e3, self.tfs[idx].matrix()[0:3, 3].reshape(3, 1), axis=0
+                ).reshape(-1)
             elif i <= idx:  # axis x position in world coordinate system
                 J[:, i] = np.cross(
                     self.tfs[i - 1].matrix()[0:3, 0:3] @ e3,
-                    (self.tfs[idx].matrix()[0:3, 3].reshape(3, 1) -
-                     self.tfs[i - 1].matrix()[0:3, 3].reshape(3, 1)),
-                    axis=0).reshape(-1)
+                    (
+                        self.tfs[idx].matrix()[0:3, 3].reshape(3, 1)
+                        - self.tfs[i - 1].matrix()[0:3, 3].reshape(3, 1)
+                    ),
+                    axis=0,
+                ).reshape(-1)
             else:
-                J[:, i] = np.zeros(3, )
+                J[:, i] = np.zeros(
+                    3,
+                )
 
     # idx 0 => link 1
     def getLinkPosition(self, idx: int):
@@ -332,7 +353,7 @@ class Manipulator:
     # idx 0 => link 1
     def getLinkPositions(self):
         x = np.zeros((3, len(self.tfs) + 1))
-        x[:, 0] = np.zeros((3, ))
+        x[:, 0] = np.zeros((3,))
         for i in range(len(self.tfs)):
             x[:, i + 1] = self.tfs[i].matrix()[0:3, 3]
         return x

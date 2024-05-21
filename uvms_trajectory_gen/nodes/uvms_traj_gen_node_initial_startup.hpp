@@ -53,7 +53,7 @@ struct ManipulatorTrajSetpoint {
 
 class UVMSTrajGenStartUp {
  public:
-  UVMSTrajGenStartUp(){};
+  UVMSTrajGenStartUp() {};
   bool startupFinished() { return finished_; }
 
   void setTrajStatusPtr(int* status_ptr) { status_ptr_ = status_ptr; }

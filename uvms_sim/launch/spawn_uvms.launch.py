@@ -9,87 +9,115 @@ def generate_launch_description():
     use_sim_time = launch.substitutions.LaunchConfiguration('use_sim_time')
     vehicle_name = launch.substitutions.LaunchConfiguration('vehicle_name')
     simulate_kinematics = launch.substitutions.LaunchConfiguration(
-        'simulate_kinematics')
+        'simulate_kinematics'
+    )
     model_path = str(package_path / 'models/urdf/uvms.urdf.xacro')
     tf_tree_model_path = str(package_path / 'models/urdf/uvms_rviz.urdf.xacro')
 
     use_sim_time_launch_arg = launch.actions.DeclareLaunchArgument(
         name='use_sim_time',
         default_value=str(True),
-        description='decides if system time or simulated time is used')
+        description='decides if system time or simulated time is used',
+    )
     vehicle_name_launch_arg = launch.actions.DeclareLaunchArgument(
         name='vehicle_name',
         default_value='uvms',
-        description='vehicle name used as namespace ')
+        description='vehicle name used as namespace ',
+    )
 
     simulate_kinematics_launch_arg = launch.actions.DeclareLaunchArgument(
         name='simulate_kinematics',
         default_value=str(False),
-        description=('decide if gazebo simulation should be executed '
-                     'on torque or velocity level'))
+        description=(
+            'decide if gazebo simulation should be executed '
+            'on torque or velocity level'
+        ),
+    )
 
     state_publisher = launch_ros.actions.Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
-        parameters=[{
-            'use_sim_time':
-            use_sim_time,
-            'robot_description':
-            launch_ros.descriptions.ParameterValue(launch.substitutions.Command(
-                [
-                    'xacro ', tf_tree_model_path, ' ', 'vehicle_name:=',
-                    vehicle_name
-                ]),
-                                                   value_type=str)
-        }])  # pi: 3.14159265359
+        parameters=[
+            {
+                'use_sim_time': use_sim_time,
+                'robot_description': launch_ros.descriptions.ParameterValue(
+                    launch.substitutions.Command(
+                        [
+                            'xacro ',
+                            tf_tree_model_path,
+                            ' ',
+                            'vehicle_name:=',
+                            vehicle_name,
+                        ]
+                    ),
+                    value_type=str,
+                ),
+            }
+        ],
+    )  # pi: 3.14159265359
     robot_description = launch.substitutions.LaunchConfiguration(
         'robot_description',
-        default=launch.substitutions.Command([
-            'ros2 run hippo_sim create_robot_description.py ', '--input ',
-            model_path, ' --mappings vehicle_name=', vehicle_name,
-            ' simulate_kinematics=', simulate_kinematics
-        ]))
+        default=launch.substitutions.Command(
+            [
+                'ros2 run hippo_sim create_robot_description.py ',
+                '--input ',
+                model_path,
+                ' --mappings vehicle_name=',
+                vehicle_name,
+                ' simulate_kinematics=',
+                simulate_kinematics,
+            ]
+        ),
+    )
 
     description = {'robot_description': robot_description}
 
-    spawner = launch_ros.actions.Node(package='hippo_sim',
-                                      executable='spawn',
-                                      parameters=[description],
-                                      arguments=[
-                                          '--param',
-                                          'robot_description',
-                                          '--remove_on_exit',
-                                          'true',
-                                          '--x',
-                                          '1.0',
-                                          '--y',
-                                          '2.5',
-                                          '--z',
-                                          '-0.5',
-                                      ])
+    spawner = launch_ros.actions.Node(
+        package='hippo_sim',
+        executable='spawn',
+        parameters=[description],
+        arguments=[
+            '--param',
+            'robot_description',
+            '--remove_on_exit',
+            'true',
+            '--x',
+            '1.0',
+            '--y',
+            '2.5',
+            '--z',
+            '-0.5',
+        ],
+    )
 
-    bridge = launch_ros.actions.Node(package='uvms_sim',
-                                     executable='bridge',
-                                     parameters=[{
-                                         'use_sim_time':
-                                         use_sim_time,
-                                         'update_frequency':
-                                         50.0,
-                                         'simulate_kinematics':
-                                         simulate_kinematics
-                                     }],
-                                     output='screen')
+    bridge = launch_ros.actions.Node(
+        package='uvms_sim',
+        executable='bridge',
+        parameters=[
+            {
+                'use_sim_time': use_sim_time,
+                'update_frequency': 50.0,
+                'simulate_kinematics': simulate_kinematics,
+            }
+        ],
+        output='screen',
+    )
 
-    spawn_group = launch.actions.GroupAction([
-        launch_ros.actions.PushRosNamespace(vehicle_name), state_publisher,
-        spawner, bridge
-    ])
+    spawn_group = launch.actions.GroupAction(
+        [
+            launch_ros.actions.PushRosNamespace(vehicle_name),
+            state_publisher,
+            spawner,
+            bridge,
+        ]
+    )
 
     launch_path = str(
-        get_package_share_path('hippo_common') /
-        'launch/tf_publisher_hippo.launch.py')
+        get_package_share_path('hippo_common')
+        / 'launch/tf_publisher_hippo.launch.py'
+    )
     launch_source = PythonLaunchDescriptionSource(launch_path)
     tf_publisher_vehicle = launch.actions.IncludeLaunchDescription(
         launch_source,
@@ -99,7 +127,12 @@ def generate_launch_description():
         }.items(),
     )
 
-    return launch.LaunchDescription([
-        use_sim_time_launch_arg, vehicle_name_launch_arg,
-        simulate_kinematics_launch_arg, spawn_group, tf_publisher_vehicle
-    ])
+    return launch.LaunchDescription(
+        [
+            use_sim_time_launch_arg,
+            vehicle_name_launch_arg,
+            simulate_kinematics_launch_arg,
+            spawn_group,
+            tf_publisher_vehicle,
+        ]
+    )

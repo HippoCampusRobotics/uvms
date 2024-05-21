@@ -60,7 +60,7 @@ class Visualization {
 
 class EndeffectorVisualization : public Visualization {
  public:
-  EndeffectorVisualization(){};
+  EndeffectorVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -73,7 +73,7 @@ class EndeffectorVisualization : public Visualization {
 
 class EndeffectorFrameVisualization : public Visualization {
  public:
-  EndeffectorFrameVisualization(){};
+  EndeffectorFrameVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -86,7 +86,7 @@ class EndeffectorFrameVisualization : public Visualization {
 
 class EndeffectorAxisVisualization : public Visualization {
  public:
-  EndeffectorAxisVisualization(){};
+  EndeffectorAxisVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -99,7 +99,7 @@ class EndeffectorAxisVisualization : public Visualization {
 
 class TargetVisualization : public Visualization {
  public:
-  TargetVisualization(){};
+  TargetVisualization() {};
   virtual void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -113,7 +113,7 @@ class TargetVisualization : public Visualization {
 
 class TargetFrameVisualization : public Visualization {
  public:
-  TargetFrameVisualization(){};
+  TargetFrameVisualization() {};
   virtual void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -139,7 +139,7 @@ class UVMSTargetVisualization : public TargetVisualization {
 
 class VelocityTargetVisualization : public Visualization {
  public:
-  VelocityTargetVisualization(){};
+  VelocityTargetVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -153,7 +153,7 @@ class VelocityTargetVisualization : public Visualization {
 
 class AUVPoseVisualization : public Visualization {
  public:
-  AUVPoseVisualization(){};
+  AUVPoseVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -166,7 +166,7 @@ class AUVPoseVisualization : public Visualization {
 
 class AUVVelocityTargetVisualization : public Visualization {
  public:
-  AUVVelocityTargetVisualization(){};
+  AUVVelocityTargetVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;
@@ -181,7 +181,7 @@ class AUVVelocityTargetVisualization : public Visualization {
 
 class AUVThrustVisualization : public Visualization {
  public:
-  AUVThrustVisualization(){};
+  AUVThrustVisualization() {};
   void initialize(
       rclcpp::Node* node_ptr,
       visualization_msgs::msg::MarkerArray::SharedPtr marker_ptr) override;

@@ -83,7 +83,7 @@ class Kinematics {
   Kinematics()
       : auv_pos_(states_.segment<3>(0)),
         auv_att_(states_.segment<3>(3)),
-        q_(states_.segment<n_active_joints>(6)){
+        q_(states_.segment<n_active_joints>(6)) {
 
         };
 

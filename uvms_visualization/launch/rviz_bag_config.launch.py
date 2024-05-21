@@ -14,17 +14,20 @@ def generate_launch_description():
     use_sim_time_launch_arg = launch.actions.DeclareLaunchArgument(
         name='use_sim_time',
         default_value=str('False'),
-        description='Use simulation(Gazebo) clock if true')
+        description='Use simulation(Gazebo) clock if true',
+    )
 
-    rviz_node = Node(package='rviz2',
-                     executable='rviz2',
-                     name='RVIZ',
-                     arguments=['-d', rviz_config_file],
-                     parameters=[{
-                         'use_sim_time': use_sim_time
-                     }])
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='RVIZ',
+        arguments=['-d', rviz_config_file],
+        parameters=[{'use_sim_time': use_sim_time}],
+    )
 
-    return launch.LaunchDescription([
-        use_sim_time_launch_arg,
-        rviz_node,
-    ])
+    return launch.LaunchDescription(
+        [
+            use_sim_time_launch_arg,
+            rviz_node,
+        ]
+    )

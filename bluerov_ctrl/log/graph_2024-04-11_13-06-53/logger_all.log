@@ -1,0 +1,24 @@
+[0.980s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'graph']
+[0.980s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='graph', build_base='build', ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, dot=False, density=False, legend=False, dot_cluster=False, dot_include_skipped=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x77a9b3ad74f0>, verb_extension=<colcon_package_information.verb.graph.GraphVerb object at 0x77a9b3ab7490>, main=<bound method GraphVerb.main of <colcon_package_information.verb.graph.GraphVerb object at 0x77a9b3ab7490>>, mixin_verb=('graph',))
+[1.029s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[1.029s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[1.029s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[1.029s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[1.029s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[1.029s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[1.029s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/home/ros-user/uuv/ros2/src/uvms/bluerov_ctrl'
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[1.030s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[1.044s] DEBUG:colcon.colcon_core.package_identification:Package '.' with type 'ros.ament_cmake' and name 'bluerov_ctrl'
+[1.044s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[1.044s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[1.044s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[1.044s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[1.044s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults

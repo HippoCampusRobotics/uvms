@@ -42,7 +42,7 @@ class TaskInterface {
 
   virtual void addReferenceModel(uvms_kinematics::Kinematics *model) = 0;
 
-  virtual void addParameterCallback(){};
+  virtual void addParameterCallback() {};
 
   void publishCmds();
 

@@ -30,16 +30,20 @@ def main():
 
     x_vec_min = np.array([sigmoid(x[i], x_min, buffer) for i in range(len(x))])
     x_vec_max = np.array(
-        [sigmoid(-x[i], -x_max, buffer) for i in range(len(x))])
+        [sigmoid(-x[i], -x_max, buffer) for i in range(len(x))]
+    )
     import matplotlib.pyplot as plt
+
     plt.figure()
-    plt.plot(x, x_vec_min, c=c_mum[0], label=r"$a_\mathrm{min}$")
-    plt.plot(x, x_vec_max, c=c_mum[1], label=r"$a_\mathrm{max}$")
-    plt.vlines([x_min, x_min + buffer, x_max - buffer, x_max],
-               -0.2,
-               1.2,
-               color="k",
-               linestyles="--")
+    plt.plot(x, x_vec_min, c=c_mum[0], label=r'$a_\mathrm{min}$')
+    plt.plot(x, x_vec_max, c=c_mum[1], label=r'$a_\mathrm{max}$')
+    plt.vlines(
+        [x_min, x_min + buffer, x_max - buffer, x_max],
+        -0.2,
+        1.2,
+        color='k',
+        linestyles='--',
+    )
     plt.xlabel('$x$')
     plt.ylabel('activation value')
     plt.legend()
@@ -47,11 +51,13 @@ def main():
 
     plt.figure()
     plt.plot(x, np.maximum(x_vec_min, x_vec_max), c=c_mum[0])
-    plt.vlines([x_min, x_min + buffer, x_max - buffer, x_max],
-               -0.2,
-               1.2,
-               color="k",
-               linestyles="--")
+    plt.vlines(
+        [x_min, x_min + buffer, x_max - buffer, x_max],
+        -0.2,
+        1.2,
+        color='k',
+        linestyles='--',
+    )
     plt.xlabel('$x$')
     plt.ylabel('activation value')
     plt.legend()
@@ -60,5 +66,5 @@ def main():
     plt.show()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

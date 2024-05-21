@@ -21,11 +21,11 @@ def solveP3(x: np.ndarray, a: float, b: float, c: float) -> int:
     q3 = q * q * q
     A = float()
     B = float()
-    if (r2 < q3):
+    if r2 < q3:
         t = r / np.sqrt(q3)
-        if (t < -1):
+        if t < -1:
             t = -1
-        if (t > 1):
+        if t > 1:
             t = 1
         t = np.arccos(t)
         a /= 3
@@ -36,10 +36,10 @@ def solveP3(x: np.ndarray, a: float, b: float, c: float) -> int:
         return 3
 
     else:
-        A = -pow(np.abs(r) + np.sqrt(r2 - q3), 1. / 3)
-        if (r < 0):
+        A = -pow(np.abs(r) + np.sqrt(r2 - q3), 1.0 / 3)
+        if r < 0:
             A = -A
-        if (0 == A):
+        if 0 == A:
             B = 0
         else:
             B = q / A
@@ -47,8 +47,8 @@ def solveP3(x: np.ndarray, a: float, b: float, c: float) -> int:
         a /= 3
         x[0] = (A + B) - a
         x[1] = -0.5 * (A + B) - a
-        x[2] = 0.5 * np.sqrt(3.) * (A - B)
-        if (np.abs(x[2]) < eps):
+        x[2] = 0.5 * np.sqrt(3.0) * (A - B)
+        if np.abs(x[2]) < eps:
             x[2] = x[1]
             return 2
 
@@ -57,10 +57,10 @@ def solveP3(x: np.ndarray, a: float, b: float, c: float) -> int:
 
 def solve_quartic(a, b, c, d) -> np.ndarray:
     a3 = -b
-    b3 = a * c - 4. * d
+    b3 = a * c - 4.0 * d
     c3 = -a * a * d - c * c + 4.0 * b * d
 
-    x3 = np.zeros((3, ))
+    x3 = np.zeros((3,))
     iZeroes = solveP3(x3, a3, b3, c3)
 
     q1 = float()
@@ -72,18 +72,17 @@ def solve_quartic(a, b, c, d) -> np.ndarray:
     y = float()
 
     y = x3[0]
-    if (iZeroes != 1):
-        if (np.abs(x3[1]) > np.abs(y)):
+    if iZeroes != 1:
+        if np.abs(x3[1]) > np.abs(y):
             y = x3[1]
-        if (np.abs(x3[2]) > np.abs(y)):
+        if np.abs(x3[2]) > np.abs(y):
             y = x3[2]
 
     D = y * y - 4 * d
-    if (np.abs(D) < eps):
-
+    if np.abs(D) < eps:
         q1 = q2 = y * 0.5
         D = a * a - 4 * (b - y)
-        if (np.abs(D) < eps):
+        if np.abs(D) < eps:
             p1 = p2 = a * 0.5
 
         else:
@@ -98,10 +97,10 @@ def solve_quartic(a, b, c, d) -> np.ndarray:
         p1 = (a * q1 - c) / (q1 - q2)
         p2 = (c - a * q2) / (q1 - q2)
 
-    retval = np.zeros((4, ))
+    retval = np.zeros((4,))
     counter = 0
     D = p1 * p1 - 4 * q1
-    if (D >= 0.0):
+    if D >= 0.0:
         sqD = np.sqrt(D)
         retval[counter] = (-p1 + sqD) * 0.5
         counter += 1
@@ -109,7 +108,7 @@ def solve_quartic(a, b, c, d) -> np.ndarray:
         counter += 1
 
     D = p2 * p2 - 4 * q2
-    if (D >= 0.0):
+    if D >= 0.0:
         sqD = np.sqrt(D)
         retval[counter] = (-p2 + sqD) * 0.5
         counter += 1
@@ -124,13 +123,24 @@ def find_nearest_point(x, z) -> (float, float, float):
     z_centered = z - c_z
     # polynomial coefficients for x^4 + a*x^3 + b*x^2 + c*x + d
     a = 2 * a_x**2 + 2 * a_z**2
-    b = (a_x**4 + 4 * a_x**2 * a_z**2 - a_x**2 * x_centered**2 + a_z**4 -
-         a_z**2 * z_centered**2)
-    c = (2 * a_x**4 * a_z**2 + 2 * a_x**2 * a_z**4 -
-         2 * a_x**2 * a_z**2 * x_centered**2 -
-         2 * a_x**2 * a_z**2 * z_centered**2)
-    d = (a_x**4 * a_z**4 - a_x**4 * a_z**2 * z_centered**2 -
-         a_x**2 * a_z**4 * x_centered**2)
+    b = (
+        a_x**4
+        + 4 * a_x**2 * a_z**2
+        - a_x**2 * x_centered**2
+        + a_z**4
+        - a_z**2 * z_centered**2
+    )
+    c = (
+        2 * a_x**4 * a_z**2
+        + 2 * a_x**2 * a_z**4
+        - 2 * a_x**2 * a_z**2 * x_centered**2
+        - 2 * a_x**2 * a_z**2 * z_centered**2
+    )
+    d = (
+        a_x**4 * a_z**4
+        - a_x**4 * a_z**2 * z_centered**2
+        - a_x**2 * a_z**4 * x_centered**2
+    )
     roots = solve_quartic(a, b, c, d)
     t = np.max(roots)
     e_x = a_x**2 * x_centered / (t + a_x**2) + c_x
@@ -167,14 +177,22 @@ def main():
     e_points = np.zeros_like(points)
     gradients = np.zeros_like(points)
     vectors = np.zeros_like(points)
-    dists = np.zeros((n, ))
+    dists = np.zeros((n,))
 
     for i in range(n):
-        e_points[0, i], e_points[1, i], dists[i], a, b, c, d, gradients[
-            0, i], gradients[1, i] = find_nearest_point(points[0, i], points[1,
-                                                                             i])
+        (
+            e_points[0, i],
+            e_points[1, i],
+            dists[i],
+            a,
+            b,
+            c,
+            d,
+            gradients[0, i],
+            gradients[1, i],
+        ) = find_nearest_point(points[0, i], points[1, i])
         vectors[:, i] = dists[i] * gradients[:, i]
-        print("dist: ", dists[i])
+        print('dist: ', dists[i])
     roots = solve_quartic(a, b, c, d)
 
     y_vec = np.zeros_like(x_vec)
@@ -189,9 +207,10 @@ def main():
     ell[0, :] = a_x * np.cos(t) + c_x
     ell[1, :] = a_z * np.sin(t) + c_z
     import matplotlib.pyplot as plt
+
     plt.figure()
-    plt.plot(x_vec, y_vec, label="polynomial")
-    plt.scatter(roots, y_roots, label="roots")
+    plt.plot(x_vec, y_vec, label='polynomial')
+    plt.scatter(roots, y_roots, label='roots')
     plt.grid()
 
     plt.figure()
@@ -199,18 +218,22 @@ def main():
     plt.gca().set_prop_cycle(None)
     plt.scatter(e_points[0, :], e_points[1, :], c=np.arange(n))
     for i in range(n):
-        plt.plot([e_points[0, i], e_points[0, i] + vectors[0, i]],
-                 [e_points[1, i], e_points[1, i] + vectors[1, i]],
-                 c='k')
-        plt.plot([e_points[0, i], e_points[0, i] + gradients[0, i]],
-                 [e_points[1, i], e_points[1, i] + gradients[1, i]],
-                 c='r')
+        plt.plot(
+            [e_points[0, i], e_points[0, i] + vectors[0, i]],
+            [e_points[1, i], e_points[1, i] + vectors[1, i]],
+            c='k',
+        )
+        plt.plot(
+            [e_points[0, i], e_points[0, i] + gradients[0, i]],
+            [e_points[1, i], e_points[1, i] + gradients[1, i]],
+            c='r',
+        )
     plt.plot(ell[0, :], ell[1, :])
-    plt.gca().set_aspect("equal")
+    plt.gca().set_aspect('equal')
     plt.grid()
 
     plt.show()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
