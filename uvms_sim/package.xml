@@ -10,12 +10,13 @@
     <depend>rclcpp</depend>
     <depend>libgflags-dev</depend>
     <depend>ros_gz</depend>
-    <depend>ignition-plugin</depend>
-    <depend>ignition-gazebo6</depend>
-    <depend>ignition-common4</depend>
-    <depend>ignition-msgs8</depend>
-    <depend>ignition-transport11</depend>
-    <depend>ignition-math6</depend>
+    <depend>gz_plugin_vendor</depend>
+    <depend>gz_sim_vendor</depend>
+    <depend>gz_common_vendor</depend>
+    <depend>gz_msgs_vendor</depend>
+    <depend>gz_math_vendor</depend>
+    <depend>gz_transport_vendor</depend>
+
     <depend>hippo_gz_msgs</depend>
     <depend>hippo_msgs</depend>
     <depend>hippo_control_msgs</depend>

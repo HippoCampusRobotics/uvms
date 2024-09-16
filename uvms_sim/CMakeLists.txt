@@ -27,19 +27,18 @@ find_package(gflags REQUIRED)
 find_package(ros_gz_bridge REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
-# find_package(<dependency> REQUIRED)
-find_package(ignition-plugin1 REQUIRED COMPONENTS register)
-set(GZ_PLUGIN_VER ${ignition-plugin1_VERSION_MAJOR})
-find_package(ignition-gazebo6 REQUIRED)
-set(GZ_GAZEBO_VER ${ignition-gazebo6_VERSION_MAJOR})
-find_package(ignition-msgs8 REQUIRED)
-set(GZ_MSGS_VER ${ignition-msgs8_VERSION_MAJOR})
-find_package(ignition-math6 REQUIRED)
-set(GZ_MATH_VER ${ignition-math6_VERSION_MAJOR})
-find_package(ignition-transport11 REQUIRED)
-set(GZ_TRANSPORT_VER ${ignition-transport11_VERSION_MAJOR})
-find_package(ignition-common4 REQUIRED)
-set(GZ_COMMON_VER ${ignition-common4_VERSION_MAJOR})
+find_package(gz_plugin_vendor REQUIRED)
+find_package(gz-plugin REQUIRED)
+find_package(gz_sim_vendor REQUIRED)
+find_package(gz-sim REQUIRED)
+find_package(gz_transport_vendor REQUIRED)
+find_package(gz-transport REQUIRED)
+find_package(gz_common_vendor REQUIRED)
+find_package(gz-common REQUIRED)
+find_package(gz_msgs_vendor REQUIRED)
+find_package(gz-msgs REQUIRED)
+find_package(gz_math_vendor REQUIRED)
+find_package(gz-math REQUIRED)
 
 find_package(alpha_msgs REQUIRED)
 find_package(hippo_control_msgs REQUIRED)
@@ -48,10 +47,13 @@ find_package(hippo_msgs REQUIRED)
 add_executable(bridge
         src/static_bridge.cpp)
 
+target_link_libraries(bridge
+  gz-transport::core
+  gz-msgs::core
+)
 ament_target_dependencies(bridge
   rclcpp
   ros_gz_bridge
-  ignition-transport${GZ_TRANSPORT_VER}
   alpha_msgs
   hippo_msgs
   hippo_control_msgs
