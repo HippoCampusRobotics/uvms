@@ -22,7 +22,14 @@
     <depend>uvms_msgs</depend>
     <depend>alpha_ctrl</depend>
     <depend>bluerov_ctrl</depend>
+<<<<<<< HEAD
     <depend>pkg-config</depend>
+=======
+    <depend>geometry_msgs</depend>
+    <depend>uvms_trajectory_gen</depend>
+    <depend>eigen</depend>
+    <depend>std_srvs</depend>
+>>>>>>> 3174e6f (Initial Commit)
 
     <test_depend>ament_lint_auto</test_depend>
     <test_depend>ament_lint_common</test_depend>

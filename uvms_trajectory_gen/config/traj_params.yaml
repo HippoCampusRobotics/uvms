@@ -1,35 +1,46 @@
 /**:
   ros__parameters:
+    # the following 3 parameters are for eef trajectory generation
+    v_max_init_eef: 0.08 #0.1 #0.01 #0.1 #0.04 # 0.15 maximum eef velocity for a generated trajectory
+    w_max_init_eef: 0.2 # 0.2 maximum eef angular velocity for a generated trajectory
+    start_accuracy: 0.01 #0.015  # 0.02 accuracy for position and attitude error norm to complete eef trajectory tracking
+    v_max_short_init_eef: 0.02
+    a_max_init_eef: 0.026 #0.005 #0.01 #0.015
+    dw_max_init_eef: 0.1
 
-    v_max_init_eef: 0.15 # maximum initial velocity for reaching start point for end effector
-    w_max_init_eef: 0.2
-    start_accuracy: 0.02  # accuracy for position and orientation error norm to reach before actual motion starts
+    run_accuracy: 0.002
 
     att_dofs_tracked: 2
-    n_runs: 6
+    n_runs: 5
 
-    startup:
-      v_max_init: 0.15
-      w_max_init: 0.2
-      dq_max_init: 0.3
-      start_accuracy: 0.025
-      start_pos: [ 1.0, 2.0, -0.7 ]
-      start_att: [ 0.0, 0.0, 0.0 ]  # attitude rpy, afterwards multiplied by pi in [rad]
-      start_joints: [1.0, 0.5, 0.75, 0.5] # states are post-multiplied by PI => in rad / pi
+    startup: # kinemtaic conditions for moving to initial position
+      v_max_init: 0.15 # 0.15 -> for auv trajectory
+      w_max_init: 0.2 # 0.2 -> for auv trajectory
+      dq_max_init: 0.8 # 0.3 -> for manipulator trajectory
+      start_accuracy: 0.025 # for auv position, auv attitude and manipulator joint states
+      start_pos: [ 1.2, 1.4, -0.7 ] #[ 1.0, 1.4, -0.7 ] #[ 1.0, 2.0, -0.7 ] #[ 0.6, 2.0, -0.7 ] #
+      # left/right: [ 1.0, 1.4, -0.7 ]
+      # behind: [ 1.0, 1.4, -0.7 ]
+      start_att: [ 0.0, 0.0, 0.7 ]  # [0.0, 0.0, 0.0]  # attitude rpy, afterwards multiplied by pi in [rad]
+      # front: [ 0.0, 0.0, 0.5 ], behind: [ 0.0, 0.0, -0.5 ]
+      # left: [ 0.0, 0.0, 0.0 ], right: [ 0.0, 0.0, 1.0 ]
+      start_joints: [1.0, 0.25, 0.5, 1.5] # [0.0, 0.6, 0.2, 1.2] #[1.0, 0.25, 0.5, 1.5] #[1.0, 0.5, 0.75, 0.5] #[0.4, 0.95, 0.45, 0.67] #[0.5, 0.95, 0.45, 0.67] #[1.0, 0.5, 0.75, 0.5] #[0.3, 0.8, 0.3, 0.6666] # states are post-multiplied by PI => in rad / pi ' beer holder [1.0, 0.1, 0.7, 1.5]
+      # [1.0, 0.25, 0.5, 1.5],  initial z achse nach oben 
+      # [1.0, 0.25, 0.5, 0.5],  initial z achse nach unten 
 
     straight_line:
       unidirectional: true  # must be true
       startpoint:
-        x: 1.2
-        y: 1.0
+        x: 0.7 #1.2
+        y: 1.5
         z: -1.0
       rotation: # afterwards multiplied by pi, rpy convention
         x: 0.0
         y: 0.0
         z: 0.0
       rot_tangential: 0.5  # afterwards multiplied by pi
-      distance: 2.0 # distance in y-direction
-      forward_velocity: 0.1
+      distance: 1.5 # distance in y-direction
+      forward_velocity: 0.02
       startup_duration: 2.5  # s
 
     sinusoidal2D:
@@ -90,16 +101,16 @@
     sinus:
       unidirectional: true  # must be true
       startpoint:
-        x: 1.2
-        y: 1.3
-        z: -0.9
+        x: 0.7 #1.2
+        y: 1.5 #1.3
+        z: -1.0 #-0.9
       rotation: # afterwards multiplied by pi, rpy convention
         x: 0.0
         y: 0.0
         z: 0.0
       rot_tangential: 0.5  # afterwards multiplied by pi
       distance: 1.5 # distance in y-direction
-      forward_velocity: 0.06
+      forward_velocity: 0.02
       startup_duration: 2.5  # s
       n_oscillations: 2 #
       amp_oscillations: 0.15 #

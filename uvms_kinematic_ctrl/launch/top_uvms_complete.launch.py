@@ -33,6 +33,8 @@ def generate_launch_description():
     vehicle_name = 'klopsi00'
     use_sim_time = False
     use_hydro = True
+    # offset_distance = 0.1
+    # number_test_rounds = 3
 
     alpha_estimation = launch.actions.IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -139,6 +141,14 @@ def generate_launch_description():
         ],
     )  # pi: 3.14159265359
 
+    uvms_trajectory_gen = launch.actions.IncludeLaunchDescription(
+        launch.launch_description_sources.PythonLaunchDescriptionSource(
+            str(uvms_trajectory_gen_path / 'launch/traj_gen.launch.py')),
+        launch_arguments={
+            'vehicle_name': vehicle_name,
+            'use_sim_time': str(use_sim_time)}.items()
+    )
+
     launch_path = str(
         get_package_share_path('hippo_common')
         / 'launch/tf_publisher_hippo.launch.py'
@@ -173,6 +183,14 @@ def generate_launch_description():
         launch_arguments={'use_sim_time': str(use_sim_time)}.items(),
     )
 
+    velocity_command = launch.actions.IncludeLaunchDescription(
+        launch.launch_description_sources.PythonLaunchDescriptionSource(
+            str(alpha_ctrl_path / 'launch/velocity_command.launch.py')),
+        launch_arguments={
+            'vehicle_name': vehicle_name,
+            'use_sim_time': str(use_sim_time)}.items()
+    )
+
     return launch.LaunchDescription(
         [
             alpha_estimation,
@@ -186,5 +204,6 @@ def generate_launch_description():
             tf_publisher_vehicle,
             uvms_visualization,
             rviz,
+            velocity_command,
         ]
     )

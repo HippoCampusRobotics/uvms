@@ -38,7 +38,10 @@ find_package(uvms_common REQUIRED)
 find_package(uvms_msgs REQUIRED)
 find_package(alpha_ctrl REQUIRED)
 find_package(bluerov_ctrl REQUIRED)
-
+find_package(uvms_trajectory_gen REQUIRED)
+find_package(Eigen3 REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
 
 add_library(kin_ctrl
         src/kinematics.cpp
@@ -87,6 +90,18 @@ ament_target_dependencies(uvms_kin_ctrl_configuration_space
         hippo_common
         )
 
+add_library(uvms_switching_kin_ctrl_configuration_space
+        nodes/uvms_switching_kin_ctrl_node_configuration_space.cpp
+        )
+
+ament_target_dependencies(uvms_switching_kin_ctrl_configuration_space
+        rclcpp
+        uvms_msgs
+        alpha_ctrl
+        bluerov_ctrl
+        hippo_common
+        )
+
 add_executable(uvms_kin_ctrl_node
         nodes/uvms_kin_ctrl_node.cpp)
 
@@ -95,6 +110,53 @@ ament_target_dependencies(uvms_kin_ctrl_node
 target_link_libraries(uvms_kin_ctrl_node
         kin_ctrl_interface
         uvms_kin_ctrl_configuration_space)
+
+
+add_executable(uvms_switching_kin_ctrl_node
+        nodes/uvms_switching_kin_ctrl_node.cpp)
+
+ament_target_dependencies(uvms_switching_kin_ctrl_node
+        )
+target_link_libraries(uvms_switching_kin_ctrl_node
+        kin_ctrl_interface
+        uvms_switching_kin_ctrl_configuration_space)
+
+add_executable(uvms_planner_node
+        nodes/uvms_planner_node.cpp)
+
+ament_target_dependencies(uvms_planner_node
+        rclcpp
+        std_msgs
+        Eigen3
+        geometry_msgs
+        alpha_ctrl
+        uvms_trajectory_gen
+        hippo_msgs
+        uvms_common
+        hippo_common
+        nav_msgs
+        std_srvs
+        )
+
+add_executable(pap_evaluation_node
+        nodes/pap_evaluation_node.cpp)
+
+ament_target_dependencies(pap_evaluation_node
+        rclcpp
+        Eigen3
+        geometry_msgs
+        hippo_msgs
+        nav_msgs
+        std_msgs
+        hippo_common)
+
+# ########
+# target_include_directories(uvms_planner_node PUBLIC
+#   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+#   $<INSTALL_INTERFACE:include>
+#   ${uvms_trajectory_gen_INCLUDE_DIRS}
+# )
+# ###############
 
 
 add_executable(estimation_drift_watchdog_node
@@ -112,7 +174,7 @@ install(
         DESTINATION share/${PROJECT_NAME}
 )
 
-install(TARGETS uvms_kin_ctrl_node estimation_drift_watchdog_node
+install(TARGETS uvms_kin_ctrl_node uvms_switching_kin_ctrl_node estimation_drift_watchdog_node uvms_planner_node pap_evaluation_node
         DESTINATION lib/${PROJECT_NAME})
 
 # for testing:

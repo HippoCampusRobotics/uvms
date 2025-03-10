@@ -13,13 +13,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#include "uvms_kin_ctrl_node_configuration_space.hpp"
+#include "uvms_switching_kin_ctrl_node_configuration_space.hpp"
 
 namespace uvms_kin_ctrl {
 
-UVMSKinematicConfigurationControl::UVMSKinematicConfigurationControl() {}
+UVMSSwitchingKinematicConfigurationControl::UVMSSwitchingKinematicConfigurationControl() {}
 
-void UVMSKinematicConfigurationControl::initialize(rclcpp::Node *node_ptr) {
+void UVMSSwitchingKinematicConfigurationControl::initialize(rclcpp::Node *node_ptr) {
   node_ptr_ = node_ptr;
   initController(); // controller interface für manipulator und auv werden initialisiert
   // dies sind control interfaces die ausschließlich für nur arm und nur bluerov geschriebven
@@ -27,25 +27,25 @@ void UVMSKinematicConfigurationControl::initialize(rclcpp::Node *node_ptr) {
   initSubscriptions();
 }
 
-void UVMSKinematicConfigurationControl::resetConnections() {
-  setpoint_timeout_timer_.reset();
-  manipulator_cmd_pub_.reset();
-  auv_vel_cmd_pub_.reset();
-  setpoint_sub_.reset();
-}
+// void UVMSSwitchingKinematicConfigurationControl::resetConnections() {
+//   setpoint_timeout_timer_.reset();
+//   manipulator_cmd_pub_.reset();
+//   auv_vel_cmd_pub_.reset();
+//   setpoint_sub_.reset();
+// }
 
-void UVMSKinematicConfigurationControl::initializeParameterCallbacks() {
+void UVMSSwitchingKinematicConfigurationControl::initializeParameterCallbacks() {
   auv_position_controller_interface_->initializeParamCallbacks();
   auv_attitude_controller_interface_->initializeParamCallbacks();
   manipulator_controller_interface_->initializeParameterCallbacks();
 }
 
-void UVMSKinematicConfigurationControl::publishControlCommands(
+void UVMSSwitchingKinematicConfigurationControl::publishControlCommands(
     const nav_msgs::msg::Odometry &auv_msg,
     const sensor_msgs::msg::JointState &manipulator_msg) {
-  hippo_control_msgs::msg::VelocityControlTarget out_auv_msg;
+  hippo_msgs::msg::VelocityControlTarget out_auv_msg;
   alpha_msgs::msg::JointData out_manipulator_msg;
-  if (!got_first_setpoint_ || setpoint_timed_out_) {
+  if (!got_first_setpoint_) { // || setpoint_timed_out_
     out_manipulator_msg = zeroManipulatorMsg(node_ptr_->now());
     manipulator_cmd_pub_->publish(out_manipulator_msg);
     return;
@@ -72,16 +72,16 @@ void UVMSKinematicConfigurationControl::publishControlCommands(
   manipulator_controller_interface_->update(manipulator_msg_ptr,
                                             out_manipulator_msg);
 
-  auv_vel_cmd_pub_->publish(out_auv_msg);
+  auv_vel_cmd_pub_->publish(out_auv_msg); //das sind die /velocity_setpoint, die während initialization für reinen auv control gesendet werden
   manipulator_cmd_pub_->publish(out_manipulator_msg);
 }
-void UVMSKinematicConfigurationControl::initTimers() {
+void UVMSSwitchingKinematicConfigurationControl::initTimers() {
   setpoint_timeout_timer_ = rclcpp::create_timer(
       node_ptr_, node_ptr_->get_clock(), std::chrono::milliseconds(500),
-      std::bind(&UVMSKinematicConfigurationControl::onSetpointTimeout, this));
+      std::bind(&UVMSSwitchingKinematicConfigurationControl::onSetpointTimeout, this));
 }
 
-void UVMSKinematicConfigurationControl::initController() {
+void UVMSSwitchingKinematicConfigurationControl::initController() {
   auv_position_controller_interface_ = new bluerov_ctrl::PosPModuleInterface();
   auv_attitude_controller_interface_ =
       new bluerov_ctrl::AttSkewSymmetricPModuleInterface();
@@ -94,19 +94,19 @@ void UVMSKinematicConfigurationControl::initController() {
   auv_attitude_controller_interface_->declareParams();
 }
 
-void UVMSKinematicConfigurationControl::initSubscriptions() {
+void UVMSSwitchingKinematicConfigurationControl::initSubscriptions() {
   std::string topic;
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
   topic = "traj_setpoint_uvms";
   setpoint_sub_ =
       node_ptr_->create_subscription<uvms_msgs::msg::UVMSControlTarget>(
           topic, qos,
-          std::bind(&UVMSKinematicConfigurationControl::onSetpointTarget, this,
+          std::bind(&UVMSSwitchingKinematicConfigurationControl::onSetpointTarget, this,
                     _1));
 }
 
 alpha_msgs::msg::JointData
-UVMSKinematicConfigurationControl::zeroManipulatorMsg(
+UVMSSwitchingKinematicConfigurationControl::zeroManipulatorMsg(
     const rclcpp::Time &_stamp) {
   alpha_msgs::msg::JointData msg;
   msg.header.stamp = _stamp;
@@ -114,21 +114,17 @@ UVMSKinematicConfigurationControl::zeroManipulatorMsg(
   return msg;
 }
 
-void UVMSKinematicConfigurationControl::onSetpointTimeout() {
-  if (setpoint_timed_out_) {
-    return;
-  }
-  RCLCPP_WARN(node_ptr_->get_logger(),
-              "Configuration space setpoint timed out. Sending zero commands.");
-  setpoint_timed_out_ = true;
+void UVMSSwitchingKinematicConfigurationControl::onSetpointTimeout() {
   if (*controller_status_ptr_ != ControllerStatus::joint_space_control) {
     return;
-  }
-  auto joint_vel_msg = zeroManipulatorMsg(node_ptr_->now());
-  manipulator_cmd_pub_->publish(joint_vel_msg);
+  }  
+  
+  RCLCPP_INFO(node_ptr_->get_logger(),
+                "Configuration space setpoint timed out. Activating end effector controller.");
+  *controller_status_ptr_ = ControllerStatus::eef_control;
 }
 
-void UVMSKinematicConfigurationControl::onSetpointTarget(
+void UVMSSwitchingKinematicConfigurationControl::onSetpointTarget(
     const uvms_msgs::msg::UVMSControlTarget::SharedPtr _msg) {
   if (_msg->header.frame_id !=
       hippo_common::tf2_utils::frame_id::kInertialName) {
@@ -151,19 +147,18 @@ void UVMSKinematicConfigurationControl::onSetpointTarget(
   }
 
   setpoint_timeout_timer_->reset();
-  if (setpoint_timed_out_) {
-    RCLCPP_INFO(node_ptr_->get_logger(),
-                "Received configuration space setpoint. Setpoint not timed out "
-                "anymore.");
-    setpoint_timed_out_ = false;
-  }
 
-  hippo_control_msgs::msg::ControlTarget auv_setpoint = _msg->auv;
-  hippo_control_msgs::msg::ControlTarget::SharedPtr auv_setpoint_ptr =
-      std::make_shared<hippo_control_msgs::msg::ControlTarget>(auv_setpoint);
+  hippo_msgs::msg::ControlTarget auv_setpoint = _msg->auv;
+  hippo_msgs::msg::ControlTarget::SharedPtr auv_setpoint_ptr =
+      std::make_shared<hippo_msgs::msg::ControlTarget>(auv_setpoint);
   std::lock_guard<std::mutex> lock(mutex_);
   auv_position_controller_interface_->setControlTarget(auv_setpoint_ptr);
   auv_attitude_controller_interface_->setControlTarget(auv_setpoint_ptr);
+  // RCLCPP_INFO(node_ptr_->get_logger(),
+  //               "Position: joint 1 %.2f joint 2 %.2f joint 3 %.2f joint 4 %.2f", _msg->manipulator.position[0], _msg->manipulator.position[1], _msg->manipulator.position[2], _msg->manipulator.position[3]);
+  // RCLCPP_INFO(node_ptr_->get_logger(),
+  //               "Velocity: joint 1 %.2f joint 2 %.2f joint 3 %.2f joint 4 %.2f", _msg->manipulator.velocity[0], _msg->manipulator.velocity[1], _msg->manipulator.velocity[2], _msg->manipulator.velocity[3]);
+  
   manipulator_controller_interface_->setPositionTarget(
       _msg->manipulator.position);
   manipulator_controller_interface_->setVelocityTarget(

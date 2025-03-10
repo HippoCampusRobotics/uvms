@@ -18,9 +18,13 @@
 namespace uvms_traj_gen {
 void UVMSTrajGenStartUp::initialize(rclcpp::Node *node_ptr) {
   node_ptr_ = node_ptr;
+  // added the following three
+  first_auv_state_ = false;
+  first_manipulator_state_ = false;
+  finished_ = false;
   bool print_load_motion_output = true;
-  initializeParameters(print_load_motion_output);
-
+  if (!already_initialized_) 
+    initializeParameters(print_load_motion_output);
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
   state_auv_sub_ = node_ptr_->create_subscription<nav_msgs::msg::Odometry>(
       "odometry", qos,
@@ -40,6 +44,10 @@ void UVMSTrajGenStartUp::resetConnections() {
   state_auv_sub_.reset();
   state_manipulator_sub_.reset();
   setpoint_pub_.reset();
+}
+
+void UVMSTrajGenStartUp::resetAUVState() {
+  first_auv_state_ = false;
 }
 
 void UVMSTrajGenStartUp::initializeParameters(bool output) {
@@ -86,9 +94,13 @@ void UVMSTrajGenStartUp::initializeParameters(bool output) {
 
   std::vector<double> start_q;
   if (!ros_param_utils::getParamArray(
-          node_ptr_, start_q, "startup.start_joints", {1.0, 0.5, 0.5, 1.0})) {
+    // the startup joint values are integers indicating by which factor each joint 1-4 is 
+    // performing 360 degree / 2pi rotations
+    // here: 1.0 means joint i start with a 1.0*2pi rotation
+          node_ptr_, start_q, "startup.start_joints", {1.0, 0.5, 0.5, 1.0} )) { // startup by Niklas: {1.0, 0.5, 0.5, 1.0} Vincent {0.0, 0.25, 0.25, 1/3}
     RCLCPP_ERROR(node_ptr_->get_logger(),
                  "Param startup.start_joints not set!");
+
     return;
   }
   if (start_q.size() != param_utils::n_active_joints) {
@@ -100,8 +112,12 @@ void UVMSTrajGenStartUp::initializeParameters(bool output) {
     return;
   }
   for (int i = 0; i < int(param_utils::n_active_joints); i++) {
-    q_des_(i) = M_PI * start_q[i];
+    q_des_(i) = M_PI * start_q[i]; //c++ mathematical constant for pi = 3.141... is M_PI
   }
+
+  already_initialized_ = true;
+  RCLCPP_INFO(node_ptr_->get_logger(),
+                 "Initialized startup!");
 }
 
 void UVMSTrajGenStartUp::sendSetpoint() {
@@ -123,7 +139,10 @@ void UVMSTrajGenStartUp::sendSetpoint() {
     msg.data = *status_ptr_;
     status_pub_ptr_->publish(msg);
   }
-  if ((q_des_ - q_).norm() < start_accuracy_) {
+  if ((q_des_ - q_).norm() < start_accuracy_) { 
+    // possible problem, that if manipulator is already in initial configuration, 
+    // the Status would be set to reached_initial_pose immediately 
+    // without governing the auv to its initial pose
     *status_ptr_ = TrajStatus::reached_initial_pose;
     std_msgs::msg::Int64 msg;
     msg.data = *status_ptr_;
@@ -144,11 +163,12 @@ void UVMSTrajGenStartUp::sendSetpoint() {
   }
 
   if (*status_ptr_ == TrajStatus::approaching_initial_manipulator_pose ||
-      *status_ptr_ == TrajStatus::reached_initial_pose) {
+      *status_ptr_ == TrajStatus::reached_initial_pose ||
+      *status_ptr_ == TrajStatus::waiting_for_goal) {
     initial_manipulator_traj_.getSetpoint(t, manipulator_setpoint_.q,
                                           manipulator_setpoint_.dq,
                                           manipulator_setpoint_.ddq);
-  } else {
+  } else { //
     manipulator_setpoint_.q = q_;
     manipulator_setpoint_.dq.setZero();
     manipulator_setpoint_.ddq.setZero();
@@ -218,6 +238,9 @@ void UVMSTrajGenStartUp::updateAUVStates(
     initial_auv_traj_.initializeFromVelocityLimits(pos_auv_, att_auv_,
                                                    pos_auv_des_, att_auv_des_,
                                                    v_max_init_, w_max_init_);
+    std_msgs::msg::Int64 msg;
+    msg.data = *status_ptr_;
+    status_pub_ptr_->publish(msg);
   }
   // std::cout << "Called after reset " << std::endl;
 }

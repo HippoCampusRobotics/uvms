@@ -13,8 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-#ifndef UVMS_TRAJECTORY_GEN_UVMS_TRAJ_GEN_NODE_HPP
-#define UVMS_TRAJECTORY_GEN_UVMS_TRAJ_GEN_NODE_HPP
+#pragma once
 #include <cstdio>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <rclcpp/rclcpp.hpp>
@@ -23,18 +22,15 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_control_msgs/msg/control_target.hpp"
+#include "hippo_msgs/msg/control_target.hpp"
 #include "uvms_common/pose_to_pose_trajectory.hpp"
 #include "uvms_common/ros_param_utils.hpp"
-#include "uvms_msgs/msg/control_target_prediction.hpp"
 #include "uvms_traj_gen_node_initial_startup.hpp"
 #include "uvms_trajectory_gen/traj.hpp"
+#include "hippo_msgs/msg/pose_stamped_numbered.hpp"
 
 using std::placeholders::_1;
 using namespace std::chrono;
-using param_utils::joint_names;
-using param_utils::link_names;
-using param_utils::StateVector;
 namespace uvms_traj_gen {
 
 //! This class generates endeffector trajectories in the inertial coordinate
@@ -42,9 +38,9 @@ namespace uvms_traj_gen {
 //! velocity and acceleration vectors are represented in the inertial coordinate
 //! system. Attitude describes rotation between inertial coordinate system and
 //! body coordinate system
-class UVMSTrajGen : public rclcpp::Node {
+class UVMSTrajGenPickPlace : public rclcpp::Node {
  public:
-  UVMSTrajGen();
+  UVMSTrajGenPickPlace();
 
  private:
   void initializeParameters(bool output);
@@ -54,44 +50,65 @@ class UVMSTrajGen : public rclcpp::Node {
   // attitude represents world-body
   void sendSetpoint();
   void updateEef(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
+  void updateGoal(const hippo_msgs::msg::PoseStampedNumbered::SharedPtr msg);
+  void updatePlannerMode(const std_msgs::msg::Int64::SharedPtr msg);
+  void updatePlannerStatus(const std_msgs::msg::Int64::SharedPtr msg);
 
-  rclcpp::Publisher<hippo_control_msgs::msg::ControlTarget>::SharedPtr
-      eef_traj_pub_;
-  rclcpp::Publisher<uvms_msgs::msg::ControlTargetPrediction>::SharedPtr
-      eef_traj_pub_prediction_;
-  rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr
-      angular_vel_debug_pub_;
+  rclcpp::Publisher<hippo_msgs::msg::ControlTarget>::SharedPtr eef_traj_pub_;
+//   rclcpp::Publisher<uvms_msgs::msg::ControlTargetPrediction>::SharedPtr
+//       eef_traj_pub_prediction_;
+//   rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr
+//       angular_vel_debug_pub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr
       pose_eef_sub_;
+  rclcpp::Subscription<hippo_msgs::msg::PoseStampedNumbered>::SharedPtr 
+      goal_pose_eef_sub_;
   rclcpp::Publisher<std_msgs::msg::Int64>::SharedPtr status_pub_;
-  rclcpp::Publisher<std_msgs::msg::Int64>::SharedPtr startup_status_pub_;
+  rclcpp::Subscription<std_msgs::msg::Int64>::SharedPtr 
+      planner_sub_;
+  rclcpp::Subscription<std_msgs::msg::Int64>::SharedPtr 
+      planner_status_sub_;
   rclcpp::TimerBase::SharedPtr timer_;
 
-  Traj *traj_gen_;
   rclcpp::Time start_time_;
 
   Eigen::Vector3d pos_;
   Eigen::Quaterniond att_;
+  Eigen::Vector3d goal_pos_;
+  Eigen::Quaterniond goal_att_;
+  Eigen::Vector3d zero_vec_;
+
+  Eigen::Vector3d start_pos_;
+  Eigen::Quaterniond start_att_;
   // parameters relevant for trajectory to initial point
-  uvms_common::p2p_trajectory::Pose2PoseTrajectory start_traj_;
+//   uvms_common::p2p_trajectory::Pose2PoseTrajectory start_traj_;
+  uvms_common::p2p_trajectory::Pose2PoseTrajectory traj_gen_;
   double v_max_init_;
   double w_max_init_;
   double start_accuracy_;
   double freq_ = 50;  // Hz
+  double run_accuracy_;
+  double v_max_short_init_;
+  double a_max_init_;
+  double dw_max_init_;
+
 
   int n_runs_;
   int run_counter_ = 0;
 
-  hippo_control_msgs::msg::ControlTarget out_msg_;
-  uvms_msgs::msg::ControlTargetPrediction out_msg_prediction_;
-  bool publish_prediction_ = false;
+  int old_goal_number_;
+
+  hippo_msgs::msg::ControlTarget out_msg_;
 
   bool first_state_ = false;
+  bool received_goal_ = true;
+  bool first_goal_ = false;
 
   int traj_status_ = TrajStatus::undeclared;
+  int planner_mode_ = TrajMode::undeclared_mode;
+  int planner_status_ = -1; //cannot include uvms_kinematic_ctrl with the plannerMode due to cycle dependencies
 
   UVMSTrajGenStartUp initial_startup_;
 };
 
 }  // namespace uvms_traj_gen
-#endif  // UVMS_TRAJECTORY_GEN_UVMS_TRAJ_GEN_NODE_HPP

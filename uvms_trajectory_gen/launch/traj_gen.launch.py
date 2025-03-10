@@ -26,7 +26,7 @@ def generate_launch_description():
         executable='uvms_traj_gen_node',
         namespace=vehicle_name,
         parameters=[
-            {'use_sim_time': use_sim_time, 'trajectory_type': 4},
+            {'use_sim_time': use_sim_time, 'trajectory_type': 4}, # 1:straight line, 5:sinus
             motion_param_file,
         ],
         output='screen',
