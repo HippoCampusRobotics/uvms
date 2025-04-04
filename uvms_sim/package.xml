@@ -17,7 +17,6 @@
     <depend>gz_math_vendor</depend>
     <depend>gz_transport_vendor</depend>
 
-    <depend>hippo_gz_msgs</depend>
     <depend>hippo_msgs</depend>
     <depend>hippo_control_msgs</depend>
     <depend>alpha_msgs</depend>
