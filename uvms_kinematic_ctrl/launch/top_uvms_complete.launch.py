@@ -30,6 +30,9 @@ def generate_launch_description():
         uvms_kin_ctrl_path / 'launch/node_estimation_drift_watchdog.launch.py'
     )
 
+    alpha_ctrl_path = get_package_share_path('alpha_ctrl')
+    uvms_trajectory_gen_path = get_package_share_path('uvms_trajectory_gen')
+
     vehicle_name = 'klopsi00'
     use_sim_time = False
     use_hydro = True
