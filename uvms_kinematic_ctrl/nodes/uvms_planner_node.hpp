@@ -160,9 +160,9 @@ class UVMSPlannerNode : public rclcpp::Node {
     Eigen::Vector3d eef_offset_obj_new_I_;
 
     // Message Storage --------------------------------
-    Eigen::Vector3d object_pos_{0.5093, 2.5025, -0.5923129272460937};
+    Eigen::Vector3d object_pos_; //for christmas: {0.5093, 2.5025, -0.5923129272460937};
     Eigen::Quaterniond object_att_;
-    Eigen::Vector3d object_plane_normal_{0.0, 0.0, 1.0}; // in world frame
+    Eigen::Vector3d object_plane_normal_; //for christmas: {0.0, 0.0, 1.0}; // in world frame
 
     Eigen::Vector3d projection_;
 

@@ -138,20 +138,20 @@ void UVMSPlannerNode::initSubscriptions() {
       std::bind(&UVMSPlannerNode::onStatusGripper, this, _1));
 
   //starting a topic with / will look for absolut topic name on global level, outside the current namespace
-//   topic = "/platform/ground_truth/odometry";
-//   platform_odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
-//       topic, qos,
-//       std::bind(&UVMSPlannerNode::onOdometryPlatform, this, _1));
+  topic = "/platform/ground_truth/odometry";
+  platform_odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
+      topic, qos,
+      std::bind(&UVMSPlannerNode::onOdometryPlatform, this, _1));
 
-//   topic = "/cylinder/ground_truth/odometry";
-//   cylinder_odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
-//       topic, qos,
-//       std::bind(&UVMSPlannerNode::onOdometryCylinder, this, _1));
+  topic = "/cylinder/ground_truth/odometry";
+  cylinder_odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
+      topic, qos,
+      std::bind(&UVMSPlannerNode::onOdometryCylinder, this, _1));
 
-//   topic = "/cylinder_holder/ground_truth/odometry";
-//   cylinder_holder_odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
-//       topic, qos,
-//       std::bind(&UVMSPlannerNode::onOdometryCylinderHolder, this, _1));
+  topic = "/cylinder_holder/ground_truth/odometry";
+  cylinder_holder_odometry_sub_ = create_subscription<nav_msgs::msg::Odometry>(
+      topic, qos,
+      std::bind(&UVMSPlannerNode::onOdometryCylinderHolder, this, _1));
 }
 
 void UVMSPlannerNode::initServices() {
@@ -403,7 +403,7 @@ Eigen::Quaterniond UVMSPlannerNode::alignZAxes(const Eigen::Quaterniond& qA, con
 
 
 void UVMSPlannerNode::runPlanner() {
-    if (!got_first_eef_pose_) return; // !got_first_traj_status_ || !got_first_gripper_status_
+    if (!got_first_eef_pose_ || !got_first_traj_status_ || !got_first_gripper_status_) return; // !got_first_traj_status_ || !got_first_gripper_status_
 
     switch(planner_mode_) {
         case PlannerMode::undefined:
@@ -417,13 +417,13 @@ void UVMSPlannerNode::runPlanner() {
             traj_mode_ = TrajMode::keep_eef_pose;
             
             // automated_check_ becomes only true after ther test run service has been called at least once
-            if (automated_check_) {
-                    // RCLCPP_INFO(get_logger(), "Activating Pick and Place Test Run.");
-                    test_run_activated_ = true;
-            }
+            // if (automated_check_) {
+            //         // RCLCPP_INFO(get_logger(), "Activating Pick and Place Test Run.");
+            //         test_run_activated_ = true;
+            // }
 
-            // if (gripper_status_ == GripperStatus::closed && traj_status_ == TrajStatus::waiting_for_planner && test_run_activated_) {
-            if (traj_status_ == TrajStatus::waiting_for_planner && test_run_activated_) {
+            if (gripper_status_ == GripperStatus::closed && traj_status_ == TrajStatus::waiting_for_planner && test_run_activated_) {
+            // if (traj_status_ == TrajStatus::waiting_for_planner && test_run_activated_) {
                 RCLCPP_INFO(get_logger(), "Starting next test rotation\n");
                 // as soon as UVMS is in initial position then object and platform is probbaly the most visible
                 // hence allowing for new object and platform data happens just here
@@ -437,24 +437,24 @@ void UVMSPlannerNode::runPlanner() {
             }
             break;
         case PlannerMode::looking_for_object:
-            // if (got_first_object_pose_ && got_first_platform_pose_ && got_first_cylinder_holder_pose_) {
-            //     Eigen::Vector3d dist_place = place_pos_ - object_pos_;
-            //     Eigen::Vector3d dist_holder = cylinder_holder_pos_ - object_pos_;
-            //     if ((object_pos_.z() < place_pos_.z() && object_pos_.z() < cylinder_holder_pos_.z()) || object_pos_.z() < -1.4) {
-            //         //check, if object is even above the placement and holder, in order for it to be reachable by the UVMS
-            //         RCLCPP_INFO(get_logger(), "Object too low in an unfeasible position!\n");
-            //         RCLCPP_INFO(get_logger(), "Terminating test run!\n");
-            //         planner_mode_ = PlannerMode::done;
-            //     }
-            //     if (dist_place.norm() > dist_holder.norm()) {
-            //         dropping_pos_ = place_pos_;
-            //         dropping_att_ = place_att_;
-            //         dropping_plane_normal_ = place_plane_normal_;
-            //     } else {
-            //         dropping_pos_ = cylinder_holder_pos_;
-            //         dropping_att_ = cylinder_holder_att_;
-            //         dropping_plane_normal_ = cylinder_holder_plane_normal_;
-            //     }
+            if (got_first_object_pose_ && got_first_platform_pose_ && got_first_cylinder_holder_pose_) {
+                Eigen::Vector3d dist_place = place_pos_ - object_pos_;
+                Eigen::Vector3d dist_holder = cylinder_holder_pos_ - object_pos_;
+                if ((object_pos_.z() < place_pos_.z() && object_pos_.z() < cylinder_holder_pos_.z()) || object_pos_.z() < -1.4) {
+                    //check, if object is even above the placement and holder, in order for it to be reachable by the UVMS
+                    RCLCPP_INFO(get_logger(), "Object too low in an unfeasible position!\n");
+                    RCLCPP_INFO(get_logger(), "Terminating test run!\n");
+                    planner_mode_ = PlannerMode::done;
+                }
+                if (dist_place.norm() > dist_holder.norm()) {
+                    dropping_pos_ = place_pos_;
+                    dropping_att_ = place_att_;
+                    dropping_plane_normal_ = place_plane_normal_;
+                } else {
+                    dropping_pos_ = cylinder_holder_pos_;
+                    dropping_att_ = cylinder_holder_att_;
+                    dropping_plane_normal_ = cylinder_holder_plane_normal_;
+                }
             // } else {
             //     break;
             // }
@@ -462,7 +462,7 @@ void UVMSPlannerNode::runPlanner() {
             // hier April Tag Lokalisierung o.ä. starten
             // sobald absolut/relativ pose von Object weiter
             // zunächst ist absolut Pose von Objekt bekannt
-            if (got_first_object_pose_) {
+            // if (got_first_object_pose_) {
                 std::lock_guard<std::mutex> lock(mutex_);
                 Eigen::Vector3d direction = object_pos_ - eef_pos_;
                 Eigen::Vector3d projection;
@@ -607,13 +607,13 @@ void UVMSPlannerNode::runPlanner() {
             }
 
             break;
-        case PlannerMode::read_new_cylinder:
+        case PlannerMode::read_new_cylinder: // correct any offset of cylinder from ideal gripping position
             if (got_first_object_pose_) {
                 std::lock_guard<std::mutex> lock(mutex_);
 
                 direction_2_place_ = dropping_pos_ - eef_pos_;
                 Eigen::Vector3d projection;
-                Eigen::Vector3d plane_normal = dropping_plane_normal_; //Lage des Objekts im Raum soll später durch Objekterkennung bestimmt werden
+                Eigen::Vector3d plane_normal = dropping_plane_normal_; //To-Do: determine pose of objects (cylinder, platform...) through object detection
                 Eigen::Matrix3d rotation_matrix;
 
                 eef_pos_des_ = dropping_pos_ + (offset_dist_ + 0.5*cylinder_height_) * dropping_plane_normal_.normalized(); //normal vector alwyas in the preferred direction
@@ -624,9 +624,10 @@ void UVMSPlannerNode::runPlanner() {
                 Eigen::Quaterniond quat(rotation_matrix);
                 eef_att_des_ = quat;
 
-                //add position offset, here I don't correct rotation error to gripped object
-                // offset from obj->eef
-                Eigen::Vector3d pos_offset = eef_pos_ - object_pos_;
+                // correct positional offset from desired cylinder grip (=eef frame) 
+                // to true cylinder position in gripper jaws
+                // To-Do: correct angular offsets as well -> eef_att_des_
+                Eigen::Vector3d pos_offset = eef_pos_ - object_pos_; // offset from obj->eef
                 // express in eff frame (the original , tilted by 30°, which is the one in the pose_endeffector topic)
                 // eef_att_.toRotationMatrix().transpose() * pos_offset;
                 // express offset, with respect to the goal eef frame
@@ -720,9 +721,9 @@ void UVMSPlannerNode::runPlanner() {
             if (gripper_status_ == GripperStatus::opened) {
                 std::lock_guard<std::mutex> lock(mutex_);
 
-                eef_pos_des_ = eef_pos_des_ - offset_dist_ * projection_.normalized();
+                // eef_pos_des_ = eef_pos_des_ - offset_dist_ * projection_.normalized();
 
-                // eef_pos_des_ = eef_offset_obj_new_I_ + dropping_pos_ + (offset_dist_ + cylinder_height_) * dropping_plane_normal_.normalized() - offset_dist_ * direction_2_place_.normalized();
+                eef_pos_des_ = eef_offset_obj_new_I_ + dropping_pos_ + (offset_dist_ + cylinder_height_) * dropping_plane_normal_.normalized() - offset_dist_ * direction_2_place_.normalized();
                 // attitude remains the same
 
                 counter_msg_pose_des_++;
