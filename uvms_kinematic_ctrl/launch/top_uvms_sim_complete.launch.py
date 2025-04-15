@@ -31,8 +31,6 @@ def generate_launch_description():
     vehicle_name = 'klopsi00'
     use_sim_time = True
     use_hydro = True
-    # offset_distance = 0.1
-    # number_test_rounds = 3
 
     alpha_estimation = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(

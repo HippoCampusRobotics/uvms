@@ -83,7 +83,7 @@ class UVMSPlannerNode : public rclcpp::Node {
     void vectorPlaneProjection(const Eigen::Vector3d &_plane_normal, const Eigen::Vector3d &_vector, Eigen::Vector3d &_proj);
     void getRotationFromVector(const Eigen::Vector3d &_x_eff, const Eigen::Vector3d &_z_eff, Eigen::Matrix3d &_rotation);
     void vectorVectorProjection(const Eigen::Vector3d &_base_vector, const Eigen::Vector3d &_vector, Eigen::Vector3d &_proj);
-    Eigen::Quaterniond alignZAxes(const Eigen::Quaterniond& qA, const Eigen::Quaterniond& qB);
+    // Eigen::Quaterniond alignZAxes(const Eigen::Quaterniond& qA, const Eigen::Quaterniond& qB);
 
     // Other-------------------------------------------
     std::mutex mutex_;
@@ -152,8 +152,6 @@ class UVMSPlannerNode : public rclcpp::Node {
     Eigen::Vector3d dropping_plane_normal_;
 
     Eigen::Matrix3d rotation_x_60_{{1.0, 0.0, 0.0},{0.0, 0.5, -std::sqrt(3)/2.0},{0.0, std::sqrt(3)/2.0, 0.5}};
-
-    // Eigen::Vector3d lift_surface_dist_{0.0, 0.0, 0.1}; //unit = m
 
     Eigen::Vector3d direction_2_place_;
 

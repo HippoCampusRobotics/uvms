@@ -55,10 +55,6 @@ class UVMSTrajGenPickPlace : public rclcpp::Node {
   void updatePlannerStatus(const std_msgs::msg::Int64::SharedPtr msg);
 
   rclcpp::Publisher<hippo_msgs::msg::ControlTarget>::SharedPtr eef_traj_pub_;
-//   rclcpp::Publisher<uvms_msgs::msg::ControlTargetPrediction>::SharedPtr
-//       eef_traj_pub_prediction_;
-//   rclcpp::Publisher<geometry_msgs::msg::Vector3>::SharedPtr
-//       angular_vel_debug_pub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr
       pose_eef_sub_;
   rclcpp::Subscription<hippo_msgs::msg::PoseStampedNumbered>::SharedPtr 
@@ -80,8 +76,6 @@ class UVMSTrajGenPickPlace : public rclcpp::Node {
 
   Eigen::Vector3d start_pos_;
   Eigen::Quaterniond start_att_;
-  // parameters relevant for trajectory to initial point
-//   uvms_common::p2p_trajectory::Pose2PoseTrajectory start_traj_;
   uvms_common::p2p_trajectory::Pose2PoseTrajectory traj_gen_;
   double v_max_init_;
   double w_max_init_;

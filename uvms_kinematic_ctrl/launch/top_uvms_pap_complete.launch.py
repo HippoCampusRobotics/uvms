@@ -24,8 +24,6 @@ def generate_launch_description():
     vehicle_name = 'klopsi00'
     use_sim_time = False
     use_hydro = True
-    # offset_distance = 0.1
-    # number_test_rounds = 3
 
     alpha_estimation = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
@@ -93,8 +91,6 @@ def generate_launch_description():
             'use_sim_time': str(use_sim_time)}.items()
     )
 
-    #added  uvms_trajectory_gen since it is in top_sim as well
-    # and I dont want to start it seperately
     uvms_trajectory_gen = launch.actions.IncludeLaunchDescription(
         launch.launch_description_sources.PythonLaunchDescriptionSource(
             str(uvms_trajectory_gen_path / 'launch/traj_pap_gen.launch.py')),
@@ -164,10 +160,7 @@ def generate_launch_description():
         launch.launch_description_sources.PythonLaunchDescriptionSource(
             str(uvms_kin_ctrl_path / 'launch/planner_ctrl.launch.py')),
         launch_arguments={
-            'vehicle_name': vehicle_name,
-            # 'offset_distance': str(offset_distance),
-            # 'number_test_rounds':str(number_test_rounds)
-            }.items()
+            'vehicle_name': vehicle_name,}.items()
     )
 
     return launch.LaunchDescription([

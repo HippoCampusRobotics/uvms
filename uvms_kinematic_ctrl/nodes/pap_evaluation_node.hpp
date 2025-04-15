@@ -15,10 +15,10 @@
 
 #pragma once
 #include <rclcpp/rclcpp.hpp>
-#include <mutex> //part of standard C++ library and directly provided through compiler
-#include <chrono> //part of standard C++ library and directly provided through compiler
+#include <mutex>
+#include <chrono>
 #include <eigen3/Eigen/Dense>
-#include <cmath> //part of standard C++ library and directly provided through compiler. For std::sqrt(), std::pow(), std::copysign()
+#include <cmath>
 
 #include <geometry_msgs/msg/point_stamped.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
@@ -91,18 +91,13 @@ class PaPEvaluationNode : public rclcpp::Node {
     hippo_msgs::msg::VectorError msg_gripped_angle_;
     hippo_msgs::msg::Int64Stamped msg_traj_status_;
 
-    //R_eef^(eef,senkrecht), where eef is the frame in pose_endeffector topic
+    //R_eef^(eef,perpendicular), where eef is the frame in pose_endeffector topic
     Eigen::Matrix3d rotation_x_60_{{1.0, 0.0, 0.0},{0.0, 0.5, -std::sqrt(3)/2.0},{0.0, std::sqrt(3)/2.0, 0.5}};
 
 
-
-
     // Boolean Varibales ------------------------------
-    // bool trajectory_status_timed_out_{false};
     bool SM_stage_changed_{false};
     bool received_traj_status_{false};
-
-
 
     // Constant Variables / ros params ----------------
     Eigen::Vector3d cylinder_pos_;
@@ -120,10 +115,6 @@ class PaPEvaluationNode : public rclcpp::Node {
 
     Eigen::Vector3d eef_setpoint_pos_;
     Eigen::Quaterniond eef_setpoint_att_;
-
-
-
-
 
 
     // Timer ------------------------------------------

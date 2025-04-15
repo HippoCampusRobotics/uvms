@@ -1,4 +1,5 @@
 // Copyright (C) 2023  Niklas Trekel
+// Copyright (C) 2024  Vincent Lenz
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -22,11 +23,11 @@ namespace uvms_kin_ctrl {
 UVMSSwitchingKinematicControlNode::UVMSSwitchingKinematicControlNode()
     : Node("uvms_switching_kin_ctrl_node") {
   RCLCPP_INFO(this->get_logger(), "Declaring parameters.");
-  declareParams(); //wird nur mit bestimmt, ob bei odometry oder joint_states messages gepublished wird
-  initPublishers(); //erstellt alle ros publisher objects
-  initTimers(); //erstellt setpoint_timeout_timer_
-  initSubscriptions(); //erstellt alle allgemeinen und die für eef control relevanten ros subscription objects
-  initController(); //
+  declareParams();
+  initPublishers();
+  initTimers();
+  initSubscriptions();
+  initController();
 }
 
 void UVMSSwitchingKinematicControlNode::initTimers() {
@@ -36,16 +37,11 @@ void UVMSSwitchingKinematicControlNode::initTimers() {
 }
 
 void UVMSSwitchingKinematicControlNode::initController() {
-  startup_controller_ = new UVMSSwitchingKinematicConfigurationControl(); //startup_controller_ is declared as a pointer to that Object
-  // in the header file, but it's not actually pointing to an object, hence the poper initialization here
-  // If it wouldn't be a pointer but declared as an instance of that class in hpp, I could immediately call methods in it
-  // I don't have to do new anymore and also have to use . instead of ->
-  // using a pointer here might be useful for the fact that once "destroyed" the pointer would return null, which was used before for an if-condition
-  // also pointer is necessary when using shared ownership with smart pointer like std::shared_ptr
+  startup_controller_ = new UVMSSwitchingKinematicConfigurationControl();
   startup_controller_->initialize(this);
   controller_interface_ = new UVMSKinematicControlInterface();
   controller_interface_->initialize(this);
-  startup_controller_->setAUVCmdPublisherPtr(auv_vel_cmd_pub_); // überträgt die publisher und status pointer, sodass configuration space control auf dieselben topics published ohne dass ein zweiter identoscher publisher erstellt wird
+  startup_controller_->setAUVCmdPublisherPtr(auv_vel_cmd_pub_);
   startup_controller_->setManipulatorCmdPublisherPtr(manipulator_cmd_pub_);
   startup_controller_->setControllerStatusPtr(&controller_status_);
   startup_controller_->initializeParameterCallbacks();
@@ -122,8 +118,8 @@ void UVMSSwitchingKinematicControlNode::onSetpointTimeout() {
 void UVMSSwitchingKinematicControlNode::onSetpointTarget(
     const hippo_msgs::msg::ControlTarget::SharedPtr _msg) {
   if(controller_status_ <= ControllerStatus::joint_space_control) {
-    // In case of configuration space controller or undefined, I don't want to risk
-    // that the eef-controller gets data
+    // In case of configuration space controller or undefined,
+    // eef will not get data
     return;
   }
   
@@ -183,9 +179,6 @@ void UVMSSwitchingKinematicControlNode::publishControlCmds() {
     dt = (this->now() - last_stamp_).seconds();
   }
   last_stamp_ = this->now();
-  // //////////////////////////////////////////////
-  // RCLCPP_INFO(this->get_logger(), "Controller Status: %d", controller_status_);
-  // //////////////////////////////////////////////
 
   switch (controller_status_) {
     case ControllerStatus::undeclared:

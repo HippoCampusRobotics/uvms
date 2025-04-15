@@ -26,7 +26,6 @@ def generate_launch_description():
         description='used for node namespace'
     )
 
-    
     control_node = launch_ros.actions.Node(package='uvms_kinematic_ctrl',
                                            executable='uvms_switching_kin_ctrl_node',
                                            namespace=vehicle_name,

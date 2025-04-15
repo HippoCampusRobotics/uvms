@@ -1,10 +1,10 @@
 /**:
   ros__parameters:
 
-    #task_keys: [1, 8, 9, 2, 12, 7, 11, 10]
+    #task_keys: [1, 8, 9, 2, 12, 14, 11, 10]
     #task_types: [1, 1, 1, 2, 3, 3, 3, 4]
 
-    task_keys: [1, 8, 9, 2, 12, 14, 13, 10] #[1, 8, 9, 2, 12, 14, 11, 10]
+    task_keys: [1, 8, 9, 2, 12, 14, 13, 10]
     task_types: [1, 1, 1, 2, 3, 3, 3, 4]
     algorithm_type: 4
     publish_task_velocities: true
@@ -66,22 +66,22 @@
 
     joint_limits:
       q_min:
-        q0: 0.032 #1.5 #0.032
+        q0: 0.032
         q1: 0.0174533
         q2: 0.0174533
         q3: -1000000.0
       q_max:
-        q0: 6.02 #4.5 #6.02
+        q0: 6.02
         q1: 3.40339
-        q2: 3.2 #3.0 #3.2  # lowered to avoid local minimum between joint limit and manipulability
+        q2: 3.2 # lowered to avoid local minimum between joint limit and manipulability
         q3: 10000000.0
       gain:
         q0: 1.0
         q1: 1.0
-        q2: 1.0 #2.0 #0.5 #1.0
+        q2: 1.0
         q3: 1.0
       safety: 0.2  # relative limit which should not be exceeded!
-      delta: 0.2 # 0.2  # offset from which on the controller will actively push the joint position away from the limits
+      delta: 0.2 # offset from which on the controller will actively push the joint position away from the limits
       alpha: 0.1 # offset added to delta that must be passed to deactivate the task once it is activated
 
     joint_limits_desired:
@@ -145,7 +145,7 @@
       c:
         x: -0.203
         z: -0.131675
-      gain: 1.0 #1.0
+      gain: 1.0
       safety: 0.02
       delta: 0.03
       alpha: 0.03 # offset added to delta that must be passed to deactivate the task once it is activated
@@ -186,19 +186,19 @@
       alpha: 0.05
 
     attitude_inclination_limits:
-      max: 0.15 #0.3
+      max: 0.15
       gain: 1.0
-      delta: 0.2 #0.1
-      alpha: 0.05 #0.05
+      delta: 0.2
+      alpha: 0.05
 
     manipulability:
       gain: 1.0
 
     manipulability_limit:
-      delta: 0.05 #0.001
-      alpha: 0.05 #0.001
+      delta: 0.05
+      alpha: 0.05
       min:  0.0035
-      gain: 0.01 #1.0
+      gain: 0.01
 
     #velocity:
       #task_weighting_matrix:

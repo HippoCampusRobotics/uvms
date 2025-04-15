@@ -84,7 +84,7 @@ UVMSTrajGen::UVMSTrajGen() : Node("traj_gen_node") {
 }
 
 void UVMSTrajGen::initializeParameters(bool output) {
-  ros_param_utils::getParam(this, v_max_init_, "v_max_init_eef", 0.1, output); //in traj_gen.launch.py are no limits defined as parameters, hence those defaults are used
+  ros_param_utils::getParam(this, v_max_init_, "v_max_init_eef", 0.1, output);
   ros_param_utils::getParam(this, w_max_init_, "w_max_init_eef", 0.1, output);
   ros_param_utils::getParam(this, start_accuracy_, "start_accuracy", 0.005,
                             output);
@@ -107,8 +107,7 @@ void UVMSTrajGen::sendSetpoint() {
       return;
     case TrajStatus::reached_initial_pose: {
       EefTrajSetpoint setpoint;
-      traj_gen_->getSetpoint(0.0, setpoint); //every traj class generates a time dependant trajectory for the eef, 
-      // getsetpoint(t=0, setpoint reference) then writes the initial point of that time dependant trajectory in the setpoint reference
+      traj_gen_->getSetpoint(0.0, setpoint);
       start_traj_.initializeFromVelocityLimits(
           pos_, att_, setpoint.pos, setpoint.att, v_max_init_, w_max_init_);
       start_time_ = this->now();
@@ -122,25 +121,17 @@ void UVMSTrajGen::sendSetpoint() {
     case TrajStatus::approaching_initial_eef_pose: {
       EefTrajSetpoint setpoint;
       Eigen::Vector3d pos_start;
-      traj_gen_->getStartPosition(pos_start); //intern wird in der traj.cpp class obige getSetpoint(0.0, setpoint) ausgeführt und dann nur der position Wert zurückgegeben, statt der gesamten pose
+      traj_gen_->getStartPosition(pos_start);
       Eigen::Quaterniond att_start;
-      traj_gen_->getStartOrientation(att_start); ///intern wird in der traj.cpp class obige getSetpoint(0.0, setpoint) ausgeführt und dann nur der orientation Wert zurückgegeben, statt der gesamten pose
+      traj_gen_->getStartOrientation(att_start);
 
       // calculate quaternion error:
       Eigen::Matrix3d att_start_tilde;
-      skew(att_start.vec(), att_start_tilde); // gibt die skew natrix auf att_start_tilde zurück, welche aus den Werten vom att_start.vec() aufgebaut wird
-
-      //dies ist eine bekannte Weise, wie man auf Basis von quaternions den attitude error berechnet. Weiter unten sieht man, dass davon die Norm genommen wird
-      //.w() ist der lineare Anteil, .vec() ist der vektorielle Anteil
-      //att_ ist der aktuelle orientierungswert des End-Effektors, der vom pose_endeffector topic ausgelesen wird 
+      skew(att_start.vec(), att_start_tilde);
       Eigen::Vector3d att_error = att_.w() * att_start.vec() - 
                                   att_start.w() * att_.vec() -
-                                  att_start_tilde * att_.vec(); // mithilfe der skew Matrix, kann so das Kreuzprodukt durch Matrix Vektro Multiplikation von att_start und att_ berechnet werden
+                                  att_start_tilde * att_.vec();
 
-      // RCLCPP_INFO(this->get_logger(), "%s", ("Distance to start point: " +
-      // std::to_string((pos_start-pos_).norm())).c_str());
-      // RCLCPP_INFO(this->get_logger(), "%s", ("Attitude error to start point:
-      // " + std::to_string(att_error.norm())).c_str());
       double dt = (this->now() - start_time_).seconds();
       start_traj_.getPositionSetpoint(dt, setpoint.pos, setpoint.vel,
                                       setpoint.acc);

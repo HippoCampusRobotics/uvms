@@ -21,8 +21,7 @@ UVMSKinematicConfigurationControl::UVMSKinematicConfigurationControl() {}
 
 void UVMSKinematicConfigurationControl::initialize(rclcpp::Node *node_ptr) {
   node_ptr_ = node_ptr;
-  initController(); // controller interface für manipulator und auv werden initialisiert
-  // dies sind control interfaces die ausschließlich für nur arm und nur bluerov geschriebven
+  initController();
   initTimers();
   initSubscriptions();
 }

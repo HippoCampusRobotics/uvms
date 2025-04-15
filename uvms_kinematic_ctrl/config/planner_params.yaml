@@ -1,8 +1,8 @@
 /**:
   ros__parameters:
     offset_distance: 0.07 # [m]
-    number_test_rounds: 1
-    cylinder_height: 0.12 # [m], must be identical to real cylinder height for gripper to grab it in the middle
+    number_test_rounds: 2
+    cylinder_height: 0.12 # [m] # identical to real cylinder height
     discharge_height: 0.02 # [m]
     automated: true
     lift_surface_dist: 0.1 # [m]
