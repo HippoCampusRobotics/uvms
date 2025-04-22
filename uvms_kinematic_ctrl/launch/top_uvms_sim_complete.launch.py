@@ -19,6 +19,15 @@ def generate_launch_description():
         / ('config/actuator_mixer_bluerov_advanced.yaml')
     )
 
+    # mixer_path = str(
+    #     bluerov_low_level_ctrl_path
+    #     / 'launch/node_actuator_mixer.launch.py'
+    # )
+    # mixer_config_file_path = str(
+    #     bluerov_low_level_ctrl_path
+    #     / ('config/actuator_mixer/hippocampus_default.yaml')
+    # )
+
     uvms_kin_ctrl_path = get_package_share_path('uvms_kinematic_ctrl')
     estimation_watchdog_path = str(
         uvms_kin_ctrl_path / 'launch/node_estimation_drift_watchdog.launch.py'
