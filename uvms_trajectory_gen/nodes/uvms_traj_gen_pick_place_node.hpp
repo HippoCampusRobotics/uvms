@@ -22,7 +22,7 @@
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 #include "uvms_common/pose_to_pose_trajectory.hpp"
 #include "uvms_common/ros_param_utils.hpp"
 #include "uvms_traj_gen_node_initial_startup.hpp"
@@ -54,7 +54,7 @@ class UVMSTrajGenPickPlace : public rclcpp::Node {
   void updatePlannerMode(const std_msgs::msg::Int64::SharedPtr msg);
   void updatePlannerStatus(const std_msgs::msg::Int64::SharedPtr msg);
 
-  rclcpp::Publisher<hippo_msgs::msg::ControlTarget>::SharedPtr eef_traj_pub_;
+  rclcpp::Publisher<hippo_control_msgs::msg::ControlTarget>::SharedPtr eef_traj_pub_;
   rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr
       pose_eef_sub_;
   rclcpp::Subscription<hippo_msgs::msg::PoseStampedNumbered>::SharedPtr 
@@ -92,7 +92,7 @@ class UVMSTrajGenPickPlace : public rclcpp::Node {
 
   int old_goal_number_;
 
-  hippo_msgs::msg::ControlTarget out_msg_;
+  hippo_control_msgs::msg::ControlTarget out_msg_;
 
   bool first_state_ = false;
   bool received_goal_ = true;

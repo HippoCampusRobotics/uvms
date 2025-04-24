@@ -56,7 +56,7 @@ void UVMSSwitchingKinematicControlNode::initPublishers() {
       create_publisher<alpha_msgs::msg::JointData>(topic, qos);
   topic = "velocity_setpoint";
   auv_vel_cmd_pub_ =
-      create_publisher<hippo_msgs::msg::VelocityControlTarget>(topic, qos);
+      create_publisher<hippo_control_msgs::msg::VelocityControlTarget>(topic, qos);
 
   topic = "pose_endeffector";
   eef_pose_pub_ = create_publisher<geometry_msgs::msg::PoseStamped>(topic, qos);
@@ -80,7 +80,7 @@ void UVMSSwitchingKinematicControlNode::initSubscriptions() {
 
 
   topic = "traj_setpoint";
-  eef_traj_sub_ = create_subscription<hippo_msgs::msg::ControlTarget>(
+  eef_traj_sub_ = create_subscription<hippo_control_msgs::msg::ControlTarget>(
       topic, qos,
       std::bind(&UVMSSwitchingKinematicControlNode::onSetpointTarget, this, _1));
 
@@ -116,7 +116,7 @@ void UVMSSwitchingKinematicControlNode::onSetpointTimeout() {
 }
 
 void UVMSSwitchingKinematicControlNode::onSetpointTarget(
-    const hippo_msgs::msg::ControlTarget::SharedPtr _msg) {
+    const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg) {
   if(controller_status_ <= ControllerStatus::joint_space_control) {
     // In case of configuration space controller or undefined,
     // eef will not get data
@@ -170,7 +170,7 @@ void UVMSSwitchingKinematicControlNode::onJointState(
 }
 
 void UVMSSwitchingKinematicControlNode::publishControlCmds() {
-  hippo_msgs::msg::VelocityControlTarget auv_vel_msg;
+  hippo_control_msgs::msg::VelocityControlTarget auv_vel_msg;
   alpha_msgs::msg::JointData joint_vel_msg;
   geometry_msgs::msg::PoseStamped eef_pose;
 

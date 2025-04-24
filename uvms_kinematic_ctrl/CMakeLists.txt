@@ -146,6 +146,7 @@ ament_target_dependencies(pap_evaluation_node
         Eigen3
         geometry_msgs
         hippo_msgs
+        hippo_control_msgs
         nav_msgs
         std_msgs
         hippo_common)

@@ -43,7 +43,7 @@ void UVMSSwitchingKinematicConfigurationControl::initializeParameterCallbacks() 
 void UVMSSwitchingKinematicConfigurationControl::publishControlCommands(
     const nav_msgs::msg::Odometry &auv_msg,
     const sensor_msgs::msg::JointState &manipulator_msg) {
-  hippo_msgs::msg::VelocityControlTarget out_auv_msg;
+  hippo_control_msgs::msg::VelocityControlTarget out_auv_msg;
   alpha_msgs::msg::JointData out_manipulator_msg;
   if (!got_first_setpoint_) {
     out_manipulator_msg = zeroManipulatorMsg(node_ptr_->now());
@@ -148,9 +148,9 @@ void UVMSSwitchingKinematicConfigurationControl::onSetpointTarget(
 
   setpoint_timeout_timer_->reset();
 
-  hippo_msgs::msg::ControlTarget auv_setpoint = _msg->auv;
-  hippo_msgs::msg::ControlTarget::SharedPtr auv_setpoint_ptr =
-      std::make_shared<hippo_msgs::msg::ControlTarget>(auv_setpoint);
+  hippo_control_msgs::msg::ControlTarget auv_setpoint = _msg->auv;
+  hippo_control_msgs::msg::ControlTarget::SharedPtr auv_setpoint_ptr =
+      std::make_shared<hippo_control_msgs::msg::ControlTarget>(auv_setpoint);
   std::lock_guard<std::mutex> lock(mutex_);
   auv_position_controller_interface_->setControlTarget(auv_setpoint_ptr);
   auv_attitude_controller_interface_->setControlTarget(auv_setpoint_ptr);  

@@ -102,7 +102,7 @@ void PaPEvaluationNode::initSubscriptions() {
         std::bind(&PaPEvaluationNode::onPoseEndeffector, this, _1));
 
     topic = "traj_setpoint";
-    eef_traj_sub_ = create_subscription<hippo_msgs::msg::ControlTarget>(
+    eef_traj_sub_ = create_subscription<hippo_control_msgs::msg::ControlTarget>(
         topic, qos, 
         std::bind(&PaPEvaluationNode::onSetpointEndeffector, this, _1));
 
@@ -150,7 +150,7 @@ void PaPEvaluationNode::onPoseEndeffector(const geometry_msgs::msg::PoseStamped:
     hippo_common::convert::EigenToRos(eef_pos_, msg_eef_pos_.point);
 }
 
-void PaPEvaluationNode::onSetpointEndeffector(const hippo_msgs::msg::ControlTarget::SharedPtr _msg){
+void PaPEvaluationNode::onSetpointEndeffector(const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg){
     hippo_common::convert::RosToEigen(_msg->position, eef_setpoint_pos_);
     hippo_common::convert::RosToEigen(_msg->attitude, eef_setpoint_att_);
 

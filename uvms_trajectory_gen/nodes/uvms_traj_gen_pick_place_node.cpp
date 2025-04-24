@@ -25,7 +25,7 @@ UVMSTrajGenPickPlace::UVMSTrajGenPickPlace() : Node("traj_gen_pick_place_node") 
   received_goal_ = false;
   start_time_ = this->now();
   rclcpp::QoS qos = rclcpp::SystemDefaultsQoS();
-  eef_traj_pub_ = this->create_publisher<hippo_msgs::msg::ControlTarget>(
+  eef_traj_pub_ = this->create_publisher<hippo_control_msgs::msg::ControlTarget>(
       "traj_setpoint", qos);
 
   pose_eef_sub_ = this->create_subscription<geometry_msgs::msg::PoseStamped>(

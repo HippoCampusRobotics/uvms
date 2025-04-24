@@ -27,7 +27,7 @@
 #include "hippo_msgs/msg/int64_stamped.hpp"
 #include "hippo_msgs/msg/float64_stamped.hpp"
 #include "hippo_msgs/msg/vector_error.hpp"
-#include "hippo_msgs/msg/control_target.hpp"
+#include "hippo_control_msgs/msg/control_target.hpp"
 
 #include "hippo_common/convert.hpp"
 
@@ -47,7 +47,7 @@ class PaPEvaluationNode : public rclcpp::Node {
     void initSubscriptions();
 
     void onPoseEndeffector(const geometry_msgs::msg::PoseStamped::SharedPtr _msg);
-    void onSetpointEndeffector(const hippo_msgs::msg::ControlTarget::SharedPtr _msg);
+    void onSetpointEndeffector(const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg);
     void onPosePlatform(const nav_msgs::msg::Odometry::SharedPtr _msg);
     void onPoseCylinder(const nav_msgs::msg::Odometry::SharedPtr _msg);
     void onTrajStatus(const std_msgs::msg::Int64::SharedPtr _msg);
@@ -141,7 +141,7 @@ class PaPEvaluationNode : public rclcpp::Node {
   
     // Subscriber -------------------------------------
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr eef_pose_sub_;
-    rclcpp::Subscription<hippo_msgs::msg::ControlTarget>::SharedPtr eef_traj_sub_;
+    rclcpp::Subscription<hippo_control_msgs::msg::ControlTarget>::SharedPtr eef_traj_sub_;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr platform_odometry_sub_;
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr cylinder_odometry_sub_;
     rclcpp::Subscription<std_msgs::msg::Int64>::SharedPtr traj_staus_sub_;
