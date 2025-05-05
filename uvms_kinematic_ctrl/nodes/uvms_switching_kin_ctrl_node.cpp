@@ -34,6 +34,10 @@ void UVMSSwitchingKinematicControlNode::initTimers() {
   setpoint_timeout_timer_ = rclcpp::create_timer(
       this, get_clock(), std::chrono::milliseconds(500),
       std::bind(&UVMSSwitchingKinematicControlNode::onSetpointTimeout, this));
+
+  controller_status_update_timer_ = rclcpp::create_timer(
+    this, get_clock(), std::chrono::milliseconds(500),
+    std::bind(&UVMSSwitchingKinematicControlNode::onControllerStatusUpdate, this));
 }
 
 void UVMSSwitchingKinematicControlNode::initController() {
@@ -60,6 +64,9 @@ void UVMSSwitchingKinematicControlNode::initPublishers() {
 
   topic = "pose_endeffector";
   eef_pose_pub_ = create_publisher<geometry_msgs::msg::PoseStamped>(topic, qos);
+
+  topic = "controller_status";
+  controller_status_pub_ = create_publisher<std_msgs::msg::Int64>(topic, qos);
 }
 void UVMSSwitchingKinematicControlNode::declareParams() {
   ros_param_utils::getParam(this, publish_on_joint_state_,
@@ -167,6 +174,11 @@ void UVMSSwitchingKinematicControlNode::onJointState(
   if (publish_on_joint_state_ && got_first_auv_state_) {
     publishControlCmds();
   }
+}
+
+void UVMSSwitchingKinematicControlNode::onControllerStatusUpdate() {
+  msg_controller_status_.data = controller_status_;
+  controller_status_pub_->publish(msg_controller_status_);
 }
 
 void UVMSSwitchingKinematicControlNode::publishControlCmds() {

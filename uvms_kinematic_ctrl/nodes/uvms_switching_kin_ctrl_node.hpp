@@ -23,6 +23,7 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/joint_state.hpp>
 #include <std_msgs/msg/float64.hpp>
+#include <std_msgs/msg/int64.hpp>
 
 #include "alpha_msgs/msg/joint_data.hpp"
 #include "hippo_common/convert.hpp"
@@ -54,9 +55,12 @@ class UVMSSwitchingKinematicControlNode : public rclcpp::Node {
   void onSetpointTarget(const hippo_control_msgs::msg::ControlTarget::SharedPtr _msg);
   void onJointState(const sensor_msgs::msg::JointState::SharedPtr _msg);
   void onOdometry(const nav_msgs::msg::Odometry::SharedPtr _msg);
+  void onControllerStatusUpdate();
   void publishControlCmds();
 
   std::mutex mutex_;
+
+  std_msgs::msg::Int64 msg_controller_status_;
 
   //////////////////////////////////////////////////////////////////////////////
   // ros params
@@ -74,6 +78,7 @@ class UVMSSwitchingKinematicControlNode : public rclcpp::Node {
   bool publish_on_joint_state_;
 
   rclcpp::TimerBase::SharedPtr setpoint_timeout_timer_;
+  rclcpp::TimerBase::SharedPtr controller_status_update_timer_;
 
   bool got_first_time_stamp_{false};
   rclcpp::Time last_stamp_;
@@ -85,6 +90,7 @@ class UVMSSwitchingKinematicControlNode : public rclcpp::Node {
   rclcpp::Publisher<hippo_control_msgs::msg::VelocityControlTarget>::SharedPtr
       auv_vel_cmd_pub_;
   rclcpp::Publisher<geometry_msgs::msg::PoseStamped>::SharedPtr eef_pose_pub_;
+  rclcpp::Publisher<std_msgs::msg::Int64>::SharedPtr controller_status_pub_;
   //////////////////////////////////////////////////////////////////////////////
   // subscriptions
   //////////////////////////////////////////////////////////////////////////////

@@ -18,10 +18,10 @@
       w_max_init: 0.2 # 0.2 -> for auv trajectory
       dq_max_init: 0.8 # 0.3 -> for manipulator trajectory
       start_accuracy: 0.025 # for auv position, auv attitude and manipulator joint states
-      start_pos: [ 1.2, 1.4, -0.7 ] #[ 1.0, 1.4, -0.7 ] #[ 1.0, 2.0, -0.7 ] #[ 0.6, 2.0, -0.7 ] #
+      start_pos: [ 1.0, 2.0, -0.7 ] #[ 1.0, 1.4, -0.7 ] #[ 1.0, 2.0, -0.7 ] #[ 0.6, 2.0, -0.7 ] #
       # left/right: [ 1.0, 1.4, -0.7 ]
       # behind: [ 1.0, 1.4, -0.7 ]
-      start_att: [ 0.0, 0.0, 0.7 ]  # [0.0, 0.0, 0.0]  # attitude rpy, afterwards multiplied by pi in [rad]
+      start_att: [ 0.0, 0.0, 0.5 ]  # [0.0, 0.0, 0.0]  # attitude rpy, afterwards multiplied by pi in [rad]
       # front: [ 0.0, 0.0, 0.5 ], behind: [ 0.0, 0.0, -0.5 ]
       # left: [ 0.0, 0.0, 0.0 ], right: [ 0.0, 0.0, 1.0 ]
       start_joints: [1.0, 0.25, 0.5, 1.5] # [0.0, 0.6, 0.2, 1.2] #[1.0, 0.25, 0.5, 1.5] #[1.0, 0.5, 0.75, 0.5] #[0.4, 0.95, 0.45, 0.67] #[0.5, 0.95, 0.45, 0.67] #[1.0, 0.5, 0.75, 0.5] #[0.3, 0.8, 0.3, 0.6666] # states are post-multiplied by PI => in rad / pi ' beer holder [1.0, 0.1, 0.7, 1.5]
@@ -110,7 +110,7 @@
         z: 0.0
       rot_tangential: 0.5  # afterwards multiplied by pi
       distance: 1.5 # distance in y-direction
-      forward_velocity: 0.02
+      forward_velocity: 0.06
       startup_duration: 2.5  # s
       n_oscillations: 2 #
       amp_oscillations: 0.15 #
