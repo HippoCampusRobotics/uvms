@@ -33,6 +33,7 @@ find_package(hippo_common REQUIRED)
 find_package(uvms_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 add_library(uvms_traj_gen STATIC
         src/traj.cpp
@@ -49,6 +50,7 @@ ament_target_dependencies(uvms_traj_gen
         hippo_control_msgs
         hippo_common
         uvms_msgs
+        Eigen3
         )
 
 add_library(uvms_startup STATIC
@@ -76,17 +78,66 @@ ament_target_dependencies(uvms_traj_gen_node
         hippo_common
         nav_msgs
         sensor_msgs
+        Eigen3
         )
 
 target_link_libraries(uvms_traj_gen_node
         uvms_traj_gen
         uvms_startup)
 
+add_executable(uvms_traj_gen_pick_place_node
+        nodes/uvms_traj_gen_pick_place_node.cpp)  
+        
+ament_target_dependencies(uvms_traj_gen_pick_place_node
+        rclcpp
+        hippo_msgs
+        hippo_common
+        nav_msgs
+        sensor_msgs
+        Eigen3
+        )
+
+target_link_libraries(uvms_traj_gen_pick_place_node
+        uvms_traj_gen
+        uvms_startup)
+
 install(DIRECTORY launch config
         DESTINATION share/${PROJECT_NAME})
 
-install(TARGETS uvms_traj_gen_node
+install(TARGETS uvms_traj_gen_node uvms_traj_gen_pick_place_node
         DESTINATION lib/${PROJECT_NAME})
+
+##############
+
+
+# install(
+#         DIRECTORY include/
+#         DESTINATION include/${PROJECT_NAME}
+#         )
+
+ament_export_targets(uvms_traj_genTargets HAS_LIBRARY_TARGET)
+ament_export_dependencies(uvms_common
+        rclcpp
+        hippo_msgs
+        hippo_common
+        uvms_msgs)
+
+install(
+        DIRECTORY include/
+        DESTINATION include
+        )
+
+install(
+        TARGETS uvms_traj_gen
+        EXPORT uvms_traj_genTargets
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+        RUNTIME DESTINATION bin
+        INCLUDES DESTINATION include
+)
+
+
+#############
 
 
 if (BUILD_TESTING)

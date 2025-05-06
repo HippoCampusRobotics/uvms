@@ -18,6 +18,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/int64.hpp>
+#include <eigen3/Eigen/Dense>
 
 #include "hippo_common/convert.hpp"
 #include "hippo_common/tf2_utils.hpp"
@@ -40,7 +41,35 @@ enum TrajStatus {
   finished_motion = 9,
   wait_for_restart = 10,
   finished_run = 11,
+  waiting_for_goal = 12,
+  approaching_goal = 13,
+  reached_goal = 14,
+  waiting_for_planner = 15,
 };
+
+enum TrajMode {
+  undeclared_mode = -1,
+  keep_eef_pose = 1,
+  new_eff_trajectory = 2,
+  go_to_starting_position = 3,
+  stop = 4,
+  received_status_reached_goal = 5,
+};
+
+
+// enum TrajStatusPaP {
+//   undeclared = -1,
+//   approaching_initial_auv_pose = 1,
+//   reached_initial_auv_pose = 2,
+//   approaching_initial_manipulator_pose = 3,
+//   reached_initial_pose = 4,
+
+//   waiting_for_goal = 5,
+//   approaching_object = 6,
+//   reched_object = 7,
+
+//   finished_run = 11,
+// };
 
 struct EefTrajSetpoint {
   Eigen::Vector3d pos;

@@ -128,21 +128,16 @@ void UVMSTrajGen::sendSetpoint() {
       // calculate quaternion error:
       Eigen::Matrix3d att_start_tilde;
       skew(att_start.vec(), att_start_tilde);
-
-      Eigen::Vector3d att_error = att_.w() * att_start.vec() -
+      Eigen::Vector3d att_error = att_.w() * att_start.vec() - 
                                   att_start.w() * att_.vec() -
                                   att_start_tilde * att_.vec();
 
-      // RCLCPP_INFO(this->get_logger(), "%s", ("Distance to start point: " +
-      // std::to_string((pos_start-pos_).norm())).c_str());
-      // RCLCPP_INFO(this->get_logger(), "%s", ("Attitude error to start point:
-      // " + std::to_string(att_error.norm())).c_str());
       double dt = (this->now() - start_time_).seconds();
       start_traj_.getPositionSetpoint(dt, setpoint.pos, setpoint.vel,
                                       setpoint.acc);
       start_traj_.getOrientationSetpoint(dt, setpoint.att, setpoint.ang_vel,
                                          setpoint.ang_acc);
-      if ((pos_start - pos_).norm() < start_accuracy_ &&
+      if ((pos_start - pos_).norm() < start_accuracy_ && //check, if eef reached initial start position and orientation/attitude of the trajectory
           att_error.norm() < start_accuracy_) {
         start_time_ = this->now();
         traj_status_ = TrajStatus::reached_initial_eef_pose;

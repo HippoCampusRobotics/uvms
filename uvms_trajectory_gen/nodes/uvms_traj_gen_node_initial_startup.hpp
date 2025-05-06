@@ -66,6 +66,8 @@ class UVMSTrajGenStartUp {
   void sendSetpoint();
   void initialize(rclcpp::Node* node_ptr);
 
+  void resetAUVState();
+
  private:
   void initializeParameters(bool output);
   void updateManipulatorStates(
@@ -105,6 +107,8 @@ class UVMSTrajGenStartUp {
   bool first_manipulator_state_ = false;
   bool finished_ = false;  //!< decides if startup sequence is finished
   int* status_ptr_;
+
+  bool already_initialized_ = false;
 };
 
 }  // namespace uvms_traj_gen
