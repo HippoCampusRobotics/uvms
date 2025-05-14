@@ -27,7 +27,7 @@ If you find this useful for your research, please consider citing our paper and 
 
 This framework can also be used for pick-and-place tasks underwater.
 
-**Video:**
+**Video:** https://youtu.be/RGsInnwlMCQ
 
 # Installation
 
