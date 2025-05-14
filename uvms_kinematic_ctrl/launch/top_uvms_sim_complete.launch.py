@@ -12,7 +12,7 @@ def generate_launch_description():
     )
     mixer_path = str(
         bluerov_low_level_ctrl_path
-        / 'launch/node_actuator_mixer.launch.py'
+        / 'launch/node_actuator_mixer_bluerov.launch.py'
     )
     mixer_config_file_path = str(
         bluerov_low_level_ctrl_path
