@@ -40,13 +40,17 @@ If not already done so, install ROS2 (Desktop-full is recommended) and setup a w
 You could use [our guide](https://hippocampusrobotics.github.io/docs/contents/getting_started/ros_installation.html). 
 
 
-This package depends on some of our other ROS2 packages:
+This package depends on some of our other ROS2 packages.
+They can be installed from source, or more conveniently, via apt.
 
+Follow [this guide](https://hippocampusrobotics.github.io/docs/contents/getting_started/pre-built_packages.html) for how to add the key + sources to apt and rosdep.
+
+Then, you should be able to install our packages via apt:
 ```shell script
 sudo apt install ros-${ROS_DISTRO}-hippo-full
 ```
 
-Get this repository (e.g. via SSH)
+Finally, get this repository (e.g. via SSH)
 ```shell script
 git clone git@github.com:HippoCampusRobotics/uvms.git
 ```
