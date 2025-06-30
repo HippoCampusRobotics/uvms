@@ -22,7 +22,7 @@ If you find this useful for your research, please consider citing our paper and 
   ```
   **Video:** https://www.youtube.com/watch?v=IDMlI5KqlVI
 
-* Nathalie Bauschmann, Vincent Lenz, Robert Seifried and Daniel A Duecker, "**Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis**". * (accepted at) 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS 2025)*. IEEE, 2025. 
+* Nathalie Bauschmann, Vincent Lenz, Robert Seifried and Daniel A Duecker, "**Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis**". *(accepted at) 2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS 2025)*. IEEE, 2025. 
   ```bibtex
   @inproceedings{Bauschmann2025,
   title = {Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis},  
