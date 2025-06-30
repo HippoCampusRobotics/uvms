@@ -22,18 +22,18 @@ If you find this useful for your research, please consider citing our paper and 
   ```
   **Video:** https://www.youtube.com/watch?v=IDMlI5KqlVI
 
-  * Nathalie Bauschmann, Vincent Lenz, Robert Seifried and Daniel A Duecker, "**Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis**". *2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS 2025)*. IEEE, 2025. 
-    ```bibtex
-    @inproceedings{Bauschmann2025,
-    title = {Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis},  
-    author = {Bauschmann, Nathalie and Lenz, Vincent and Seifried, Robert and Duecker, Daniel A},  
-    year  = {2025},
-    month = {October},
-    publisher = {{IEEE}},
-    booktitle = {2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}
-    }
-    ```
-    **Video:** https://youtu.be/C2BV5Mmz6VE
+* Nathalie Bauschmann, Vincent Lenz, Robert Seifried and Daniel A Duecker, "**Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis**". *2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS 2025)*. IEEE, 2025. 
+  ```bibtex
+  @inproceedings{Bauschmann2025,
+  title = {Experimental Open-Source Framework for Underwater Pick-and-Place Studies with Lightweight UVMS -- An Extensive Quantitative Analysis},  
+  author = {Bauschmann, Nathalie and Lenz, Vincent and Seifried, Robert and Duecker, Daniel A},  
+  year  = {2025},
+  month = {October},
+  publisher = {{IEEE}},
+  booktitle = {2025 IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)}
+  }
+  ```
+  **Video:** https://youtu.be/C2BV5Mmz6VE
 
 # Pick-and-Place Framework
 
